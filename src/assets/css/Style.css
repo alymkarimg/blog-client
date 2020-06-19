@@ -1,0 +1,54 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+h1, h2, h3, h4, h5, h6, p, a {
+    font-family: 'Lobster', sans-serif;;
+}
+
+/* .cke_focus {
+    outline: none !important;
+    border-width: 3px !important;
+    border-style: solid !important;
+    border-image-slice: 1 !important;
+    border-image-source: linear-gradient(to left, rgba(255, 0, 0, 0.5), rgba(248, 148, 6, 0.5)) !important;
+    padding: 3px !important;
+    transition: 0.3s all !important;
+}
+
+.cke {
+    margin-top: 5px !important;
+    margin-left: 1px !important;
+    margin-right: 1px !important;
+} */
+
+.ck.ck-toolbar-dropdown .ck.ck-toolbar .ck.ck-toolbar__items {
+    flex-wrap: wrap !important;
+}
+
+.editableAreaContainer img {
+    max-width: 100% !important;
+    min-width: 50px !important;
+}
+
+.editableAreaContainer .image>figcaption {
+    text-align: center;
+    word-break: break-word;
+    color: #333;
+    background-color: #f7f7f7;
+    padding: .6em;
+    font-size: .75em;
+    outline-offset: -1px;
+    font-weight: 400;
+}
+
+.editableAreaContainer h1 {
+    text-align: center;
+    padding: 20px 10px 20px 10px;
+    margin-bottom: 0px;
+    color: #f7f7f7;
+    background-color: #333;
+}
+
+.dark-overlay {
+    background-color: rgba(0, 0, 0, 0.35);
+  }
