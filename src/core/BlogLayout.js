@@ -7,9 +7,6 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import EditableArea from './EditableArea';
 
-// add an editable area whose pathname = blog editableAreas and guid = blog {slug}
-
-
 const BlogLayout = ({ history }) => {
 
     let user = isAuth();
