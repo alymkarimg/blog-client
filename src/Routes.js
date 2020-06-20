@@ -12,7 +12,8 @@ import { PrivateRoute, AdminRoute } from './auth/PrivateAdminRoute'
 import EditableAreaContextProvider from './contexts/EditableAreaContext'
 import GlobalContextProvider from './contexts/GlobalContext';
 import Blogs from './core/Blogs';
-
+import AdminBlogs from './core/AdminBlog'
+import BlogLayout from './core/BlogLayout'
 
 
 
@@ -28,7 +29,9 @@ const Routes = () => {
                         <Route path="/auth/activate/:token" exact component={ActivateAccount} />
                         <Route path="/auth/password/forgot" exact component={Forgot} />
                         <Route path="/auth/password/reset/:token" exact component={Reset} />
-                        <Route path="/admin/blog" exact component={Blogs} />
+                        <Route path="/admin/blog" exact component={AdminBlogs} />
+                        <Route path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
+                        <Route path="/blogs" exact component={Blogs} />
                         <PrivateRoute path="/profile" exact component={Profile} />
                         <AdminRoute path="/admin/home" exact component={AdminHome} />
                     </EditableAreaContextProvider>

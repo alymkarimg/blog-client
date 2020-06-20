@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -17,22 +18,43 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SimpleSelect({ title, menuitems, nonefirst = false, nonelast = false }) {
+export default function SimpleSelect({ title, menuitems, nonefirst = false, nonelast = false, sort = null }) {
+    const ITEM_HEIGHT = 48;
+    const ITEM_PADDING_TOP = 8;
+    const MenuProps = {
+        PaperProps: {
+            style: {
+                maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                width: 250,
+            },
+        },
+        getContentAnchorEl: null,
+        anchorOrigin: {
+            vertical: "bottom",
+            horizontal: "left",
+        }
+    };
+
     const classes = useStyles();
-    const [age, setAge] = React.useState('');
+    const [values, setValues] = useState({
+        sortBy: sort
+    });
+
+    const { sortBy } = values
 
     const handleChange = (event) => {
-        setAge(event.target.value);
+        setValues({ ...values, sortBy: event.target.value });
     };
 
     return (
         <div>
             <FormControl variant="outlined" className={classes.formControl}>
-    <InputLabel id="demo-simple-select-outlined-label">{title}</InputLabel>
+                <InputLabel id="demo-mutiple-chip-label">{title}</InputLabel>
                 <Select
                     labelId="demo-simple-select-outlined-label"
                     id={`select_${title}`}
-                    value={age}
+                    value={sortBy}
+                    MenuProps={MenuProps}
                     onChange={handleChange}
                     label={title}
                 >
@@ -41,7 +63,6 @@ export default function SimpleSelect({ title, menuitems, nonefirst = false, none
                         <MenuItem value="">
                             <em>None</em>
                         </MenuItem>
-                    }
                     }
                     {
                         menuitems.length > 0 && (

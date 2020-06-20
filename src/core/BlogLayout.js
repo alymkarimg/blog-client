@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Layout from '../core/Layout';
+import Layout from './Layout';
 import { updateUserCookie, isAuth, getCookie, signout } from '../auth/Helpers'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import EditableArea from './EditableArea';
 
-const CreateBlog = ({ history }) => {
+// add an editable area whose pathname = blog editableAreas and guid = blog {slug}
+
+
+const BlogLayout = ({ history }) => {
+
     let user = isAuth();
     const [values, setValues] = useState({
         firstname: '',
@@ -170,4 +174,4 @@ const CreateBlog = ({ history }) => {
         </Layout>
     )
 };
-export default CreateBlog;
+export default BlogLayout;

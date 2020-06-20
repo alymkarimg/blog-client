@@ -84,6 +84,7 @@ const Banner = (props) => {
               </div>
               <div className="carousel-caption">
                 <div className="animated fadeInDown">
+                  {/* pathname = bannertitle, guid = index of banner item */}
                   <EditableArea pathname={title} guid={index}></EditableArea>
                 </div>
               </div>
