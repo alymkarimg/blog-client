@@ -1,8 +1,53 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+h1, h2, h3, h4, h5, h6, p, a, button, input {
+    font-family: 'Lobster', sans-serif;
+    ;
+}
 
-h1, h2, h3, h4, h5, h6, p, a {
-    font-family: 'Lobster', sans-serif;;
+body {
+    background-color: #ededed;
+}
+
+/* The emerging W3C standard
+   that is currently Firefox-only */
+   * {
+    scrollbar-width: thin;
+    scrollbar-color: #343a40 whitesmoke;
+  }
+  
+  /* Works on Chrome/Edge/Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+  *::-webkit-scrollbar-track {
+    background: whitesmoke;
+  }
+  *::-webkit-scrollbar-thumb {
+    background-color: #343a40;
+    border-radius: 20px;
+    border: 3px solid whitesmoke;
+  }
+
+p {
+    margin-bottom: 0px;
+}
+
+img {
+    max-width: 100%;
+}
+
+.overlay_above_nav {
+    position: absolute;
+    left: 0px;
+    width: 100%;
+    top: 0px;
+    background-color: #ededed;
+}
+
+.overlay_above_nav .container {
+    margin-top: 0px !important;
+    box-shadow: 1px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+    background-color: white;
 }
 
 /* .cke_focus {
@@ -41,7 +86,7 @@ h1, h2, h3, h4, h5, h6, p, a {
     font-weight: 400;
 }
 
-.editableAreaContainer h1 {
+.MuiCard-root .editableAreaContainer h1 {
     text-align: center;
     padding: 20px 10px 20px 10px;
     margin-bottom: 0px;
@@ -49,6 +94,99 @@ h1, h2, h3, h4, h5, h6, p, a {
     background-color: #333;
 }
 
-.dark-overlay {
-    background-color: rgba(0, 0, 0, 0.35);
-  }
+.editableAreaContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: middle;
+    opacity: 1;
+}
+
+.fade-in {
+    animation-name: fadeInOpacity;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in;
+    animation-duration: 0.5s;
+}
+
+.ea_border {
+    border-image-source: linear-gradient(to left, #743ad5, #d53a9d);
+}
+
+.editableAreaContainer.loading {
+    background: white;
+    margin: 10px;
+}
+
+@keyframes fadeInOpacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@media (max-width: 576px) {
+    .banner_wrapper {
+        position: relative !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .overlay_above_nav {
+        position: relative;
+        left: 0px;
+        width: 100%;
+        top: 0px;
+        background-color: #333 !important;
+    }
+}
+
+.loader {
+    width: 60px;
+}
+
+.loader-wheel {
+    animation: spin 1s infinite linear;
+    border: 2px solid rgba(30, 30, 30, 0.5);
+    border-left: 4px solid #fff;
+    border-radius: 50%;
+    height: 50px;
+    margin-bottom: 10px;
+    width: 50px;
+}
+
+.loader-text {
+    color: #fff;
+    font-family: arial, sans-serif;
+}
+
+.loader-text:after {
+    content: 'Loading';
+    animation: load 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes load {
+    0% {
+        content: 'Loading';
+    }
+    33% {
+        content: 'Loading.';
+    }
+    67% {
+        content: 'Loading..';
+    }
+    100% {
+        content: 'Loading...';
+    }
+}

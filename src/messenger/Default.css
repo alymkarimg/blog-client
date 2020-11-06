@@ -1,0 +1,218 @@
+.messengerSidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0.35;
+    background-color: #ededed;
+}
+
+.sidebarHeader {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 0px 20px 20px;
+    border-right: 1px solid lightgray;
+    ;
+}
+
+.sidebarChat:hover {
+    background-color: white;
+}
+
+.sidebarChatInfo {
+    margin-left: 15px;
+}
+
+.sidebarChatInfo>h2 {
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.sidebarChatInfo>p {
+    font-size: 14px;
+}
+
+
+.messenger {
+    background-color: whitesmoke;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.messengerBody {
+    min-height: 500px;
+    display: flex;
+    height: 95%;
+    width: 100%;
+    background-color: white;
+    border-top: 1px solid lightgray;
+}
+
+.sidebarHeaderRight {
+    font-size: 24px;
+    margin-right: 2vw;
+}
+
+.sidebarSearch {
+    border-top: 1px solid lightgray;
+    border-right: 1px solid lightgray;
+    ;
+    border-bottom: 1px solid lightgray;
+    display: flex;
+    align-items: center;
+    background-color: whitesmoke;
+    height: 39px;
+    padding: 40px;
+}
+
+.sidebarSearchContainer {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    width: 100%;
+    height: 35px;
+    border-radius: 20px;
+}
+
+.sidebarSearchContainer .MuiSvgIcon-root {
+    color: rgb(57, 255, 20);
+}
+
+.sidebarSearchContainer>input {
+    border: none;
+    margin-left: 10px;
+    outline-width: 0px;
+    width: 100%;
+}
+
+.sidebarChat {
+    border-right: 1px solid lightgray;
+    ;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+    border-bottom: 1px solid lightgray;
+}
+
+.sidebarChat h2 {
+    font-size: 20px;
+}
+
+.profileAvatar {
+    max-width: 50%;
+}
+
+.shadow .profileContainer {
+    padding: 20px;
+}
+
+.shadow {
+    background-color: white;
+    box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.messengerChat {
+    display: flex;
+    flex-direction: column;
+    flex: 0.85;
+}
+
+.chatHeader {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    background: whitesmoke;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #EAEAEA, whitesmoke);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #EAEAEA, #F2F2F2,whitesmoke); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    background-repeat: repeat;
+    background-position: center;
+}
+
+.chatHeaderInfo {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.chatHeaderInfo>h3 {
+    font-weight: 500px;
+    margin-bottom: 5px;
+}
+
+.chatHeaderInfo>p {
+    color: gray;
+}
+
+.chatBody {
+    flex: 1;
+    overflow: scroll;
+    overflow-x: hidden;
+    padding: 30px;
+    max-height: 500px;
+}
+
+.chatMessage {
+    position: relative;
+    font-size: 16px;
+    padding: 10px;
+    width: fit-content;
+    border-radius: 10px;
+    background-color: #343a40;
+    margin-bottom: 30px;
+    color: whitesmoke;
+}
+
+.chatTime {
+    margin-left: 10px;
+    font-size: xx-small;
+}
+
+.chatName {
+    color: rgb(57, 255, 20);
+    position: absolute;
+    font-weight: 800;
+    font-size: x-small;
+    top: -15px;
+    left: 3px
+}
+
+.chatReciever {
+    margin-left: auto;
+    background-color: rgb(57, 255, 20);;
+}
+
+.chatFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 62px;
+    border-top: 1px solid lightgray
+}
+
+.chatFooter > form {
+    display: flex;
+    flex: 1;
+}
+
+.chatFooter > form > input {
+    flex: 1;
+    border-radius: 30px;
+    padding: 10px;
+    border: none;
+}
+
+.chatFooter > form > button {
+    display: none;
+}
+
+.chatFooter .MuiSvgIcon-root {
+    padding: 2px;
+    color: #343a40;
+}
+
+@media (max-width: 991px) {
+    /* .container.messenger {
+        margin-top: 0px !important;
+    } */
+    .messengerSidebar {
+        flex: 1;
+    }
+}

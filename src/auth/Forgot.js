@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../core/Layout'
+import Layout from '../core/layouts/Layout'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -53,7 +53,8 @@ const Forgot = ({ history }) => {
         </form>
     );
 
-    return (<Layout>
+    return (
+    <Layout>
         <div className="col-md-6 offset-md-3">
             <ToastContainer />
             <h1 className="p-5 text-center">Forgot Password</h1>

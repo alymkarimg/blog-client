@@ -1,8 +1,8 @@
 import React, { createContext, Component, useEffect, useState } from 'react';
-import { isEdit, getCookie } from '../auth/Helpers'
+import { isEdit, getCookie } from '../helpers/Default'
 import { toast } from 'react-toastify'
 import axios from 'axios'
-import { removeQuery } from '../auth/Helpers';
+import { removeQuery } from '../helpers/Default';
 
 export const EditableAreaContext = createContext(null);
 

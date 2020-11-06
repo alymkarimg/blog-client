@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import jwt from 'jsonwebtoken'
-import Layout from '../core/Layout'
+import Layout from '../core/layouts/Layout'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
@@ -40,7 +40,7 @@ const Reset = ({ match }) => {
             data: { password, confirmPassword, resetPasswordLink: token }
         }).then(response => {
 
-            toast.success(response.message);
+            toast.success(response.data.message);
             setValues({ ...values, [buttonText]: 'Done' })
 
         }).catch(error => {
@@ -73,7 +73,8 @@ const Reset = ({ match }) => {
         </form>
     );
 
-    return (<Layout>
+    return (
+    <Layout>
         <div className="col-md-6 offset-md-3">
             <ToastContainer />
             <h1 className="p-5 text-center">Hey, {user ? user.firstname + " " + user.surname : ""}, please enter your new password</h1>

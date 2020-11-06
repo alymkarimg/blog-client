@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Layout from '../core/Layout';
-import { updateUserCookie, isAuth, getCookie, signout } from '../auth/Helpers'
+import Layout from './layouts/Layout';
+import { updateUserCookie, isAuth, getCookie, signout } from '../helpers/Default'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-import EditableArea from './EditableArea';
+import EditableArea from './components/EditableArea';
 
-const CreateBlog = ({ history }) => {
+const CreateProfile = ({ history }) => {
     let user = isAuth();
     const [values, setValues] = useState({
         firstname: '',
@@ -113,51 +113,65 @@ const CreateBlog = ({ history }) => {
     }
 
     const updateForm = () => (
-        <div>
+        <div className="shadow">
             <div className="row">
-                <div className="form-group offset-md-4 col-md-4 text-center">
-                    <label className="text-muted">{email}</label>
-                </div>
-                <div className="form-group offset-md-4 col-md-4 text-center">
-                    <label className="text-muted">{role}</label>
+                <div className="form-group col-md-12">
+                    <h1 style={{ color: "Whitesmoke", background: "#343a40", padding: "25px" }}>Welcome, Alym</h1>
                 </div>
             </div>
+            <div className="profileContainer">
+                <div className="row">
+                    <div className="form-group offset-md-2 col-md-8 text-center">
+                        <img
+                            src={'https://pyxis.nymag.com/v1/imgs/630/6e0/eb215ad90cd826b9e57ff505f54c5c7228-07-avatar.rhorizontal.w700.jpg'}
+                            alt="avatar" className="profileAvatar img-responsive" />
+                    </div>
 
-            <form className="row">
-                <div className="form-group col-xs-12 col-sm-4">
-                    <label className="text-muted">Firstname*</label>
-                    <input type="text" className="form-control" onChange={handleChange('firstname')} value={firstname} />
-                </div>
-                <div className="form-group col-xs-12 col-sm-4">
-                    <label className="text-muted">Surname*</label>
-                    <input type="text" className="form-control" onChange={handleChange('surname')} value={surname} />
-                </div>
-                <div className="form-group col-xs-12 col-sm-4">
-                    <label className="text-muted">Username*</label>
-                    <input type="text" className="form-control" onChange={handleChange('username')} value={username} />
-                </div>
-
-                <div className="form-group col-sm-12">
-                    <label className="text-muted">Biography</label>
-                    <textarea rows={5} className="form-control" onChange={handleChange('description')} value={description} />
+                    <div className="form-group offset-md-4 col-md-4 text-center">
+                        <label className="text-muted">{email}</label>
+                    </div>
+                    <div className="form-group offset-md-4 col-md-4 text-center">
+                        <label className="text-muted">{role}</label>
+                    </div>
                 </div>
 
-                <div className="form-group col-sm-3">
-                    <button className="btn btn-secondary" onClick={changePassword}>{showPassword ? "Keep Password" : "Change Password"}</button>
+                <form className="row">
+                    <div className="form-group col-xs-12 col-sm-4">
+                        <label className="text-muted">Firstname*</label>
+                        <input type="text" className="form-control" onChange={handleChange('firstname')} value={firstname} />
+                    </div>
+                    <div className="form-group col-xs-12 col-sm-4">
+                        <label className="text-muted">Surname*</label>
+                        <input type="text" className="form-control" onChange={handleChange('surname')} value={surname} />
+                    </div>
+                    <div className="form-group col-xs-12 col-sm-4">
+                        <label className="text-muted">Username*</label>
+                        <input type="text" className="form-control" onChange={handleChange('username')} value={username} />
+                    </div>
+
+                    <div className="form-group col-sm-12">
+                        <label className="text-muted">Biography</label>
+                        <textarea rows={5} className="form-control" onChange={handleChange('description')} value={description} />
+                    </div>
+
+                    <div className="form-group col-sm-3">
+                        <button className="btn btn-secondary" onClick={changePassword}>{showPassword ? "Keep Password" : "Change Password"}</button>
+                    </div>
+
+                    {showPassword && (<div className="form-group col-xs-12 col-sm-4">
+                        <input type="text" className="form-control" onChange={handleChange('password')} placeholder="Enter password" value={password} />
+                    </div>)}
+
+                    {showPassword && (<div className="form-group col-xs-12 col-sm-4">
+                        <input type="text" className="form-control" onChange={handleChange('confirmPassword')} placeholder="Confirm password" value={confirmPassword} />
+                    </div>)}
+                </form>
+                <div className="row">
+                    <div className="form-group col-sm-4">
+                        <button className="btn btn-primary" onClick={clickSubmit}>{buttonText}</button>
+                    </div>
                 </div>
 
-                {showPassword && (<div className="form-group col-xs-12 col-sm-4">
-                    <input type="text" className="form-control" onChange={handleChange('password')} placeholder="Enter password" value={password} />
-                </div>)}
-
-                {showPassword && (<div className="form-group col-xs-12 col-sm-4">
-                    <input type="text" className="form-control" onChange={handleChange('confirmPassword')} placeholder="Confirm password" value={confirmPassword} />
-                </div>)}
-            </form>
-            <div className="row">
-                <div className="form-group col-sm-4">
-                    <button className="btn btn-primary" onClick={clickSubmit}>{buttonText}</button>
-                </div>
             </div>
         </div>
     );
@@ -170,4 +184,4 @@ const CreateBlog = ({ history }) => {
         </Layout>
     )
 };
-export default CreateBlog;
+export default CreateProfile;

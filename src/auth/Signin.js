@@ -1,14 +1,14 @@
 import React, { useState, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Layout from '../core/Layout'
-import { authenticate, isAuth } from './Helpers'
+import Layout from '../core/layouts/Layout'
+import { authenticate, isAuth } from '../helpers/Default'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-import Google from './Google'
+import Google from './components/Google'
 import { GlobalContext } from '../contexts/GlobalContext'
-import EditableArea from '../core/EditableArea'
-import Facebook from './Facebook'
+import EditableArea from '../core/components/EditableArea'
+import Facebook from './components/Facebook'
 
 const Signin = ({ history }) => {
 
@@ -110,7 +110,8 @@ const Signin = ({ history }) => {
         }
     };
 
-    return (<Layout>
+    return (
+    <Layout>
         <div className="row">
             <div className="col-md-3">
                 <ToastContainer />

@@ -1,8 +1,8 @@
 import React, { createContext, Component, useEffect, useState } from 'react';
-import { isEdit, getCookie, isAuth } from '../auth/Helpers'
+import { isEdit, getCookie, isAuth } from '../helpers/Default'
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios'
-import { removeQuery } from '../auth/Helpers';
+import { removeQuery } from '../helpers/Default';
 
 export const GlobalContext = createContext(null);
 

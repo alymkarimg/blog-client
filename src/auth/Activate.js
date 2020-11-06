@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import Layout from '../core/Layout';
+import Layout from '../core/layouts/Layout';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { ToastContainer, toast } from 'react-toastify';
@@ -54,7 +54,8 @@ const ActivateAccount = ({match}) => {
         </div>
     )
 
-    return (<Layout>
+    return (
+    <Layout>
         <ToastContainer />
         <div className="col-md-6 offset-md-3">
             {activationLink()}
