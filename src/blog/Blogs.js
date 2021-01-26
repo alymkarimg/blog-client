@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../core/layouts/Layout'
+import Layout from '../layouts/Layout'
 import BlogCard from './components/BlogCard'
 import { useState, useEffect } from 'react';
 import axios from 'axios'
@@ -16,6 +16,7 @@ import Avatar from '@material-ui/core/Avatar';
 import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
+import TextField from '@material-ui/core/TextField';
 import CardContent from '@material-ui/core/CardContent';
 
 const Blogs = () => {
@@ -69,8 +70,14 @@ const Blogs = () => {
                 <div className="col-md-12">
                     <EditableArea fade={true} pathname="/blog" guid="EA_blog_title"></EditableArea>
                 </div>
+                {/* <div className="col-md-12" style={{ marginBottom: "10px" }}>
+                    <p>Search</p>
+                    <div style={{ width: "33%" }}>
+                        <TextField id="search_blogs" fullWidth />
+                    </div>
+                </div> */}
                 <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
-                    <div style={ {MarginRight: "15px" }}>
+                    <div style={{ MarginRight: "15px", MarginLeft: "-15px", marginBottom: "10px" }}>
                         <p>Sort</p>
                         <div className="sort" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
                             <SimpleSelect value="" sort="Newest listed" title="By" menuitems={["Most popular", "Newest listed", "Oldest listed"]}></SimpleSelect>
@@ -87,15 +94,15 @@ const Blogs = () => {
                     </div>
                 </div>
                 <div className="row col-md-12">
-                    <div className="col-md-8">
+                    <div className="col-md-9">
                         {posts.map((post, i) => {
 
                             if (i < 1) {
                                 return (
                                     <React.Fragment>
-                                            <div className="fade-in" style={{ marginBottom: "20px" }}>
-                                                <BlogCard post={post} />
-                                            </div>
+                                        <div className="fade-in" style={{ marginBottom: "20px" }}>
+                                            <BlogCard post={post} />
+                                        </div>
                                     </React.Fragment>
                                 )
                             } else {
@@ -107,7 +114,7 @@ const Blogs = () => {
                             }
                         })}
                     </div>
-                    <div className="col-md-4 fade-in ml-auto" style={{
+                    <div className="col-md-3 fade-in ml-auto" style={{
                         paddingRight: "0px",
                         marginBottom: "20px",
                         position: "relative"

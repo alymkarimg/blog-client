@@ -8,6 +8,27 @@ body {
     background-color: #ededed;
 }
 
+.ck.ck-balloon-panel.ck-balloon-panel_visible {
+    z-index: 1400;
+    
+}
+
+.create_blog_container_wrapper p {
+    color: black !important;
+}
+
+.create_blog_container_wrapper .ck p {
+    color: unset !important;
+}
+
+.MuiDialog-paperWidthSm {
+    max-width: 900px !important;
+}
+
+.fileContainer {
+    box-shadow: none !important;
+}
+
 /* The emerging W3C standard
    that is currently Firefox-only */
    * {

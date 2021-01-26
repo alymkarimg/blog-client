@@ -1,19 +1,19 @@
 import React, { useState, useEffect, Fragment, useContext } from 'react';
 import reactDOM from 'react-dom';
 import { Link, withRouter } from 'react-router-dom';
-import { isEdit, isAuth, signout } from '../../helpers/Default';
-import EditableArea from '../../core/components/EditableArea'
-import { EditableAreaContext } from '../../contexts/EditableAreaContext'
-import Sidebar from '../components/Sidebar'
-import Banner from '../components/AnimatedBanner'
+import { isEdit, isAuth, signout } from '../helpers/Default';
+import EditableArea from '../core/components/EditableArea'
+import { EditableAreaContext } from '../contexts/EditableAreaContext'
+import Sidebar from '../core/components/Sidebar'
+import Banner from '../core/components/AnimatedBanner'
 import axios from 'axios'
 import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
+import '../shop/node_modules/react-toastify/dist/ReactToastify.min.css'
 import { Drawer, makeStyles } from '@material-ui/core';
-import '../../assets/css/Style.css'
-import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../../helpers/Default'
-import TextField from '@material-ui/core/TextField'
+import '../assets/css/Style.css'
+import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../helpers/Default'
 import { Navbar, Nav, NavDropdown, Line, Form, FormControl, Button } from 'react-bootstrap'
+import { Switch, FormGroup, FormControlLabel } from '@material-ui/core';
 
 const Layout = function ({ children, match, history }) {
 
@@ -24,14 +24,20 @@ const Layout = function ({ children, match, history }) {
 
     const [values, setValues] = useState({
         sidebarIsOpen: false,
-        adminButtonText: '',
-        HomepageActive: false
+        adminButtonText: 'Close Menu',
+        HomepageActive: false,
+        editSwitchText: "edit",
+        checked: false
     })
 
-    let { sidebarIsOpen, adminButtonText, HomepageActive } = values
+    let { sidebarIsOpen, adminButtonText, HomepageActive, checked } = values
 
     const toggleDrawer = () => {
         setValues({ ...values, sidebarIsOpen: !sidebarIsOpen })
+    }
+
+    const toggleEditMode = () => {
+
     }
 
     useEffect(() => {
@@ -90,9 +96,9 @@ const Layout = function ({ children, match, history }) {
                     <Navbar.Brand><Link to="/" className="nav-link" style={isActive('/', match)}>Home</Link></Navbar.Brand>
                     <Navbar.Collapse id="basic-navbar-nav">
                         {/* Blogs button  */}
-                            <Nav.Link className="nav-item" >
-                                <Link className="nav-link" to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
-                            </Nav.Link>
+                        <Nav.Link className="nav-item" >
+                            <Link className="nav-link" to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
+                        </Nav.Link>
                     </Navbar.Collapse>
                     <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
                         <Nav className="mr-0">
@@ -108,6 +114,10 @@ const Layout = function ({ children, match, history }) {
                                 <Nav.Link className="nav-item" >
                                     <Link className="nav-link" to="/admin/home" style={isActive('/admin/home', match)} >{`Admin home`}</Link>
                                 </Nav.Link>
+                            )}
+                            {/* Open admin sidebar page */}
+                            {isAuth() && isAuth().category.title == 'admin' && (
+                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={toggleDrawer}>{adminButtonText}</button>
                             )}
                             {/* profile page */}
                             {isAuth() && (
@@ -131,12 +141,27 @@ const Layout = function ({ children, match, history }) {
                                 }}>Signout</button>
                             )}
 
+                            <FormGroup row>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={checked}
+                                            onChange={toggleEditMode}
+                                            name="Edit"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Edit"
+                                />
+                            </FormGroup>
+
                             {/* Publish */}
-                            {isEdit() && isAuth() && isAuth().category.title == 'admin' && (
-                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
-                                    () => updatePublishEditableAreas()
-                                }>Publish</button>
-                            )}
+                            {
+                                isEdit() && isAuth() && isAuth().category.title == 'admin' && (
+                                    <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
+                                        () => updatePublishEditableAreas()
+                                    }>Publish</button>
+                                )}
 
                             {/* Edit page */}
                             {!isEdit() && isAuth() && isAuth().category.title == 'admin' && (
@@ -145,11 +170,6 @@ const Layout = function ({ children, match, history }) {
                                         search: '?edit=true'
                                     })
                                 }}>Edit</button>
-                            )}
-
-                            {/* Open admin sidebar page */}
-                            {isAuth() && isAuth().category.title == 'admin' && (
-                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={toggleDrawer}>{adminButtonText}</button>
                             )}
                         </Nav>
                         <Form inline>

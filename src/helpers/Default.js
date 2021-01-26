@@ -1,6 +1,11 @@
 import cookie from 'js-cookie';
 import { createHistory } from 'history'
 
+
+String.prototype.capitalize = function() {
+    return this.charAt(0).toUpperCase() + this.slice(1)
+}
+
 // set in cookie
 export const setCookie = (key, value) => {
     if (window !== 'undefined') {
@@ -70,6 +75,11 @@ export const isAuth = () => {
     }
 }
 
+export const isAdmin = () => {
+    return isAuth() && isAuth().category.title === 'admin'
+}
+
+
 // signout
 export const signout = (next) => {
     removeCookie('token')
@@ -137,4 +147,34 @@ export const isActive = (path, match) => {
             return { color: '#fdfdfb' };
         }
     }
+}
+
+export const getFieldsFromPrototype = (prototype, includeEditableArea) => {
+    return Object.keys(prototype).filter((property) => {
+        
+        // delete any fields starting with M
+        // delete slug, _id, v, editable area
+  
+        if(property == "mtitle" || property == "mdescription" || 
+        property == "_id" || property == "__v" 
+        || property == "slug"){
+            return false
+        }
+
+        if(includeEditableArea && property == "editableArea"){
+            return true
+        }
+  
+        return true
+  
+    })
+} 
+
+export const arrayToObject = (array) => {
+    var obj = {};
+    array.forEach(function(data){
+        obj[data[0]] = data[1]
+    });
+    
+    return obj
 }

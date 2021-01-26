@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Layout from '../core/layouts/Layout'
+import Layout from '../layouts/Layout'
 import { authenticate, isAuth } from '../helpers/Default'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'

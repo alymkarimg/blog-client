@@ -13,10 +13,9 @@ import { PrivateRoute, AdminRoute } from './auth/components/PrivateOrAdminRoute'
 import EditableAreaContextProvider from './contexts/EditableAreaContext'
 import GlobalContextProvider from './contexts/GlobalContext';
 import Blogs from './blog/Blogs';
+import Shop from './shop/Shop';
 import AdminBlogs from './admin/AdminBlog'
 import BlogLayout from './blog/layouts/BlogLayout'
-
-
 
 const Routes = () => {
     return (
@@ -33,6 +32,7 @@ const Routes = () => {
                         <Route path="/admin/blog" exact component={AdminBlogs} />
                         <Route path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
                         <Route path="/blogs" exact component={Blogs} />
+                        <Route path="/shop" exact component={Shop} />
                         <PrivateRoute path="/profile" exact component={Profile} />
                         <PrivateRoute path="/messenger" exact component={Messenger} />
                         <AdminRoute path="/admin/home" exact component={AdminHome} />

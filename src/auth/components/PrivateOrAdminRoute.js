@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { isAuth } from '../../helpers/Default';
+import { isAuth, isAdmin } from '../../helpers/Default';
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route {...rest} render={
@@ -19,7 +19,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const AdminRoute = ({ component: Component, ...rest }) => {
     return (
         <Route {...rest} render={
-            props => isAuth() && isAuth().category.title === 'admin' ? <Component {...props} /> : <Redirect to={{
+            props => isAdmin() ? <Component {...props} /> : <Redirect to={{
                 pathname: '/signin',
                 state: { from: props.location }
             }} />

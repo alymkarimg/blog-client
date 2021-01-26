@@ -4,9 +4,9 @@ import 'bootstrap/dist/css/bootstrap.css'
 import Routes from './Routes';
 
 ReactDOM.render(
-  <div>
+  <div className="blog">
     <Routes />
   </div>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
 

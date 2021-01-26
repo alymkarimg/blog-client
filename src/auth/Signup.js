@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import Layout from '../core/layouts/Layout';
+import Layout from '../layouts/Layout';
 import { isAuth } from '../helpers/Default'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
@@ -19,10 +19,7 @@ const Signup = () => {
 
     const { firstname, surname, username, email, password, confirmPassword, buttonText } = values;
 
-    const handleChange = (name) => ((event) => {
-        // console.log(event.target.value);
-        setValues({ ...values, [name]: event.target.value })
-    })
+ 
 
     const clickSubmit = (event) => {
         event.preventDefault()

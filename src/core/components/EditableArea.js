@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ReactDOM, render } from "react-dom";
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.min.css'
+import 'react-toastify/dist/ReactToastify.css'
 import DOMPurify from 'dompurify';
 import { isEdit, getCookie } from '../../helpers/Default'
 import { EditableAreaContext } from '../../contexts/EditableAreaContext'
@@ -63,7 +63,7 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = ({ pathname, guid, size, fade = false, useloading = false }) => {
+const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, alwaysOn= false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
@@ -124,7 +124,7 @@ const EditableArea = ({ pathname, guid, size, fade = false, useloading = false }
             );
         }
         // if the area is not loading and is in edit mode and is focused
-        else if (isEdit()) {
+        else if (isEdit() || alwaysOn) {
             return (
                     <CKEditor
                         data-pathname={pathname} 

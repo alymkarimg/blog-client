@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Layout from '../core/layouts/Layout'
+import Layout from '../layouts/Layout'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'

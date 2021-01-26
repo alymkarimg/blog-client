@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../core/layouts/Layout'
+import Layout from '../layouts/Layout'
 import AdminDashboardCard from './components/AdminDashboardCard'
 
 const size = {width:"400px", height:"345px"};

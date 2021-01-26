@@ -9,6 +9,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Select from '@material-ui/core/Select';
 import Checkbox from '@material-ui/core/Checkbox';
 import Chip from '@material-ui/core/Chip';
+import { useEffect } from 'react';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -53,16 +54,16 @@ function getStyles(name, content, theme) {
     };
 }
 
-export default function MultipleSelect({ title, menuitems }) {
+export default function MultipleSelect({ title, menuitems, value, onChange }) {
     const classes = useStyles();
     const theme = useTheme();
-    const [values, setValues] = React.useState({ content: menuitems, selected: [] });
+    const [values, setValues] = React.useState({ content: menuitems, selected: value});
 
     let { content, selected } = values;
 
-    const handleChange = (event) => {
-        setValues({ ...values, selected: event.target.value });
-    };
+    useEffect(() => {
+        setValues({...values, selected: value})
+    }, [value])
 
     return (
         <React.Fragment>
@@ -73,7 +74,7 @@ export default function MultipleSelect({ title, menuitems }) {
                     id="demo-mutiple-checkbox"
                     multiple
                     value={selected}
-                    onChange={handleChange}
+                    onChange={onChange}
                     input={<Input />}
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, Redirect } from 'react-router-dom'
-import Layout from './layouts/Layout';
+import Layout from '../layouts/Layout';
 import { updateUserCookie, isAuth, getCookie, signout } from '../helpers/Default'
 import axios from 'axios'
 import { ToastContainer, toast } from 'react-toastify'
