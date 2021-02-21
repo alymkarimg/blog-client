@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function EnhancedTable({ headCells, title, deletepathname, getURL }) {
+export default function EnhancedTable({ title, deletepathname, getURL }) {
 
   const classes = useStyles();
   const size = { width: "300px", height: "300px" }
@@ -130,16 +130,8 @@ export default function EnhancedTable({ headCells, title, deletepathname, getURL
       url: getURL,
     }).then(response => {
 
-      let prototype = response.data.prototype
-
       setValues({
-        ...values, prototype, rows: response.data.blogs.map(item => {
-          // get common properties of item
-          var common = Object.keys(prototype).filter({}.hasOwnProperty.bind(item));
-          // check vs prototype
-          var prototypedItem = common.map(k => item[k]);
-          return prototypedItem
-        })
+        ...values, prototype: response.data.prototype
       })
 
     }).catch(error => {
@@ -304,16 +296,14 @@ if (prototype != null) {
 else {
   return (
     <div style={size} className={`loading loader`} >
-      <div class="loader-wheel"></div>
-      <div class="loader-text"></div>
+      <div className="loader-wheel"></div>
+      <div className="loader-text"></div>
     </div>
   );
 }
 }
 
 EnhancedTable.propTypes = {
-  prototype: PropTypes.object.isRequired,
-  rows: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
   getURL: PropTypes.string.isRequired,
   deletepathname: PropTypes.string.isRequired

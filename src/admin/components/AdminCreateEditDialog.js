@@ -20,7 +20,7 @@ const FullScreenDialog = ({ open, prototype, handleClose, handleCreateRow, getUR
   })
 
   var textfieldsArray = getFieldsFromPrototype(prototype, true)
-  const [values, setValues] = useState(arrayToObject(textfieldsArray))
+  const [values, setValues] = useState(arrayToObject(textfieldsArray.map(prop => ({ prop }))))
 
   const createForm = (arr) => {
     const form = [];
@@ -47,7 +47,7 @@ const FullScreenDialog = ({ open, prototype, handleClose, handleCreateRow, getUR
         form.push(<div className="col-md-12" >
           <p>Content</p>
           <div style={{ marginBottom: "10px", marginLeft: "-10px" }}>
-            <EditableArea pathname={prototype.editableAreaPathname} guid="create" alwaysOn={true} />
+            <EditableArea alwaysOn={true} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`/admin/blog`} guid="create" />
           </div>
         </div>)
       }

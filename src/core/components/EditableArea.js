@@ -8,8 +8,7 @@ import DOMPurify from 'dompurify';
 import { isEdit, getCookie } from '../../helpers/Default'
 import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import '../../assets/css/Style.css'
-
-import CKEditor from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import InlineEditor from "@ckeditor/ckeditor5-build-inline/build/ckeditor.js";
 import { useRef } from 'react';
 
@@ -87,14 +86,13 @@ const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, 
             url: `${process.env.REACT_APP_API}/editable-area`,
             data: values,
         }).then(response => {
+        
             setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
+
         }).catch(error => {
 
             toast.error(error)
 
-            // error.response.data.errors.forEach((error) => {
-            //     toast.error(error.message)
-            // })
         })
     }, [])
 

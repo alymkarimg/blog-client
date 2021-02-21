@@ -2,7 +2,7 @@ import cookie from 'js-cookie';
 import { createHistory } from 'history'
 
 
-String.prototype.capitalize = function() {
+String.prototype.capitalize = function () {
     return this.charAt(0).toUpperCase() + this.slice(1)
 }
 
@@ -134,9 +134,9 @@ export const isFullscreen = (match) => {
 }
 
 export const isActive = (path, match) => {
-    if(isHomepageActive(match)){
+    if (isHomepageActive(match)) {
         if (match.path === path) {
-            return { color: '#39ff14'};
+            return { color: '#39ff14' };
         } else {
             return { color: '#fdfdfb' };
         }
@@ -151,30 +151,29 @@ export const isActive = (path, match) => {
 
 export const getFieldsFromPrototype = (prototype, includeEditableArea) => {
     return Object.keys(prototype).filter((property) => {
-        
+
         // delete any fields starting with M
         // delete slug, _id, v, editable area
-  
-        if(property == "mtitle" || property == "mdescription" || 
-        property == "_id" || property == "__v" 
-        || property == "slug"){
+
+        if (property == "mtitle" || property == "mdescription" ||
+            property == "_id" || property == "__v"
+            || property == "slug") {
             return false
         }
 
-        if(includeEditableArea && property == "editableArea"){
+        if (includeEditableArea && property == "editableArea") {
             return true
         }
-  
-        return true
-  
-    })
-} 
 
-export const arrayToObject = (array) => {
-    var obj = {};
-    array.forEach(function(data){
-        obj[data[0]] = data[1]
-    });
-    
-    return obj
+        return true
+
+    })
+}
+
+export const arrayToObject = (arr) => {
+    var result = {};
+    for (var i = 0; i < arr.length; i++) {
+        result[arr[i].key] = arr[i].value;
+    }
+    return result
 }

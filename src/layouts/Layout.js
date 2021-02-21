@@ -8,7 +8,7 @@ import Sidebar from '../core/components/Sidebar'
 import Banner from '../core/components/AnimatedBanner'
 import axios from 'axios'
 import { ToastContainer } from 'react-toastify'
-import '../shop/node_modules/react-toastify/dist/ReactToastify.min.css'
+import '../../node_modules/react-toastify/dist/ReactToastify.min.css'
 import { Drawer, makeStyles } from '@material-ui/core';
 import '../assets/css/Style.css'
 import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../helpers/Default'
