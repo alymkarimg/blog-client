@@ -13,7 +13,7 @@ const AdminBlog = () => {
     return (
         <Layout>
             <AdminTable
-                title="Manage blogs"
+                name="Blog"
                 deletepathname="blogs/deleteAdmin"
                 getURL={getURL}
                 ></AdminTable>

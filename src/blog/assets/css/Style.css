@@ -1,0 +1,6 @@
+.MuiCardHeader-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 4 1;
+}

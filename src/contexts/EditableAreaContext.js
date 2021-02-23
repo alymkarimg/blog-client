@@ -3,6 +3,7 @@ import { isEdit, getCookie } from '../helpers/Default'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { removeQuery } from '../helpers/Default';
+import EditableArea from '../core/components/EditableArea';
 
 export const EditableAreaContext = createContext(null);
 
@@ -12,16 +13,12 @@ const EditableAreaContextProvider = (props) => {
         editableAreas: [],
     })
 
-    const { publishEditableAreas, editableAreas } = editableAreavalues
+    var { publishEditableAreas, editableAreas } = editableAreavalues
 
     // add a value to the editable area state
     const updateEditableAreas = (editableArea) => {
-        setValues({ ...editableAreavalues, editableAreas: editableAreas.push(editableArea) })
-    }
-
-    // for a button in the navigation to update publish editable area state
-    const updatePublishEditableAreas = () => {
-        setValues({ ...editableAreavalues, publishEditableAreas: true })
+        editableAreas = editableAreas.concat([editableArea])
+        setValues({ ...editableAreavalues, editableAreas })
     }
 
     // when pubisheditableareas changes, update db if there are editable areas to update
@@ -48,6 +45,13 @@ const EditableAreaContextProvider = (props) => {
         }
     }, [publishEditableAreas])
 
+
+    // for a button in the navigation to update publish editable area state
+    const updatePublishEditableAreas = () => {
+        setValues({ ...editableAreavalues, publishEditableAreas: true })
+    }
+
+    
     return (
         <EditableAreaContext.Provider value={{ editableAreavalues, updateEditableAreas, updatePublishEditableAreas }}>
             {props.children}

@@ -16,21 +16,26 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { getImageURL } from '../../helpers/Default'
+import { getImageURL, toHumanString, truncate } from '../../helpers/Default'
+import EditableArea from '../../core/components/EditableArea';
+import '../assets/css/Style.css'
 
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        justifyContent: 'space-between'
     },
     details: {
         display: 'flex',
         flexDirection: 'column',
+        flex: '3 1',
+        justifyContent: 'space-between'
     },
     content: {
-        flex: '1 0 auto',
+        flex: '2 1',
     },
     cover: {
-        width: 400,
+        maxWidth: "25%",
     },
     controls: {
         display: 'flex',
@@ -60,6 +65,11 @@ const useStyles = makeStyles((theme) => ({
     avatar: {
         backgroundColor: red[500],
     },
+    actions: {
+        justifyContent: 'space-between',
+        width: '100%',
+        display: 'flex'
+    }
 }));
 
 function changeBackground(e) {
@@ -70,7 +80,7 @@ function removeBackground(e) {
     e.target.className = '';
 }
 
-export default function BlogCard({ post }) {
+export default function BlogCard({ blog }) {
     const classes = useStyles();
     const [values, setValues] = useState({
         expanded: false,
@@ -92,37 +102,42 @@ export default function BlogCard({ post }) {
     return (
 
         <Card className={classes.root
-} raised = { true} >
-    <div className={classes.details}>
-        <CardHeader
-            avatar={
-                <Avatar aria-label={title} className={classes.avatar}></Avatar>
-            }
-            title={title}
-            subheader={datePublished}
-        />
-        <CardContent>
-            <Typography style={{ flex: 1 }} variant="body2" color="textSecondary" component="p">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit corrupti temporibus libero ut dolorum numquam, voluptatem animi ad nisi placeat.{contentSnippet}...
-                        </Typography>
-            <Link to='/auth/password/forgot' style={{ margin: "30px 0px" }} className="btn btn-sm btn-outline-info"> Read more </Link>
-        </CardContent>
-        <div className={classes.controls}>
-            <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
-            </CardActions>
-        </div>
-    </div>
-    <CardMedia
-        className={classes.cover}
-        image={getImageURL("paella.jpg")}
-        title="Paella dish"
-    />
-            </Card >
+        } raised={true} >
+            <div className={classes.details}>
+                <CardHeader
+                    avatar={
+                        <Avatar aria-label={title} className={classes.avatar}></Avatar>
+                    }
+                    title={<Typography gutterBottom variant="h5" component="h2">
+                    {blog.title}
+                </Typography>}
+                    subheader={<Typography gutterBottom variant="p" component="p">
+                    {toHumanString(blog.publishedDate)}
+                </Typography>}
+                />
+                <CardContent className={classes.blogCard}>
+                    <EditableArea truncate={400} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`blog editableArea`} guid={`blog ${blog.slug}`} />
+                </CardContent>
+                <div className={classes.controls}>
+                    <CardActions className={classes.actions} disableSpacing>
+                        <div>
+                            <IconButton aria-label="add to favorites">
+                                <FavoriteIcon />
+                            </IconButton>
+                            <IconButton aria-label="share">
+                                <ShareIcon />
+                            </IconButton>
+                        </div>
+                        <Link to='/auth/password/forgot' style={{ margin: "20px 10px" }} className="btn btn-sm btn-outline-info"> Read more </Link>
+                    </CardActions>
+                </div>
+            </div>
+            <CardMedia
+                component={"img"}
+                className={classes.cover}
+                image={getImageURL("paella.jpg")}
+                title="Paella dish"
+            />
+        </Card >
     )
 }

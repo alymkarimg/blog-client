@@ -1,5 +1,6 @@
 import cookie from 'js-cookie';
-import { createHistory } from 'history'
+import axios from "axios";
+import { toast } from 'react-toastify'
 
 
 String.prototype.capitalize = function () {
@@ -94,6 +95,21 @@ export const isEdit = () => {
     return editQuery ? true : false;
 }
 
+export const isAdminArea = () => {
+    let url = window.location.href;
+    //get rid of the trailing / before doing a simple split on /
+    var url_parts = url.replace(/\/\s*$/, '').split('/');
+    //since we do not need example.com
+    url_parts.shift();
+
+    if(url_parts[1] == "admin"){
+        return true
+    }else{
+        return false
+    }
+
+}
+
 export const removeQuery = (queryName) => {
     let search = window.location.search;
     let params = new URLSearchParams(search);
@@ -149,25 +165,45 @@ export const isActive = (path, match) => {
     }
 }
 
-export const getFieldsFromPrototype = (prototype, includeEditableArea) => {
-    return Object.keys(prototype).filter((property) => {
+export const getFieldsFromPrototype = (prototype, includeEditableArea = false) => {
+    return prototype.filter((property) => {
 
         // delete any fields starting with M
         // delete slug, _id, v, editable area
 
         if (property == "mtitle" || property == "mdescription" ||
             property == "_id" || property == "__v"
-            || property == "slug") {
+            || property == "slug" || property == "createdAt" || property == "updatedAt") {
             return false
         }
 
-        if (includeEditableArea && property == "editableArea") {
-            return true
+        if (includeEditableArea == false && property == "editableArea") {
+            return false
         }
 
         return true
 
     })
+}
+
+function isIsoDate(str) {
+    if (!/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/.test(str)) return false;
+    var d = new Date(str);
+    return d.toISOString() === str;
+}
+
+export const toHumanString = (a) => {
+
+    if (a != undefined && a.constructor === Array && a.length > 0) {
+        return a.length == 1 ? a[0] : [a.slice(0, a.length - 1).join(", "), a[a.length - 1]].join(" and ")
+    }
+    else if (isIsoDate(a)) {
+        return a.slice(0, 10);
+    }
+    else {
+        return ""
+    }
+
 }
 
 export const arrayToObject = (arr) => {
@@ -176,4 +212,8 @@ export const arrayToObject = (arr) => {
         result[arr[i].key] = arr[i].value;
     }
     return result
+}
+
+export const trunc = (string, n) => {
+    return string.substr(0, n - 1) + (string.length > n ? '&hellip;' : '');
 }

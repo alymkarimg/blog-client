@@ -17,14 +17,10 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
     var headCells = getFieldsFromPrototype(prototype).map((property) => {
 
         let column = {
-            title: property,
+            id: property,
             numeric: false,
-            disablePadding: false,
+            disablePadding: true,
             label: property.capitalize()
-        }
-
-        if (property == "title"){
-            column.disablePadding = true
         }
 
         if (property == "publishedDate"){
@@ -51,7 +47,7 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
                 </TableCell>
                 {headCells.map((headCell) => (
                     <TableCell
-                        key={headCell.title}
+                        key={headCell.id}
                         align={headCell.numeric ? 'right' : 'left'}
                         padding={headCell.disablePadding ? 'none' : 'default'}
                         sortDirection={orderBy === headCell.id ? order : false}

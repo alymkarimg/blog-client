@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useContext, Fragment } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types';
 import { ReactDOM, render } from "react-dom";
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import DOMPurify from 'dompurify';
-import { isEdit, getCookie } from '../../helpers/Default'
+import { isAdmin, isEdit, isAdminArea, getCookie, trunc } from '../../helpers/Default'
 import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import '../../assets/css/Style.css'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -62,7 +62,7 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, alwaysOn= false }) => {
+const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
@@ -86,7 +86,7 @@ const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, 
             url: `${process.env.REACT_APP_API}/editable-area`,
             data: values,
         }).then(response => {
-        
+
             setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
 
         }).catch(error => {
@@ -103,11 +103,6 @@ const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, 
         }
     }, [publishEditableAreas])
 
-    // update state when editor changes
-    const onEditorChange = (evt, editor) => {
-        setValues({ ...values, data: editor.getData() })
-    }
-
     const renderEditableArea = () => {
 
         const fadeVar = fade ? "fade-in" : ""
@@ -122,30 +117,43 @@ const EditableArea = ({ pathname, guid, size, fade = false, useloading = false, 
             );
         }
         // if the area is not loading and is in edit mode and is focused
-        else if (isEdit() || alwaysOn) {
+        else if (isEdit() && isAdmin() || alwaysOn) {
             return (
-                    <CKEditor
-                        data-pathname={pathname} 
-                        id={guid}
-                        className={`editableAreaContainer ${fadeVar}`}
-                        editor={InlineEditor}
-                        config={editorConfig}
-                        data={data}
-                        onChange={onEditorChange}
-                        onInit={editor => {
-                            console.log(Array.from(editor.ui.componentFactory.names()));
-                            // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                            //     return new UploadAdapter(loader);
-                            // };
-                        }}
-                        onBlur={() => {
-                        }}
-                        onfocus={() => {
-                        }}
-                    />
+                <CKEditor
+                    data-pathname={pathname}
+                    id={guid}
+                    className={`editableAreaContainer ${fadeVar}`}
+                    editor={InlineEditor}
+                    config={editorConfig}
+                    data={data}
+                    onChange={(evt, editor) => {
+                        if(isAdminArea()){
+                            onEditorChange(editor.getData())
+                        }
+                    }}
+                    onReady={editor => {
+                        console.log(Array.from(editor.ui.componentFactory.names()));
+                        // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                        //     return new UploadAdapter(loader);
+                        // };
+                    }}
+                    onBlur={() => {
+                    }}
+                    onfocus={() => {
+                    }}
+                />
             )
         }
         // if the area is not loading and is in view mode or is in edit mode without being focused
+        else if(truncate != false) {
+            return (
+                <div ref={myRef}
+                    className={`editableAreaContainer ${fadeVar}`} >
+                    <div dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}>
+                    </div>
+                </div>
+            )
+        }
         else {
             return (
                 <div ref={myRef}

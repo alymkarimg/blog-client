@@ -1,27 +1,37 @@
-import React, { useState } from 'react'
+import React, { useState, } from 'react'
 import ImageUploader from "react-images-upload";
+import axios from "axios";
+import { getCookie } from '../../helpers/Default'
+import DOMPurify from 'dompurify';
+import { toast } from 'react-toastify'
+import Button from '@material-ui/core/Button';
+import 'react-toastify/dist/ReactToastify.css'
+
 
 const Uploader = (props) => {
 
-    const [pictures, setPictures] = useState([]);
+    const { getURL, onImageDrop } = props
 
-    const onDrop = picture => {
-        setPictures([...pictures, picture]);
-    };
     return (
-        <ImageUploader
-            {...props}
-            withIcon={true}
-            withPreview={true}
-            singleImage={true}
-            onChange={onDrop}
-            imgExtension={[".jpg", ".gif", ".png", ".gif"]}
-            maxFileSize={5242880}
-        />
+        <form>
+            <ImageUploader
+                {...props}
+                name={"imageFile"}
+                withIcon={false}
+                withPreview={true}
+                singleImage={false}
+                onChange={(picture) => {
+                    onImageDrop(picture)
+                }}
+                imgExtension={[".jpg", ".gif", ".png"]}
+                maxFileSize={5242880}
+            />
+        </form>
     );
 }
 
 Uploader.propTypes = {
+
 };
 
 

@@ -4,11 +4,13 @@ import EditableArea from '../../core/components/EditableArea'
 import React, { useState, useEffect, useContext } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { isAdmin } from '../../helpers/Default'
+import { isAdmin, isEdit } from '../../helpers/Default'
 import Toggle from "./Toggle";
 import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom';
 import '../assets/css/Style.css'
+import { Button } from '@material-ui/core'
+import ImageUploader from '../../core/components/ImageUploader'
 
 const Banner = ({ title, size }) => {
 
@@ -18,13 +20,15 @@ const Banner = ({ title, size }) => {
     loading: true
   })
 
+  const getURL = `${process.env.REACT_APP_API}/animated-banner`;
+
   var { title, loading, animatedBannerItems: items } = values
 
   // when the component mounts, set the state
   useEffect(() => {
     axios({
       method: 'POST',
-      url: `${process.env.REACT_APP_API}/animated-banner`,
+      url: getURL,
       data: values,
     }).then(response => {
       if (response.data.errors && response.data.errors.length > 0) {
@@ -129,22 +133,36 @@ const Banner = ({ title, size }) => {
     }
   }
 
-  const bannerEditMode = () => {
-    if (isAdmin()) {
-      return (
-        <div className="bannerColumnEditor">
-          {/* Add a button to add an animated banner slide */}
-          {/* Add a button to remove the current animated banner slide */}
-          {/* Add a dropdown and toggle to control the mask property on the current banner slide */}
-          {/* Add a toggle switch to control the editable area property on the current banner slide */}
-          <Toggle color={"success"} label="Link" name="Link"></Toggle>
-          <Toggle color="primary" label="Media" name="Link"></Toggle>
-        </div>)
-      // return (
-      //   <div className="bannerSlideEditor">
+  const onImageDrop = () => {
 
-      //   </div>
-      // )
+  }
+
+  const bannerEditMode = () => {
+    if (isAdmin() && isEdit()) {
+      return (
+        <div>
+          <div className="bannerColumnEditor">
+            {/* Add a button to add an animated banner slide */}
+            {/* Add a button to remove the current animated banner slide */}
+            {/* Add a button to Change the current picture (image uploader) */}
+
+            {/* Add an expandable menu to Control the masks properties */}
+            <div className="editContainer">
+              <Button containedSizeSmall variant="contained">Add New Slide</Button>
+              <Button containedSizeSmall variant="contained" color="primary">Remove Current Slide</Button>
+              </div>
+              <div className="editContainer">
+              <Button containedSizeSmall variant="contained">Toggle Mask</Button>
+              <Button containedSizeSmall variant="contained" color="primary">Toggle Editable Area</Button>
+              </div>
+              <ImageUploader onImageDrop={onImageDrop} getURL={getURL}></ImageUploader>
+              <div className="editContainer2">
+                <Button className="bannerColumnEditorButton" containedSizeSmall variant="contained">Edit</Button>
+              </div>
+            </div>
+          </div>
+
+      )
     }
   }
 
@@ -165,7 +183,7 @@ const Banner = ({ title, size }) => {
               <div className="carousel-caption">
                 <div className="animated fadeInDown">
                   {/* pathname = bannertitle, guid = index of banner item */}
-                  <EditableArea useloading={true} fade={false} size={{ width: size.width, height: size.height }} pathname={title} guid={index}></EditableArea>
+                  <EditableArea useloading={true} fade={false} size={{ width: size.width, height: size.height }} pathname={title} guid={`${index}`}></EditableArea>
                 </div>
               </div>
             </div>

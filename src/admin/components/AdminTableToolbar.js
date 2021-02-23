@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.min.css';
 import axios from 'axios'
 import '../../assets/css/Style.css'
 
-const EnhancedTableToolbar = (props) => {
+const EnhancedTableToolbar = ({ setOpen, numSelected, name, deletepathname, selected }) => {
 
     const useToolbarStyles = makeStyles((theme) => ({
         appBar: {
@@ -47,7 +47,6 @@ const EnhancedTableToolbar = (props) => {
     }));
 
     const classes = useToolbarStyles();
-    const { numSelected, title, deletepathname, selected } = props;
 
     const handleDeleteToggle = (event, selected, deletepathname) => {
         event.preventDefault()
@@ -83,15 +82,15 @@ const EnhancedTableToolbar = (props) => {
                 </Typography>
             ) : (
                     <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                        {title}
+                        {`Manage ${name}`}
                     </Typography>
                 )}
             {numSelected == 0 && (
                 <Tooltip title="Add">
                     <IconButton onClick={(e) => {
-                        props.setOpen(true)
+                        setOpen(true)
                     }}
-                        aria-label="Add blog">
+                        aria-label={`Add ${name}`}>
                         <AddIcon />
                     </IconButton>
                 </Tooltip>

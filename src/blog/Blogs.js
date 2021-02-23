@@ -22,7 +22,7 @@ import CardContent from '@material-ui/core/CardContent';
 const Blogs = () => {
 
     const [values, setValues] = useState({
-        posts: [1, 2, 3],
+        blogs: [],
     });
 
     const useStyles = makeStyles((theme) => ({
@@ -37,7 +37,7 @@ const Blogs = () => {
 
     const classes = useStyles();
 
-    const { posts } = values;
+    const { blogs } = values;
 
     useEffect(() => {
 
@@ -45,17 +45,9 @@ const Blogs = () => {
             method: 'GET',
             url: `${process.env.REACT_APP_API}/blogs/`
         }).then(response => {
-            if (response.data.errors && response.data.errors.length > 0) {
-                response.data.errors.forEach((error) => {
-                    toast.error(error.message)
-                })
-            }
-            else if (response.data.blogs.length > 0) {
-                setValues({ ...values, posts: response.data.blogs });
-            }
-            else {
 
-            }
+                setValues({ ...values, blogs: response.data.blogs });
+
         }).catch(error => {
             console.log(error)
             error.response.data.errors.forEach((error) => {
@@ -87,31 +79,22 @@ const Blogs = () => {
                         <p>Filter</p>
                         <div className="filter" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
                             <SimpleSelect value="" title="Time" menuitems={["Past hour", "Past 24 hours", "Past week", "Past month", "Past year"]}></SimpleSelect>
-                            <MultipleSelect title="Category" menuitems={["Vegetarian", "Recipes", "Articles"]} />
-                            <MultipleSelect title="Author" menuitems={["Jane Dick", "Richard Harry", "Steve Austen"]} />
-                            <MultipleSelect title="Month" menuitems={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} />
+                            <MultipleSelect value={[]} title="Category" menuitems={["Vegetarian", "Recipes", "Articles"]} />
+                            <MultipleSelect value={[]} title="Author" menuitems={["Jane Dick", "Richard Harry", "Steve Austen"]} />
+                            <MultipleSelect value={[]} title="Month" menuitems={["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]} />
                         </div>
                     </div>
                 </div>
                 <div className="row col-md-12">
                     <div className="col-md-9">
-                        {posts.map((post, i) => {
-
-                            if (i < 1) {
-                                return (
-                                    <React.Fragment>
-                                        <div className="fade-in" style={{ marginBottom: "20px" }}>
-                                            <BlogCard post={post} />
-                                        </div>
-                                    </React.Fragment>
-                                )
-                            } else {
-                                return (
+                        {blogs.map((blog, i) => {
+                            return (
+                                <React.Fragment>
                                     <div className="fade-in" style={{ marginBottom: "20px" }}>
-                                        <BlogCard post={post} />
+                                        <BlogCard blog={blog} />
                                     </div>
-                                )
-                            }
+                                </React.Fragment>
+                            )
                         })}
                     </div>
                     <div className="col-md-3 fade-in ml-auto" style={{
