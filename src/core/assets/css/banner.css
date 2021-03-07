@@ -1,0 +1,39 @@
+
+.fileContainer {
+    background: transparent !important;
+    padding: 0px 0px !important;
+    margin: 0px auto !important; 
+    display: block !important;
+}
+
+
+.fileContainer .chooseFileButton {
+    margin: 0px !important;
+}
+
+.fileUploader {
+    display: flex;
+    justify-content: center;
+}
+
+
+.fileContainer .uploadPictureContainer {
+    width: 100% !important;
+    margin: -2px 0px 0px 0px !important;
+    padding: 0px !important;
+    background: #edf2f6 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    position: relative !important;
+}
+
+.fileContainer .uploadPicturesWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    top: 25px;
+    position: relative;
+    padding-bottom: 10px;
+}

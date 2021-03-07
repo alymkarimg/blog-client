@@ -4,15 +4,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Switch from '@material-ui/core/Switch';
 import { ToggleButton } from 'react-bootstrap';
 
-const Toggle = ({label, name, color}) => {
+const Toggle = ({label, name, color, onToggle, labelPlacement="right"}) => {
   const [state, setState] = React.useState({
     checkedA: true,
     checkedB: true,
   });
 
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
-  };
+
 
   return (
     <FormGroup row>
@@ -24,9 +22,10 @@ const Toggle = ({label, name, color}) => {
         control={
           <Switch
             checked={state.checkedB}
-            onChange={handleChange}
+            onChange={onToggle}
             name={name}
             color={color}
+            labelPlacement={labelPlacement}
           />
         }
         label={label}

@@ -14,6 +14,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import '../../assets/css/Style.css'
 import ImageUploader from '../../core/components/ImageUploader'
 import { getFieldsFromPrototype, uploadImage, getCookie } from '../../helpers/Default'
+import Banner from '../../core/components/AnimatedBanner'
 
 const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCreateRow }) => {
 
@@ -43,7 +44,7 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
   const onEditorChange = (editableArea) => {
     setValues({ ...values, dbItem: { ...dbItem, editableArea } })
   }
-  
+
 
   var textfieldsArray = getFieldsFromPrototype(prototype, true)
 
@@ -73,6 +74,7 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
           <p>Content</p>
           <div style={{ marginBottom: "10px", marginLeft: "-10px" }}>
             <EditableArea onEditorChange={onEditorChange} alwaysOn={true} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`editableArea_create`} guid={`${dbItem.slug}`} />
+            {/* <EditableArea onEditorChange={onEditorChange} alwaysOn={true} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`editableArea_create`} guid={`${dbItem.slug}`} /> */}
           </div>
         </div>)
       }
@@ -108,55 +110,54 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
   }, [open]);
 
   return (
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        scroll={scroll}
-        fullWidth
-        disableBackdropClick={true}
-        aria-labelledby="scroll-dialog-title"
-        aria-describedby="scroll-dialog-description"
-      >
-        <h2 style={{ textAlign: "center", padding: "20px" }}> Add a {name} </h2>
-        <DialogContent dividers={scroll === 'paper'}>
-          <DialogContentText
-            id="scroll-dialog-description"
-            ref={descriptionElementRef}
-            tabIndex={-1}
-          >
-            <div className="row">
-              {createForm(textfieldsArray)}
-              {values.image == undefined &&
-                (
-                  <div className="row col-md-4" style={{ justifyContent: "center" }}>
-                    <div>
-                      <ImageUploader onImageDrop={onImageDrop} getURL={getURL}></ImageUploader>
-                    </div>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      scroll={scroll}
+      fullWidth
+      disableBackdropClick={true}
+      aria-labelledby="scroll-dialog-title"
+      aria-describedby="scroll-dialog-description"
+    >
+      <h2 style={{ textAlign: "center", padding: "20px" }}> Add a blog </h2>
+      <DialogContent dividers={scroll === 'paper'}>
+        <DialogContentText
+          id="scroll-dialog-description"
+          ref={descriptionElementRef}
+          tabIndex={-1}
+        >
+          <div className="row">
+            {createForm(textfieldsArray)}
+            {values.image == undefined &&
+              (
+                <div className="row col-md-4" style={{ justifyContent: "center" }}>
+                  <div>
+                    <p>Image</p>
+                    <Banner alwaysOn={true} size={{ width: "250px", height: "250px" }} title="mainBanner" ></Banner>
                   </div>
-                )
-              }
-            </div>
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-
-          <Button onClick={handleClose} color="secondary">
-            Cancel
+                </div>
+              )
+            }
+          </div>
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="secondary">
+          Cancel
             </Button>
-          <Button
-            variant="contained"
-            component="label"
-            onClick={(e) => {
-              e.preventDefault();
-              handleCreateRow(dbItem)
-              handleClose()
-            }}
-          >
-            Create {name}
-          </Button>
-        </DialogActions>
-      </Dialog >
-  );
+        <Button
+          variant="contained"
+          component="label"
+          onClick={(e) => {
+            e.preventDefault();
+            handleCreateRow(dbItem)
+            handleClose()
+          }}
+        >
+          Create {name}
+        </Button>
+      </DialogActions>
+    </Dialog>);
 }
 
 FullScreenDialog.propTypes = {

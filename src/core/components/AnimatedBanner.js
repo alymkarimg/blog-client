@@ -1,42 +1,136 @@
-import Carousel from 'bootstrap/'
 import PropTypes from 'prop-types';
 import EditableArea from '../../core/components/EditableArea'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { isAdmin, isEdit } from '../../helpers/Default'
+import { isAdmin, isEdit, isAdminArea } from '../../helpers/Default'
 import Toggle from "./Toggle";
 import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom';
 import '../assets/css/Style.css'
-import { Button } from '@material-ui/core'
+import '../assets/css/banner.css'
+import { Button, TextField } from '@material-ui/core'
 import ImageUploader from '../../core/components/ImageUploader'
+import PlusOneRoundedIcon from '@material-ui/icons/PlusOneRounded';
+import DeleteSweepRoundedIcon from '@material-ui/icons/DeleteSweepRounded';
+import { getCookie } from '../../helpers/Default'
+import ReactDOM from 'react-dom'
+import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext'
+import Carousel from 'react-bootstrap/Carousel'
 
-const Banner = ({ title, size }) => {
+const Banner = ({ title, size, alwaysOn = false }) => {
 
   const [values, setValues] = useState({
-    title,
-    animatedBannerItems: [],
-    loading: true
+    animatedBanner: null,
+    loading: true,
+    showEditableAreas: true,
+    editBar: false,
+    currentSlide: 0,
+    slidesEdited: false
   })
+
+  useEffect(() => {}, [animatedBanner])
 
   const getURL = `${process.env.REACT_APP_API}/animated-banner`;
 
-  var { title, loading, animatedBannerItems: items } = values
+  var { loading, animatedBanner, showEditableAreas, editBar, currentSlide, slidesEdited } = values
 
-  // when the component mounts, set the state
-  useEffect(() => {
+  const dataSlideTo = useRef(null);
+
+  const removeCurrentSlide = () => {
+
     axios({
       method: 'POST',
-      url: getURL,
-      data: values,
+      url: `${getURL}/delete`,
+      data: { animatedBanner, slideNumber: currentSlide },
+      headers: {
+        Authorization: `Bearer ${getCookie('token')}`
+      }
     }).then(response => {
       if (response.data.errors && response.data.errors.length > 0) {
         response.data.errors.forEach((error) => {
           toast.error(error.message)
         })
       } else {
-        setValues({ ...values, animatedBannerItems: response.data.items, loading: false });
+        if (currentSlide == 0) {
+          setValues({ ...values, animatedBanner: response.data.banner, currentSlide:  0})
+        }
+        else {
+          setValues({ ...values, animatedBanner: response.data.banner, currentSlide: currentSlide - 1 })
+        }
+
+        // var slides = dataSlideTo.current.children
+        // setValues({...values, slidesEdited: true})
+        // slides[currentSlide-1].classList.add("active")
+        // var element =  $("#video-carousel-example2")
+        // $("#video-carousel-example2").carousel(currentSlide - 1)
+
+        toast.success(response.data.message)
+
+      }
+    }).catch(error => {
+      error.response.data.errors.forEach((error) => {
+        toast.error(error.message)
+      })
+    })
+  }
+
+  const addSlide = () => {
+    axios({
+      method: 'POST',
+      url: `${getURL}/add`,
+      data: values.animatedBanner,
+      headers: {
+        Authorization: `Bearer ${getCookie('token')}`
+      }
+    }).then(response => {
+      if (response.data.errors && response.data.errors.length > 0) {
+        response.data.errors.forEach((error) => {
+          toast.error(error.message)
+        })
+      } else {
+        if(response.data.length < 2){
+          setValues({ ...values, animatedBanner: response.data.animatedBanner, currentSlide: response.data.length})
+        }else{
+          setValues({ ...values, animatedBanner: response.data.animatedBanner, currentSlide: response.data.length - 1})
+        }
+        toast.success(response.data.message)
+        // currentSlide: response.data.length
+      }
+    }).catch(error => {
+      error.response.data.errors.forEach((error) => {
+        toast.error(error.message)
+      })
+    })
+  }
+
+  const onToggle = () => {
+    setValues({ ...values, showEditableAreas: !showEditableAreas })
+  }
+
+  const handleSelect = (currentSlide, e) => {
+    setValues({ ...values, currentSlide });
+  };
+
+  const onImageDrop = (images) => {
+    // push all images (base64 object) to the images array
+    // ensure src is available on the array items
+  }
+
+  useEffect(() => {
+    axios({
+      method: 'POST',
+      url: `${getURL}/${title}`,
+      headers: {
+        Authorization: `Bearer ${getCookie('token')}`
+      }
+    }).then(response => {
+      if (response.data.errors && response.data.errors.length > 0) {
+        response.data.errors.forEach((error) => {
+          toast.error(error.message)
+        })
+      } else {
+        setValues({ ...values, animatedBanner: response.data, loading: false });
       }
     }).catch(error => {
       error.response.data.errors.forEach((error) => {
@@ -45,162 +139,119 @@ const Banner = ({ title, size }) => {
     })
   }, [])
 
-  const animatedBannerItem = (item) => {
-    switch (item.columns.length) {
-      case 1:
-        return (
-          <div className="row">
-            <div className="col-md-12">
-              {processAnimatedBannerSlides()}
-            </div>
-          </div>
-        )
-      case 2:
-        return (
-          <div className="row">
-            <div className="col-md-6">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-6">
-              {processAnimatedBannerSlides()}
-            </div>
-          </div>
-        )
-      case 3:
-        return (
-          <div className="row">
-            <div className="col-md-4">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-4">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-4">
-              {processAnimatedBannerSlides()}
-            </div>
-          </div>
-        )
-      case 5:
-        return (
-          <div className="row">
-            <div className="col-md-2">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-2">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-2">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-2">
-              {processAnimatedBannerSlides()}
-            </div>
-            <div className="col-md-2">
-              {processAnimatedBannerSlides()}
-            </div>
-          </div>
-        )
+  var width = `${size.width}`
+  var height = `${size.height}`
+  var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
+  var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
+  var bigOrSmall = parseInt(width, 10) > threshold
+  var autoplay = isAdmin() && isEdit() || isAdminArea && alwaysOn ? false : 10000
+
+  const processAnimatedBannerSlides = () => {
+
+    if (animatedBanner.items) {
+
+      return (
+        animatedBanner.items.map(function (item, i) {
+
+          // discern beetween video and href
+          var source = "https://mdbootstrap.com/img/video/Lines.mp4"
+          var isImg = false;
+
+          return (
+            <React.Fragment>
+              <Carousel.Item className={i == currentSlide ? "carousel-item active" : "carousel-item"} style={{ height, width }} >
+                {isImg && (
+                  <Link to={source}>
+                    <video style={{ maxWidth: "100%", maxHeight: "100%" }} className="video-fluid" autoPlay loop muted>
+                      <source src={source} type="video/mp4" />
+                    </video>
+                  </Link>
+                )}
+
+                {!isImg && (
+                  <video style={{ height: "100%", width: "100%", objectFit: "cover" }} className="video-fluid" autoPlay loop muted>
+                    <source src={source} type="video/mp4" />
+                  </video>
+                )}
+                <Carousel.Caption className="carousel-caption">
+                  <div className="animated fadeInDown">
+                    {/* pathname = bannertitle, guid = index of banner item */}
+                    {showEditableAreas && (
+                      <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height }} pathname={title} guid={`${i}`}></EditableArea>
+                    )}
+                  </div>
+                </Carousel.Caption>
+              </Carousel.Item>
+            </React.Fragment>
+          )
+        }))
     }
   }
 
-  const processAnimatedBannerSlides = (href, source) => {
+  const createBanner = () => {
+    return (
+      <div className={bigOrSmall ? "banner" : "bannerSmall"} >
+        <Carousel indicators={false} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width }} fade>
+          {
+            processAnimatedBannerSlides()
+          }
+        </Carousel>
+        {
+          (isAdmin() && isEdit() || alwaysOn) && (
+            <React.Fragment>
+              <Button onClick={() => {
+                setValues({ ...values, editBar: !editBar })
+              }} className="bannerEditButton" border={0} containedSizeSmall variant="contained" color="secondary">EDIT</Button>
+              {editBar && (
+                <div className={bigOrSmall ? "bannerEditorButtons" : "bannerEditorButtonsSmall"} >
+                  {/* <Button border={0} onClick={() => {
+              setValues({ ...values, hideBannerToolbar: !hideBannerToolbar })
+              }} className="" containedSizeSmall variant="contained">Upload Image</Button> */}
+                  <ImageUploader onClick={(e) => { e.preventDefault() }} onImageDrop={(images) => {
 
-    source = "https://mdbootstrap.com/img/video/Lines.mp4"
+                  }}
+                    singleImage={true} withPreview={false} onImageDrop={onImageDrop} getURL={getURL} buttonText={"Choose Image"} withLabel={false} withIcon={false} ></ImageUploader>
+                  <div style={{ position: "relative", top: "8px" }}>
+                    <TextField
+                      label="Slide Interval"
+                      InputProps={{
+                        inputProps: {
+                          max: 100, min: 0,
+                        }
+                      }}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      value={animatedBanner.interval} size="small" type="number" id="autoplayInterval" variant="outlined" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "120px" }} />
 
-    if (href) {
-      return (
-        <Link to={href}>
-          <video style={{ filter: "grayscale(100%)" }} className="video-fluid" autoPlay loop muted>
-            <source src={source} type="video/mp4" />
-          </video>
-        </Link>
-      )
-    }
-    else return (
-      <div>
-        <video style={{ filter: "grayscale(100%)" }} className="video-fluid" autoPlay loop muted>
-          <source src={source} type="video/mp4" />
-        </video>
+                  </div>
+                  <div>
+                    <Button onClick={addSlide} border={0} variant="contained" color="secondary"><PlusOneRoundedIcon /> Slide</Button>
+                    <Button onClick={removeCurrentSlide} border={0} variant="contained" color="primary"><DeleteSweepRoundedIcon /> Slide </Button>
+                  </div>
+                  {/* <Toggle labelPlacement="top" className={"BannerToggle"} label={"Hide Editable Area"} onToggle={onToggle} containedSizeSmall variant="contained" color="primary"></Toggle> */}
+                </div>
+
+              )}
+            </React.Fragment>
+          )
+        }
+      </div >
+    )
+  }
+
+  if (animatedBanner) {
+    return (
+      <div ref={dataSlideTo}>
+        {createBanner()}
       </div>
     )
-
+  } else {
+    return (
+      <p>Loading...</p>
+    )
   }
 
-  const animatedBannerItemMask = (item) => {
-    if (item.mask) {
-      return (<div className={item.mask}>
-      </div>)
-    }
-  }
-
-  const onImageDrop = () => {
-
-  }
-
-  const bannerEditMode = () => {
-    if (isAdmin() && isEdit()) {
-      return (
-        <div>
-          <div className="bannerColumnEditor">
-            {/* Add a button to add an animated banner slide */}
-            {/* Add a button to remove the current animated banner slide */}
-            {/* Add a button to Change the current picture (image uploader) */}
-
-            {/* Add an expandable menu to Control the masks properties */}
-            <div className="editContainer">
-              <Button containedSizeSmall variant="contained">Add New Slide</Button>
-              <Button containedSizeSmall variant="contained" color="primary">Remove Current Slide</Button>
-              </div>
-              <div className="editContainer">
-              <Button containedSizeSmall variant="contained">Toggle Mask</Button>
-              <Button containedSizeSmall variant="contained" color="primary">Toggle Editable Area</Button>
-              </div>
-              <ImageUploader onImageDrop={onImageDrop} getURL={getURL}></ImageUploader>
-              <div className="editContainer2">
-                <Button className="bannerColumnEditorButton" containedSizeSmall variant="contained">Edit</Button>
-              </div>
-            </div>
-          </div>
-
-      )
-    }
-  }
-
-  return (
-    <div className="">
-      <div style={{ padding: "0", height: size.height }} id="video-carousel-example2" className="carousel slide carousel-fade" data-ride="carousel">
-        <ol className="carousel-indicators">
-          <li data-target="#video-carousel-example2" data-slide-to="0" className="active"></li>
-        </ol>
-        <div className="carousel-inner" role="listbox">
-          {items.map(function (item, index) {
-            return <div className="carousel-item active" style={{ height: size.height }} >
-              <div className="view">
-                {bannerEditMode()}
-                {animatedBannerItem(item)}
-                {animatedBannerItemMask(item)}
-              </div>
-              <div className="carousel-caption">
-                <div className="animated fadeInDown">
-                  {/* pathname = bannertitle, guid = index of banner item */}
-                  <EditableArea useloading={true} fade={false} size={{ width: size.width, height: size.height }} pathname={title} guid={`${index}`}></EditableArea>
-                </div>
-              </div>
-            </div>
-          })}
-        </div>
-        <a className="carousel-control-prev" href="#video-carousel-example2" role="button" data-slide="prev">
-          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span className="sr-only">Previous</span>
-        </a>
-        <a className="carousel-control-next" href="#video-carousel-example2" role="button" data-slide="next">
-          <span className="carousel-control-next-icon" aria-hidden="true"></span>
-          <span className="sr-only">Next</span>
-        </a>
-      </div>
-
-    </div>
-  )
 }
 
 Banner.propTypes = {

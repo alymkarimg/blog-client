@@ -127,8 +127,8 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
                     config={editorConfig}
                     data={data}
                     onChange={(evt, editor) => {
-                        if(isAdminArea()){
-                            onEditorChange(editor.getData())
+                        if (isAdminArea() && alwaysOn || !alwaysOn) {
+                            setValues({ ...values, data: editor.getData() })
                         }
                     }}
                     onReady={editor => {
@@ -145,7 +145,7 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
             )
         }
         // if the area is not loading and is in view mode or is in edit mode without being focused
-        else if(truncate != false) {
+        else if (truncate != false) {
             return (
                 <div ref={myRef}
                     className={`editableAreaContainer ${fadeVar}`} >

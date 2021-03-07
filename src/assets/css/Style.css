@@ -2,6 +2,7 @@
 h1, h2, h3, h4, h5, h6, p, a, button, input {
     font-family: 'Lobster', sans-serif;
     ;
+    font-weight: 400;
 }
 
 body {
@@ -29,6 +30,9 @@ body {
     box-shadow: none !important;
 }
 
+.fileUploader {
+    padding-right: 10px !important;
+}
 /* The emerging W3C standard
    that is currently Firefox-only */
    * {

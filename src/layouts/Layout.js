@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { isEdit, isAuth, signout } from '../helpers/Default';
 import EditableArea from '../core/components/EditableArea'
 import { EditableAreaContext } from '../contexts/EditableAreaContext'
+import { AnimatedBannerContext } from '../contexts/AnimatedBannerContext'
 import Sidebar from '../core/components/Sidebar'
 import Banner from '../core/components/AnimatedBanner'
 import axios from 'axios'
@@ -50,6 +51,7 @@ const Layout = function ({ children, match, history }) {
 
     const classes = useStyles();
     const { updatePublishEditableAreas } = useContext(EditableAreaContext);
+    const { updatePublishAnimatedBanners, updateAnimatedBanners } = useContext(AnimatedBannerContext);
 
     const items = [
         { name: 'home', label: 'Home' },
@@ -159,7 +161,10 @@ const Layout = function ({ children, match, history }) {
                             {
                                 isEdit() && isAuth() && isAuth().category.title == 'admin' && (
                                     <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
-                                        () => updatePublishEditableAreas()
+                                        () => {
+                                            updatePublishAnimatedBanners();
+                                            updatePublishEditableAreas();
+                                        }
                                     }>Publish</button>
                                 )}
 
@@ -197,7 +202,7 @@ const Layout = function ({ children, match, history }) {
                     <div className="overlay_above_nav">
                         <div className="banner_wrapper" style={{
                         }}>
-                            <Banner size={{ width: "unset", height: "400px" }} title="mainBanner" ></Banner>
+                            <Banner size={{ width: "100%", height: "400px" }} title="mainBanner" ></Banner>
                         </div>
                         {!isFullscreen(match) && (
                             <div style={{ marginTop: '20px', marginBottom: '20px' }} className={`container`} >

@@ -1,63 +1,76 @@
 .bannerEditModeContainer {
     display: flex;
     flex-direction: row;
-
 }
 
 .bannerColumnEditor {
     position: absolute;
     bottom: 35px;
     left: 20px;
+    opacity: 0;
     height: 300px;
-    min-width: 100px;
-    z-index: 100000;
+    min-width: 260px;
+    z-index: 1000;
     background-color: #d9d9d9;
     background-image: linear-gradient(315deg, #d9d9d9 0%, #f6f2f2 74%);
-    padding: 20px;
     transition: 0.3s;
     border-radius: 30px;
     border: 1px solid rgba(27, 18, 18, 0.582);
     display: flex;
-    justify-content: space-evenly;
-    flex-direction: column;
+    justify-content: start;
+    flex-direction: row;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
+}
+
+.bannerColumnEditor.show {
+    opacity: 1;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
+}
+
+.bannerColumnEditor * {
+    display: none;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
+}
+
+.bannerColumnEditor.show * {
+    display: flex;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
+}
+
+.bannerColumnEditor.show .deleteImage {
+    display: block;
+    transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
 }
 
 .bannerColumnEditor::after {
-	content: '';
-	position: absolute;
-	width: 0;
-	height: 0;
-	bottom: -7%;
-	left: 1.5em; 
-	border: .75rem solid transparent;
-	border-top: none;
-	border-bottom-color: #fff;
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    bottom: -7%;
+    left: 1.5em;
+    border: .75rem solid transparent;
+    border-top: none;
+    border-bottom-color: #fff;
     z-index: 1;
-	filter: drop-shadow(0.0625rem -0.0625rem 0 linear-gradient(315deg, #f8f9d2 0%, #e8dbfc 74%));
-    transform: rotate(210deg); 
+    filter: drop-shadow(0.0625rem -0.0625rem 0 linear-gradient(315deg, #f8f9d2 0%, #e8dbfc 74%));
+    transform: rotate(210deg);
     transform-origin: left top
-}
-
-.bannerColumnEditor.MuiButton-container {
-
-    min-width: 30px;
-
 }
 
 .bannerColumnEditorButton {
     position: absolute !important;
-    width: 20px;
     height: 20px;
-    bottom: -25px;
-    left: -3%;
+    bottom: 10px;
+    left: 10px;
     background-color: #ededed !important;
-
+    z-index: 1000;
+    border: none;
+    outline: none;
 }
 
 .editContainer button {
     text-transform: capitalize;
-    width: 45%;
-    height: 50px;
     margin: 5px;
 }
 
@@ -66,6 +79,190 @@
     font-weight: 600;
 }
 
+.editContainer .MuiButton-root {
+    font-size: 0.675rem;
+}
 
+.carouselButton {
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    color: rgb(57, 255, 20);
+}
 
+.carouselButton.Left {
+    position: relative;
+    top: -10px;
+    left: 20px
+}
 
+.carouselButton.Right {
+    position: relative;
+    top: -10px;
+    right: 20px;
+}
+
+.bannerButtonContainer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    flex: 1 1 1 1 1;
+    padding: 20px;
+}
+
+.errorMessage {
+    visibility: hidden;
+}
+
+.carousel-control-prev-icon, .carousel-control-prev-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23343a40' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-control-next-icon {
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23343a40' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+
+.MuiFormControlLabel-root {
+    position: relative;
+    left: 3px;
+}
+
+.editContainer3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.carousel-controls .carousel-control-prev.hide {
+    z-index: 0;
+    visibility: hidden;
+}
+
+.carousel-controls .carousel-control-next.hide {
+    z-index: 0;
+    visibility: hidden;
+}
+
+/* 0----------------------------------------- */
+
+.banner {
+    position: relative;
+}
+
+.bannerEditorButtons {
+    bottom: 0px;
+    left: 0%;
+    z-index: 2;
+    float: left;
+    position: relative;
+}
+
+.deleteImage {
+    top: -55px !important;
+    position: absolute !important;
+    left: 104px;
+}
+
+.uploadPicture {
+    display: none !important;
+}
+
+.errorsContainer {
+    display: none !important;
+}
+
+.fileContainer .uploadPictureContainer {
+    border: 0px !important;
+    height: 0px !important;
+    box-shadow: none !important;
+}
+
+.fileUploader {
+    top: 5px;
+    position: relative;
+}
+
+.bannerEditorButtons * {
+    padding-right: 10px;
+}
+
+.bannerEditorButtons {
+    bottom: 50px;
+    left: 90px;
+    z-index: 200;
+    /* float: left; */
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    /* background: white; */
+    max-width: 800px;
+    align-items: end;
+    background-color: #ededed;
+    padding: 10px;
+    display: flex !important;
+    align-items: center;
+    border-radius: 5px;
+    animation: fadein 0.5s linear;
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+.bannerEditorButtons:before {
+    content: "";
+    width: 0px;
+    height: 0px;
+    position: absolute;
+    border-left: 10px solid transparent;
+    border-right: 10px solid white;
+    border-top: 10px solid white;
+    border-bottom: 10px solid transparent;
+    left: -19px;
+    bottom: 6px;
+    transform: rotate(90deg);
+}
+
+.bannerSmall {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.bannerEditorButtonsSmall {
+    max-width: 500px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    padding-top: 10px;
+}
+
+.bannerSmall .carousel-caption {
+    top: 30px !important;
+    overflow-y: scroll;
+}
+
+.banner .carousel-caption {
+    bottom: 80px !important;
+    overflow-y: scroll;
+}
+
+.carousel-caption::-webkit-scrollbar {
+    display: none !important;
+}
+
+.bannerEditButton {
+    bottom: 40px;
+    left: 5px;
+    z-index: 2;
+    color: #ededed !important;
+    background-color: black !important;
+}
