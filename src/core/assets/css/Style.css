@@ -152,7 +152,7 @@
 .bannerEditorButtons {
     bottom: 0px;
     left: 0%;
-    z-index: 2;
+    z-index: 20;
     float: left;
     position: relative;
 }
@@ -186,8 +186,14 @@
     padding-right: 10px;
 }
 
+.MuiButtonBase-root {
+    margin: 5px;
+}
+
+
+
 .bannerEditorButtons {
-    bottom: 50px;
+    top: 69px;
     left: 90px;
     z-index: 200;
     /* float: left; */
@@ -196,6 +202,7 @@
     flex-direction: row;
     /* background: white; */
     max-width: 800px;
+    max-height: 58px;
     align-items: end;
     background-color: #ededed;
     padding: 10px;
