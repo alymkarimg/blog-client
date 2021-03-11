@@ -70,7 +70,7 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
 
     const [values, setValues] = useState({
         pathname,
-        guid: guid,
+        guid,
         data: '',
         loading: true,
         size,
