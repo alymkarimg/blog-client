@@ -119,14 +119,6 @@ img {
     background-color: #333;
 }
 
-.editableAreaContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    vertical-align: middle;
-    opacity: 1;
-}
-
 .fade-in {
     animation-name: fadeInOpacity;
     animation-iteration-count: 1;

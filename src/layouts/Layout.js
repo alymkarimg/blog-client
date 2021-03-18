@@ -15,11 +15,26 @@ import '../assets/css/Style.css'
 import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../helpers/Default'
 import { Navbar, Nav, NavDropdown, Line, Form, FormControl, Button } from 'react-bootstrap'
 import { Switch, FormGroup, FormControlLabel } from '@material-ui/core';
+import $ from "jquery"
 
 const Layout = function ({ children, match, history }) {
 
+    $(document).ready(function () {
+        $("a").on('click', function (e) {
+            var url = e.target.parentNode.href;
+            if (url && url.endsWith("#intro")) {
+                var hash = url.substring(url.indexOf("#") + 1);
+                $('html, body').animate({
+                    scrollTop: $('#' + hash).offset().top
+                }, 500);
+                return false;
+            }
+        });
+    });
+
     const useStyles = makeStyles((themes) => ({
-        drawerPaper: { width: 'inherit' },
+        drawerPaper: { width: 'inherit',
+                        boxShadow: "1px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)" },
         input: { color: "white" }
     }))
 
@@ -51,7 +66,7 @@ const Layout = function ({ children, match, history }) {
 
     const classes = useStyles();
     const { updatePublishEditableAreas } = useContext(EditableAreaContext);
-    const { updatePublishAnimatedBanners, updateAnimatedBanners } = useContext(AnimatedBannerContext);
+    const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
     const items = [
         { name: 'home', label: 'Home' },
@@ -100,6 +115,10 @@ const Layout = function ({ children, match, history }) {
                         {/* Blogs button  */}
                         <Nav.Link className="nav-item" >
                             <Link className="nav-link" to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
+                        </Nav.Link>
+                        {/* Shop button */}
+                        <Nav.Link className="nav-item" >
+                            <Link className="nav-link" to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
                         </Nav.Link>
                     </Navbar.Collapse>
                     <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">

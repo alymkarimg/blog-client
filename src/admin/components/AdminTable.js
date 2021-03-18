@@ -220,6 +220,7 @@ export default function EnhancedTable({ name, deletepathname, getURL }) {
           name={name}
           open={open}
           prototype={prototype}
+          title={rows.length - 1}
           getURL={getURL}
           handleClose={handleClose}
           handleCreateRow={handleCreateRow}

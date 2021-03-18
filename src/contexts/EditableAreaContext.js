@@ -21,6 +21,11 @@ const EditableAreaContextProvider = (props) => {
         setValues({ ...editableAreavalues, editableAreas })
     }
 
+    // for a button in the navigation to update publish editable area state
+    const updatePublishEditableAreas = () => {
+        setValues({ ...editableAreavalues, publishEditableAreas: true })
+    }
+
     // when pubisheditableareas changes, update db if there are editable areas to update
     useEffect(() => {
         if (publishEditableAreas && isEdit() && editableAreas.length > 0) {
@@ -45,13 +50,6 @@ const EditableAreaContextProvider = (props) => {
         }
     }, [publishEditableAreas])
 
-
-    // for a button in the navigation to update publish editable area state
-    const updatePublishEditableAreas = () => {
-        setValues({ ...editableAreavalues, publishEditableAreas: true })
-    }
-
-    
     return (
         <EditableAreaContext.Provider value={{ editableAreavalues, updateEditableAreas, updatePublishEditableAreas }}>
             {props.children}

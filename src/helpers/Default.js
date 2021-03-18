@@ -102,12 +102,20 @@ export const isAdminArea = () => {
     //since we do not need example.com
     url_parts.shift();
 
-    if(url_parts[1] == "admin"){
+    if (url_parts[2] == "admin") {
         return true
-    }else{
+    } else {
         return false
     }
 
+}
+
+export const bigOrSmall = (width) => {
+    if (width) {
+        var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
+        var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
+        const bigOrSmall = parseInt(width, 10) > threshold
+    }
 }
 
 export const removeQuery = (queryName) => {
@@ -216,4 +224,10 @@ export const arrayToObject = (arr) => {
 
 export const trunc = (string, n) => {
     return string.substr(0, n - 1) + (string.length > n ? '&hellip;' : '');
+}
+
+
+export const hasExtension = (imgExtension, fileName) => {
+    const pattern = '(' + imgExtension.join('|').replace(/\./g, '\\.') + ')$';
+    return new RegExp(pattern, 'i').test(fileName);
 }

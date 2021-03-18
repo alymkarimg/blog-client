@@ -3,7 +3,7 @@ import EditableArea from '../../core/components/EditableArea'
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { isAdmin, isEdit, isAdminArea } from '../../helpers/Default'
+import { isAdmin, isEdit, isAdminArea, hasExtension } from '../../helpers/Default'
 import Toggle from "./Toggle";
 import 'react-toastify/dist/ReactToastify.css'
 import { Link } from 'react-router-dom';
@@ -19,31 +19,51 @@ import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import Carousel from 'react-bootstrap/Carousel'
 import DOMPurify from 'dompurify';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext';
 
 const Banner = ({ title, size, alwaysOn = false }) => {
 
-  const { loadEditor } = useContext(EditableAreaContext);
+  const { animatedBannerValues, updateAnimatedBanners, updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
+  const { publishAnimatedBanner } = animatedBannerValues;
 
-  useEffect(() => { }, [animatedBanner])
+  const bannerImageUploader = useRef();
 
   const [values, setValues] = useState({
     animatedBanner: null,
     loading: true,
-    showEditableAreas: true,
     editBar: false,
     currentSlide: 0,
-    slidesEdited: false
+    source: null,
+    publishAnimatedBanner: false
   })
+
+  useEffect(() => {
+    if (publishAnimatedBanner) {
+      updateAnimatedBanners({ title: animatedBanner.title, items: animatedBanner.items })
+    }
+  }, [publishAnimatedBanner])
+
+  var width = `${size.width}`
+  var height = `${size.height}`
+  var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
+  var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
+  var bigOrSmall = parseInt(width, 10) > threshold
+  var autoplay = isAdmin() && isEdit() || alwaysOn ? false : 10000
+
 
   const getURL = `${process.env.REACT_APP_API}/animated-banner`;
 
-  var { loading, animatedBanner, showEditableAreas, editBar, currentSlide, slidesEdited } = values
+  var { loading, animatedBanner, editBar, currentSlide, source } = values
 
   const dataSlideTo = useRef(null);
 
+  useEffect(() => {
+
+  }, [animatedBanner])
+
   const removeCurrentSlide = () => {
 
-    if (currentSlide == 0) {
+    if (animatedBanner.items.length == 1 && currentSlide == 0) {
       toast.success("Cannot delete the only slide")
       return
     }
@@ -56,14 +76,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         Authorization: `Bearer ${getCookie('token')}`
       }
     }).then((response) => {
-
-      // var animatedBanner = response.data.banner
-      // setValues({...values, animatedBanner})
-
-      // loadBanner()
-
-      // setValues({...values, currentSlide: 0})
-      if (response.data) {
+      if (response) {
         if (currentSlide > 0) {
           setValues({ ...values, animatedBanner: response.data.banner, currentSlide: currentSlide - 1 });
         } else {
@@ -83,22 +96,6 @@ const Banner = ({ title, size, alwaysOn = false }) => {
     })
   }
 
-  const findEditableArea = () => {
-    axios({
-      method: 'POST',
-      url: `${process.env.REACT_APP_API}/editable-area`,
-      data: values,
-    }).then(response => {
-
-      setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
-
-    }).catch(error => {
-
-      toast.error(error)
-
-    })
-  }
-
   const addSlide = () => {
     axios({
       method: 'POST',
@@ -109,16 +106,9 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         Authorization: `Bearer ${getCookie('token')}`
       }
     }).then((response) => {
-      // var animatedBanner = response.data.animatedBanner;
-      // setValues({...values, animatedBanner})
-
-      reloadEditableArea()
       loadBanner();
-      // if length == 1, guid == 0
-      // if length == 2, guid == 1
-      // if length == 3, guid == 2
-
       handleSelect((animatedBanner.items.length - 1), undefined)
+      reloadEditableArea()
       toast.success(response.data.message)
 
     }).catch(error => {
@@ -136,7 +126,9 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         Authorization: `Bearer ${getCookie('token')}`
       }
     }).then(response => {
-      setValues({ ...values, animatedBanner: response.data, loading: false, });
+      var animatedBanner = response.data
+      setValues({ ...values, animatedBanner, loading: false });
+
     }).catch(error => {
       error.response.data.errors.forEach((error) => {
         toast.error(error.message)
@@ -144,22 +136,21 @@ const Banner = ({ title, size, alwaysOn = false }) => {
     })
   }
 
-  const onToggle = () => {
-    setValues({ ...values, showEditableAreas: !showEditableAreas })
-  }
-
   const handleSelect = (currentSlide, e) => {
     reloadEditableArea()
     setValues({ ...values, currentSlide });
+
+    // var bannerImageUploaders = document.querySelector('.imageUploader');
+    // bannerImageUploaders.children[0].children[2].value = null
+
+
+
+
+
   };
 
   const reloadEditableArea = () => {
     var areaContainer = document.querySelectorAll('.editableAreaContainerBanner');
-
-    // const domEditableElement = document.querySelector( '.ck-editor__editable' );
-
-    // // Get the editor instance from the editable element.
-    // const editorInstance = domEditableElement.ckeditorInstance;
 
     // use active class to find the current ckeditor instance
     var areaToChangeContainer;
@@ -168,12 +159,10 @@ const Banner = ({ title, size, alwaysOn = false }) => {
       content = animatedBanner.items[currentSlide].EditableArea.content
       for (var i = 0; i < areaContainer.length - 1; i++) {
 
-        // if (areaContainer[i].children.classList.contains("active")) {
-        //   areaToChangeContainer == areaContainer[i]
-        //   console.log(areaToChangeContainer.children
-        // }
-
         var ckeditorContainerDiv = areaContainer[currentSlide]
+        if(ckeditorContainerDiv == undefined){
+          ckeditorContainerDiv = areaContainer[currentSlide - 1]
+        }
         var ckeditorDiv = ckeditorContainerDiv.children[0]
 
         if (!isEdit() && content == ckeditorDiv.innerHTML) {
@@ -186,23 +175,20 @@ const Banner = ({ title, size, alwaysOn = false }) => {
     }
   }
 
-  const onImageDrop = (images) => {
-    // get current slide
-    // save image
-  }
+  const onImageDrop = (media) => {
 
+    // if new image is present, display new image on the slide
+    if (media[0]) {
+      animatedBanner.items[currentSlide].newImage = media[0]
+      // get current slide
+      setValues({ ...values, animatedBanner })
+      updateAnimatedBanners(animatedBanner)
+    }
+  }
 
   useEffect(() => {
     loadBanner();
   }, [])
-
-
-  var width = `${size.width}`
-  var height = `${size.height}`
-  var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
-  var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
-  var bigOrSmall = parseInt(width, 10) > threshold
-  var autoplay = isAdmin() && isEdit() || alwaysOn ? false : 10000
 
   const processAnimatedBannerSlides = () => {
 
@@ -212,22 +198,25 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         animatedBanner.items.map(function (item, i) {
 
           // get source
-          "http://techslides.com/demos/sample-videos/small.mp4"
+          // animatedBanner.items[i].image
 
-          var source = animatedBanner.items[i].image
+          if (item) {
 
-          // discern beetween video and href
-          var isImg = false;
+            var imageName = item.newImage ? item.newImage.name : item.image;
+            var isVideo = hasExtension(['.mp4'], imageName);
+            source = item.newImage ? URL.createObjectURL(item.newImage) : item.image;
 
+
+          }
           return (
             <Carousel.Item style={{ height, width }} >
-              {isImg && (
-                  <img src={source} style={{ maxWidth: "100%", maxHeight: "100%" }} className="image-fluid">
-                  </img>
+              {!isVideo && (
+                <img src={source} style={{ minWidth: "100%", maxHeight: "100%" }} className="image-fluid">
+                </img>
               )}
 
-              {!isImg && (
-                <video style={{ height: "100%", width: "100%", objectFit: "cover" }} className="video-fluid" autoPlay loop muted>
+              {isVideo && (
+                <video style={{ height: "100%", width: "100%", objectFit: "cover" }} className="video-fluid image-fluid" autoPlay loop muted>
                   <source src={source} type="video/mp4" />
                 </video>
               )}
@@ -235,9 +224,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
                 <div className="animated fadeInDown editableAreaContainerBanner">
                   {/* pathname = bannertitle, guid = index of banner item */}
                   {/*  */}
-                  {showEditableAreas && (
-                    <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height }} pathname={title} guid={`${i}`}></EditableArea>
-                  )}
+                  <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height }} pathname={title} guid={`${i}`}></EditableArea>
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -248,29 +235,26 @@ const Banner = ({ title, size, alwaysOn = false }) => {
 
   const createBanner = () => {
     return (
-      <div className={bigOrSmall ? "banner" : "bannerSmall"} >
-        <Carousel interval={30000} defaultActiveIndex={0} pause="hover" ref={dataSlideTo} indicators={true} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width }} fade>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        marginBottom: "20px"
+      }
+      } className={bigOrSmall ? "banner" : "bannerSmall"} >
+        <Carousel keyboard={false} interval={30000} defaultActiveIndex={0} pause="hover" ref={dataSlideTo} indicators={true} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width }} fade>
           {
             processAnimatedBannerSlides()
           }
         </Carousel>
         {
-          (isAdmin() && isEdit() || alwaysOn) && (
-            <React.Fragment>
-              { bigOrSmall && (
-                <Button onClick={() => {
-                  setValues({ ...values, editBar: !editBar })
-                }} className={bigOrSmall ? "bannerEditButton" : "bannerEditButton bannerEditBttonSmall"} border={0} containedSizeSmall variant="contained" color="secondary">EDIT</Button>
-
-              )}
-              {editBar || !bigOrSmall && isAdmin() && (
+          ((isAdmin() && isEdit()) || isAdminArea() && alwaysOn) && (
+            <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", zIndex: 3 }}>
+              {(bigOrSmall) && (
                 <div className={bigOrSmall ? "bannerEditorButtons" : "bannerEditorButtonsSmall"} >
                   {/* <Button border={0} onClick={() => {
               setValues({ ...values, hideBannerToolbar: !hideBannerToolbar })
               }} className="" containedSizeSmall variant="contained">Upload Image</Button> */}
-                  <ImageUploader onClick={(e) => { e.preventDefault() }} onImageDrop={(images) => {
-
-                  }}
+                  <ImageUploader className="imageUploader" onClick={(e) => { e.preventDefault() }} singleImage onImageDrop={onImageDrop}
                     singleImage={true} withPreview={false} onImageDrop={onImageDrop} getURL={getURL} buttonText={"Choose Image"} withLabel={false} withIcon={false} ></ImageUploader>
                   <div style={{ position: "relative", top: "8px", margin: "5px" }}>
                     <TextField
@@ -294,7 +278,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
                 </div>
 
               )}
-            </React.Fragment>
+            </div>
           )
         }
       </div >

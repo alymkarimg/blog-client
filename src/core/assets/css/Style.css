@@ -190,25 +190,23 @@
     margin: 5px;
 }
 
-
+a {
+    scroll-behavior: smooth !important;
+}
 
 .bannerEditorButtons {
-    top: 69px;
-    left: 90px;
     z-index: 200;
-    /* float: left; */
-    position: absolute;
     display: flex;
     flex-direction: row;
-    /* background: white; */
     max-width: 800px;
     max-height: 58px;
     align-items: end;
-    background-color: #ededed;
+    background-color: whitesmoke;
     padding: 10px;
     display: flex !important;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 0px;
+    outline: 1px solid grey;
     animation: fadein 0.5s linear;
 }
 
@@ -221,26 +219,11 @@
     }
 }
 
-.bannerEditorButtons:before {
-    content: "";
-    width: 0px;
-    height: 0px;
-    position: absolute;
-    border-left: 10px solid transparent;
-    border-right: 10px solid white;
-    border-top: 10px solid white;
-    border-bottom: 10px solid transparent;
-    left: -19px;
-    bottom: 6px;
-    transform: rotate(90deg);
-}
-
 .bannerSmall {
     display: flex;
     justify-content: space-around;
     position: relative;
     flex-direction: column;
-    padding-top: 10px;
 }
 
 .bannerEditorButtonsSmall {
@@ -249,7 +232,10 @@
     justify-content: center;
     display: flex;
     flex-direction: column;
-    padding-top: 10px;
+}
+
+.bannerSmall .carousel-indicators {
+    top: 0px !important;
 }
 
 .bannerSmall .carousel-caption {
@@ -267,9 +253,15 @@
 }
 
 .bannerEditButton {
-    bottom: 40px;
-    left: 5px;
     z-index: 2;
     color: #ededed !important;
     background-color: black !important;
+}
+
+.carousel-indicators .active {
+    background-color: black;
+}
+
+.carousel-indicators li {
+    background-color: grey;
 }

@@ -15,8 +15,13 @@ import '../../assets/css/Style.css'
 import ImageUploader from '../../core/components/ImageUploader'
 import { getFieldsFromPrototype, uploadImage, getCookie } from '../../helpers/Default'
 import Banner from '../../core/components/AnimatedBanner'
+import { EditableAreaContext } from '../../contexts/EditableAreaContext'
+import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext'
 
-const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCreateRow }) => {
+const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, handleCreateRow }) => {
+
+  const { updatePublishEditableAreas } = useContext(EditableAreaContext);
+  const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
   const [values, setValues] = useState({
     prototype,
@@ -26,25 +31,19 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
       categories: [],
       editableArea: null,
       categories: [],
-      pictures: []
+      animatedBanner: null
     },
   })
 
-  var { dbItem, blogUpdate } = values;
-
+  var { dbItem } = values;
 
   const handleChange = (name) => ((event) => {
     setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } })
   })
 
-  const onImageDrop = (pictures) => {
-    setValues({ ...values, dbItem: { ...dbItem, pictures } })
-  };
-
   const onEditorChange = (editableArea) => {
     setValues({ ...values, dbItem: { ...dbItem, editableArea } })
   }
-
 
   var textfieldsArray = getFieldsFromPrototype(prototype, true)
 
@@ -133,7 +132,7 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
                 <div className="row col-md-4" style={{ justifyContent: "center" }}>
                   <div>
                     <p>Image</p>
-                    <Banner alwaysOn={true} size={{ width: "250px", height: "250px" }} title="mainBanner" ></Banner>
+                    <Banner alwaysOn={true} size={{ width: "250px", height: "180px" }} title={`blogBanner ${title}`} ></Banner>
                   </div>
                 </div>
               )
@@ -150,7 +149,20 @@ const FullScreenDialog = ({ name, open, prototype, handleClose, getURL, handleCr
           component="label"
           onClick={(e) => {
             e.preventDefault();
+            // replace image with newImage
+            // if new image is present, display new image on the slide
+           
             handleCreateRow(dbItem)
+
+            dbItem.animatedBanner.items[title].image = dbItem.animatedBanner.items[title].newImage;
+            // get current slide
+            setValues({ ...values, dbItem})
+
+            // publish editable areas
+            updatePublishAnimatedBanners();
+            updatePublishEditableAreas();
+
+
             handleClose()
           }}
         >

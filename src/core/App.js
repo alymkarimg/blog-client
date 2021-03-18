@@ -5,7 +5,9 @@ import EditableArea from './components/EditableArea'
 const App = () => {
   return (
       <Layout>
-      <EditableArea fade={true} className="p-5 text-center" path="/" guid="ea_profile_intro"></EditableArea>
+        <div id="intro">
+        <EditableArea fade={true} className="p-5 text-center" path="/" guid="ea_profile_intro"></EditableArea>
+        </div>   
       </Layout>
   )
 }
