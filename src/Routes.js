@@ -17,48 +17,51 @@ import Blogs from './blog/Blogs';
 import Shop from './shop/Shop';
 import AdminBlogs from './admin/AdminBlog'
 import BlogLayout from './blog/layouts/BlogLayout'
+import EditablePage from './core/EditablePage'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import './assets/css/Style.css'
 
 const theme = createMuiTheme({
     typography: {
-      fontFamily: [
-        'Lobster',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        'sans-serif'
-      ].join(','),
+        fontFamily: [
+            'Lobster',
+            'Roboto',
+            '"Helvetica Neue"',
+            'Arial',
+            'sans-serif'
+        ].join(','),
     }
-  });
+});
 
 
 const Routes = () => {
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
-                <Switch>
-                    <GlobalContextProvider>
-                        <EditableAreaContextProvider>
+                <GlobalContextProvider>
+                    <EditableAreaContextProvider>
                         <AnimatedBannerContextProvider>
-                            <Route path="/" exact component={App} />
-                            <Route path="/signup" exact component={Signup} />
-                            <Route path="/signin" exact component={Signin} />
-                            <Route path="/auth/activate/:token" exact component={ActivateAccount} />
-                            <Route path="/auth/password/forgot" exact component={Forgot} />
-                            <Route path="/auth/password/reset/:token" exact component={Reset} />
-                            <Route path="/admin/blog" exact component={AdminBlogs} />
-                            <Route path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
-                            <Route path="/blogs" exact component={Blogs} />
-                            <Route path="/shop" exact component={Shop} />
-                            <PrivateRoute path="/profile" exact component={Profile} />
-                            <PrivateRoute path="/messenger" exact component={Messenger} />
-                            <AdminRoute path="/admin/home" exact component={AdminHome} />
+                            <Switch>
+                                <Route path="/" exact component={App} />
+                                <Route path="/signup" exact component={Signup} />
+                                <Route path="/signin" exact component={Signin} />
+                                <Route path="/auth/activate/:token" exact component={ActivateAccount} />
+                                <Route path="/auth/password/forgot" exact component={Forgot} />
+                                <Route path="/auth/password/reset/:token" exact component={Reset} />
+                                <Route path="/admin/blog" exact component={AdminBlogs} />
+                                <Route path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
+                                <Route path="/blogs" exact component={Blogs} />
+                                <Route path="/shop" exact component={Shop} />
+                                <PrivateRoute path="/profile" exact component={Profile} />
+                                <PrivateRoute path="/messenger" exact component={Messenger} />
+                                <AdminRoute path="/admin/home" exact component={AdminHome} />
+                                {/* for any page with a param, render editable page */}
+                                <Route path="/:page" exact component={EditablePage} />
+                            </Switch>
                         </AnimatedBannerContextProvider>
-                        </EditableAreaContextProvider>
-                    </GlobalContextProvider>
-                </Switch>
+                    </EditableAreaContextProvider>
+                </GlobalContextProvider>
             </BrowserRouter>
         </ThemeProvider>
     );

@@ -74,10 +74,11 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
         data: '',
         loading: true,
         size,
-        fade
+        fade,
+        pageError: false
     })
 
-    var { data, loading } = values
+    var { data, loading, pageError } = values
 
     // when the component mounts, set the state
     useEffect(() => {
@@ -87,7 +88,11 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
             data: values,
         }).then(response => {
 
-            setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
+            if (response.data.message) {
+                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), pageError: response.data.message });
+            } else {
+                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
+            }
 
         }).catch(error => {
 
@@ -106,60 +111,69 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
     const renderEditableArea = () => {
 
         const fadeVar = fade ? "fade-in" : ""
-
-        // if the area is loading and is  in view mode
-        if (loading && useloading) {
-            return (
-                <div style={size} className={`editableAreaContainer loading loader`} >
-                    <div class="loader-wheel"></div>
-                    <div class="loader-text"></div>
-                </div>
-            );
-        }
-        // if the area is not loading and is in edit mode and is focused
-        else if (isEdit() && isAdmin() || alwaysOn) {
-            return (
-                <CKEditor
-                    data-pathname={pathname}
-                    id={guid}
-                    className={`editableAreaContainer ${fadeVar}`}
-                    editor={InlineEditor}
-                    config={editorConfig}
-                    data={data}
-                    onChange={(evt, editor) => {
-                        if (isAdminArea() && alwaysOn || !alwaysOn) {
-                            setValues({ ...values, data: editor.getData() })
-                        }
-                    }}
-                    onReady={editor => {
-                        console.log(Array.from(editor.ui.componentFactory.names()));
-                        // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                        //     return new UploadAdapter(loader);
-                        // };
-                    }}
-                    onBlur={() => {
-                    }}
-                    onfocus={() => {
-                    }}
-                />
-            )
-        }
-        // if the area is not loading and is in view mode or is in edit mode without being focused
-        else if (truncate != false) {
-            return (
-                <div ref={myRef}
-                    className={`editableAreaContainer ${fadeVar}`} >
-                    <div dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}>
+        if (!pageError) {
+            // if the area is loading and is  in view mode
+            if (loading && useloading) {
+                return (
+                    <div style={size} className={`editableAreaContainer loading loader`} >
+                        <div class="loader-wheel"></div>
+                        <div class="loader-text"></div>
                     </div>
-                </div>
-            )
+                );
+            }
+            // if the area is not loading and is in edit mode and is focused
+            else if (isEdit() && isAdmin() || alwaysOn) {
+                return (
+                    <CKEditor
+                        data-pathname={pathname}
+                        id={guid}
+                        className={`editableAreaContainer ${fadeVar}`}
+                        editor={InlineEditor}
+                        config={editorConfig}
+                        data={data}
+                        onChange={(evt, editor) => {
+                            if (isAdminArea() && alwaysOn || !alwaysOn) {
+                                setValues({ ...values, data: editor.getData() })
+                            }
+                        }}
+                        onReady={editor => {
+                            console.log(Array.from(editor.ui.componentFactory.names()));
+                            // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                            //     return new UploadAdapter(loader);
+                            // };
+                        }}
+                        onBlur={() => {
+                        }}
+                        onfocus={() => {
+                        }}
+                    />
+                )
+            }
+            // if the area is not loading and is in view mode or is in edit mode without being focused
+            else if (truncate != false) {
+                return (
+                    <div ref={myRef}
+                        className={`editableAreaContainer ${fadeVar}`} >
+                        <div dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}>
+                        </div>
+                    </div>
+                )
+            }
+            else {
+                return (
+                    <div ref={myRef}
+                        className={`editableAreaContainer ${fadeVar}`} >
+                        <div dangerouslySetInnerHTML={{ __html: data }}>
+                        </div>
+                    </div>
+                )
+            }
         }
         else {
             return (
-                <div ref={myRef}
-                    className={`editableAreaContainer ${fadeVar}`} >
-                    <div dangerouslySetInnerHTML={{ __html: data }}>
-                    </div>
+                <div style={{display:"flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                    <h1>404 Error</h1>
+                    <p>{pageError}</p>
                 </div>
             )
         }

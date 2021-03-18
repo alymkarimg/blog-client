@@ -15,6 +15,7 @@
         "@wiris/mathtype-ckeditor5": "^7.20.0",
         "axios": "^0.21.1",
         "bootstrap": "^4.5.0",
+        "chokidar": "^3.5.1",
         "ckeditor5": "^26.0.0",
         "dompurify": "^2.2.6",
         "font-awesome": "^4.7.0",
@@ -37,7 +38,8 @@
         "react-spinners": "^0.8.3",
         "react-toastify": "^5.5.0",
         "react-transition-group": "^4.4.1",
-        "sass": "^1.26.5"
+        "sass": "^1.26.5",
+        "swiper": "^6.5.0"
     },
     "scripts": {
         "start": "react-scripts start",

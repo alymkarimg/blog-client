@@ -18,6 +18,7 @@ import { red } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import ShopSnippet from './components/ShopSnippet';
+import "../assets/css/Style.css"
 
 const Shop = () => {
 
@@ -66,20 +67,37 @@ const Shop = () => {
 
     return (
         <Layout>
-            <div className="row">
-                <div className="col-md-12">
-                    <EditableArea fade={true} pathname="/shop" guid="EA_shop_title"></EditableArea>
+            <div style={{marginBottom: "20px", paddingBottom: "20px"}} className="shopContainer">
+                <div className="row">
+                    <div className="col-md-12">
+                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_title"></EditableArea>
+                    </div>
+                    <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
+                        <div>
+                            <div className="filter" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
+                                <MultipleSelect value={[]} title="Filter food" menuitems={["Pizzas", "Kebabs", "Garlic Bread", "Chicken Strips", "Hot Wings", "Side Orders", ""]} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-12" >
+                        {/* <EditableArea fade={true} pathname="/shop" guid="EA_shop_food"></EditableArea> */}
+                        <ShopSnippet></ShopSnippet>
+                    </div>
+                    <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
+                        <div>
+                            <div className="filter" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
+                                <MultipleSelect value={[]} title="Filter drinks" menuitems={["Pizzas", "Kebabs", "Garlic Bread", "Chicken Strips", "Hot Wings", "Side Orders", ""]} />
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-12" >
+                        {/* <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea> */}
+                        <ShopSnippet></ShopSnippet>
+                    </div>
                 </div>
-                <div className="col-md-12" >
-                    <EditableArea fade={true} pathname="/shop" guid="EA_shop_new_items"></EditableArea>
-                    <ShopSnippet></ShopSnippet>
-                    <EditableArea fade={true} pathname="/shop" guid="EA_shop_offers"></EditableArea>
-                    <ShopSnippet></ShopSnippet>
-                </div>
-                <div className="row col-md-12">
-                </div>
-            </div>
-        </Layout >
+        </div>
+        </Layout>
     )
 }
 
