@@ -7,6 +7,7 @@ import ActivateAccount from './auth/Activate';
 import Profile from './core/Profile';
 import Messenger from './messenger/Default';
 import AdminHome from './admin/AdminHome';
+import AdminMenu from './admin/AdminMenu';
 import Forgot from './auth/Forgot'
 import Reset from './auth/Reset'
 import { PrivateRoute, AdminRoute } from './auth/components/PrivateOrAdminRoute'
@@ -21,6 +22,7 @@ import EditablePage from './core/EditablePage'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import './assets/css/Style.css'
+import EditableArea from './core/components/EditableArea';
 
 const theme = createMuiTheme({
     typography: {
@@ -33,7 +35,6 @@ const theme = createMuiTheme({
         ].join(','),
     }
 });
-
 
 const Routes = () => {
     return (
@@ -49,13 +50,14 @@ const Routes = () => {
                                 <Route path="/auth/activate/:token" exact component={ActivateAccount} />
                                 <Route path="/auth/password/forgot" exact component={Forgot} />
                                 <Route path="/auth/password/reset/:token" exact component={Reset} />
-                                <Route path="/admin/blog" exact component={AdminBlogs} />
-                                <Route path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
                                 <Route path="/blogs" exact component={Blogs} />
                                 <Route path="/shop" exact component={Shop} />
                                 <PrivateRoute path="/profile" exact component={Profile} />
                                 <PrivateRoute path="/messenger" exact component={Messenger} />
                                 <AdminRoute path="/admin/home" exact component={AdminHome} />
+                                <AdminRoute path="/admin/menu" exact component={AdminMenu} />
+                                <AdminRoute path="/admin/blog" exact component={AdminBlogs} />
+                                <AdminRoute path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
                                 {/* for any page with a param, render editable page */}
                                 <Route path="/:page" exact component={EditablePage} />
                             </Switch>

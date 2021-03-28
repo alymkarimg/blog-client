@@ -9,9 +9,25 @@ body {
     background-color: #ededed;
 }
 
+.MuiList-root a {
+    color: black !important;
+}
+
+a {
+    text-decoration: none !important;
+}
+
+.btn-link {
+    text-decoration: none;
+    margin-top: 2px;
+}
+
+.MuiTypography-root a {
+    color: white;
+}
+
 .ck.ck-balloon-panel.ck-balloon-panel_visible {
     z-index: 1400;
-    
 }
 
 .create_blog_container_wrapper p {
@@ -33,25 +49,30 @@ body {
 .fileUploader {
     padding-right: 10px !important;
 }
+
 /* The emerging W3C standard
    that is currently Firefox-only */
-   * {
+
+* {
     scrollbar-width: thin;
     scrollbar-color: #343a40 whitesmoke;
-  }
-  
-  /* Works on Chrome/Edge/Safari */
-  *::-webkit-scrollbar {
+}
+
+/* Works on Chrome/Edge/Safari */
+
+*::-webkit-scrollbar {
     width: 12px;
-  }
-  *::-webkit-scrollbar-track {
+}
+
+*::-webkit-scrollbar-track {
     background: whitesmoke;
-  }
-  *::-webkit-scrollbar-thumb {
+}
+
+*::-webkit-scrollbar-thumb {
     background-color: #343a40;
     border-radius: 20px;
     border: 3px solid whitesmoke;
-  }
+}
 
 p {
     margin-bottom: 0px;
@@ -71,7 +92,7 @@ img {
 
 .overlay_above_nav .container {
     margin-top: 0px !important;
-    box-shadow: 1px 5px 5px -3px rgba(0,0,0,0.2), 0px 8px 10px 1px rgba(0,0,0,0.14), 0px 3px 14px 2px rgba(0,0,0,0.12);
+    box-shadow: 1px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
     background-color: white;
 }
 
@@ -206,4 +227,63 @@ img {
     100% {
         content: 'Loading...';
     }
+}
+
+/* ---------- Admin menu --------------- */
+
+.menuTableContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: to;
+    justify-content: flex-start;
+    margin-top: 0px !important;
+    box-shadow: 1px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%);
+    background-color: rgb(255, 255, 255);
+    min-height: 500px;
+    padding: 0px;
+    border-radius: 20px;
+}
+
+.nestable {
+    width: 100%;
+}
+
+.nestable-item {
+    margin: 0px !important;
+}
+
+.nestable-list {
+    margin: 0px !important;
+}
+
+.nestable-item-name {
+    padding: 5px;
+    background-color: #ededed;
+    justify-content: space-between;
+    display: flex;
+    margin: 5px;
+    border-radius: 20px;
+}
+
+.nestable-item-name::nth-child(even) {
+    background-color: darkgray;
+}
+
+ol {
+    list-style-type: none;
+    counter-reset: item;
+}
+
+ol>li {
+    counter-increment: item;
+}
+
+.adminMenu {
+    position: absolute;
+    z-index: 100;
+}
+
+.MuiAppBar-colorPrimary {
+    background-color: transparent !important;
+    box-shadow:none;
 }

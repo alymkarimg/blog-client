@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment, useContext } from 'react';
+import React, { useState, useEffect, Fragment, useContext, useRef, createRef } from 'react';
 import reactDOM from 'react-dom';
 import { Link, withRouter } from 'react-router-dom';
 import { isEdit, isAuth, signout } from '../helpers/Default';
@@ -7,17 +7,31 @@ import { EditableAreaContext } from '../contexts/EditableAreaContext'
 import { AnimatedBannerContext } from '../contexts/AnimatedBannerContext'
 import Sidebar from '../core/components/Sidebar'
 import Banner from '../core/components/AnimatedBanner'
+import Hamburger from 'hamburger-react'
 import axios from 'axios'
-import { ToastContainer } from 'react-toastify'
+import { toast, ToastContainer } from 'react-toastify'
 import '../../node_modules/react-toastify/dist/ReactToastify.min.css'
-import { Drawer, makeStyles } from '@material-ui/core';
+import { Drawer, makeStyles, fade, Menu, MenuItem, Avatar, ClickAwayListener, Popper } from '@material-ui/core';
 import '../assets/css/Style.css'
 import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../helpers/Default'
 import { Navbar, Nav, NavDropdown, Line, Form, FormControl, Button } from 'react-bootstrap'
 import { Switch, FormGroup, FormControlLabel } from '@material-ui/core';
-import $ from "jquery"
+import $, { contains, nodeName } from "jquery"
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import InputBase from '@material-ui/core/InputBase';
+import MenuIcon from '@material-ui/icons/Menu';
+import SearchIcon from '@material-ui/icons/Search';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import EditIcon from '@material-ui/icons/Edit';
+import PublishIcon from '@material-ui/icons/Publish';
 
 const Layout = function ({ children, match, history }) {
+
+
+    const elementsRef = useRef([]);
 
     $(document).ready(function () {
         $("a").on('click', function (e) {
@@ -32,21 +46,117 @@ const Layout = function ({ children, match, history }) {
         });
     });
 
-    const useStyles = makeStyles((themes) => ({
-        drawerPaper: { width: 'inherit',
-                        boxShadow: "1px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)" },
-        input: { color: "white" }
-    }))
+    const useStyles = makeStyles((theme) => ({
+        menu: {
+            display: "flex",
+            justifyContent: "flex-end",
+            [theme.breakpoints.up('md')]: {
+                justifyContent: 'flex-start',
+            },
+        },
+        drawerPaper: {
+            paddingTop: "70px",
+            width: 'inherit',
+            boxShadow: "1px 5px 5px -3px rgb(0 0 0 / 20%), 0px 8px 10px 1px rgb(0 0 0 / 14%), 0px 3px 14px 2px rgb(0 0 0 / 12%)"
+        },
+        input: { color: "white" },
+        root: {
+            boxShadow: "none !important",
+            backgroundColor: "transparent",
+            display: "flex",
+            justifyContent: "flex-end",
+            zIndex: "1500",
+            width: "100%",
+        },
+        menuButton: {
+            marginRight: theme.spacing(2),
+            position: 'absolute',
+            marginLeft: "5px",
+            paddingTop: "9px",
+            zIndex: 1300,
+            color: "rgb(57, 255, 20) !important",
+            display: "none",
+            [theme.breakpoints.down('sm')]: {
+                display: 'block',
+            },
+        },
+        title: {
+            display: 'none',
+            padding: "0px 30px",
+            [theme.breakpoints.up('md')]: {
+                display: 'block',
+            },
+        },
+        menuItems: {
+            justifyContent: "flex-start",
+            display: "none",
+            flexGrow: 1,
+            [theme.breakpoints.up('md')]: {
+                display: 'flex',
+            },
+        },
+        menuItem: {
+            marginTop: "3px",
+            padding: "0px 30px",
+            display: 'none',
+            [theme.breakpoints.up('sm')]: {
+                display: 'block',
+            },
+        },
+        search: {
+            position: 'relative',
+            borderRadius: theme.shape.borderRadius,
+            backgroundColor: fade(theme.palette.common.white, 0.15),
+            '&:hover': {
+                backgroundColor: fade(theme.palette.common.white, 0.25),
+            },
+            marginLeft: "100px",
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                marginLeft: theme.spacing(1),
+                width: 'auto',
+            },
+        },
+        searchIcon: {
+            padding: theme.spacing(0, 2),
+            height: '100%',
+            position: 'absolute',
+            pointerEvents: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+        inputRoot: {
+            color: 'inherit',
+        },
+        inputInput: {
+            padding: theme.spacing(1, 1, 1, 0),
+            // vertical padding + font size from searchIcon
+            paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+            transition: theme.transitions.create('width'),
+            width: '100%',
+            [theme.breakpoints.up('sm')]: {
+                width: '12ch',
+                '&:focus': {
+                    width: '20ch',
+                },
+            },
+        },
+    }));
+    const classes = useStyles();
 
     const [values, setValues] = useState({
         sidebarIsOpen: false,
         adminButtonText: 'Close Menu',
         HomepageActive: false,
         editSwitchText: "edit",
-        checked: false
+        checked: false,
+        menuTree: null,
+        anchorEl: null,
+        popupOpen: false,
     })
 
-    let { sidebarIsOpen, adminButtonText, HomepageActive, checked } = values
+    let { sidebarIsOpen, menuTree, anchorEl, popupOpen } = values
 
     const toggleDrawer = () => {
         setValues({ ...values, sidebarIsOpen: !sidebarIsOpen })
@@ -57,6 +167,21 @@ const Layout = function ({ children, match, history }) {
     }
 
     useEffect(() => {
+        axios({
+            method: 'GET',
+            url: `${process.env.REACT_APP_API}/menu/`,
+        }).then(response => {
+            console.log(response.data.menuTree)
+            setValues({ ...values, menuTree: response.data.menuTree })
+        }).catch(error => {
+            console.log('Error loading menu items', error.response.data);
+            error.response.data.errors.forEach((error) => {
+                toast.error(error.message)
+            })
+        })
+    }, [])
+
+    useEffect(() => {
         setValues({ ...values, adminButtonText: sidebarIsOpen ? "Close Menu" : "Administer Site" })
     }, [])
 
@@ -64,7 +189,6 @@ const Layout = function ({ children, match, history }) {
         setValues({ ...values, HomepageActive: isHomepageActive(match) })
     }, [match])
 
-    const classes = useStyles();
     const { updatePublishEditableAreas } = useContext(EditableAreaContext);
     const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
@@ -105,118 +229,253 @@ const Layout = function ({ children, match, history }) {
     ]
 
 
+    
+
     const nav = () => {
+
+        const handleClose = (event, anchor) => {
+
+
+            if (event == null) {
+                setValues({ ...values, anchorEl: null, popupOpen: false });
+            }
+            else {
+                console.log(event.currentTarget.activeElement)
+                setValues({ ...values, anchorEl: event.currentTarget.activeElement, popupOpen: true })
+
+                if(document.contains(event.currentTarget.activeElement)){
+                    console.log(event.currentTarget.activeElement)
+                }else{
+                    setValues({ ...values, popupOpen: true})
+                    console.log(event.currentTarget.activeElement)
+                }
+
+            }
+            // else if (event && event.currentTarget && event.currentTarget.activeElement ) {
+            //     setValues({ ...values, anchorEl: event.currentTarget.activeElement })
+            // }
+            // else if (event && event.currentTarget && event.currentTarget.activeElement && anchorEl.contains(event.currentTarget.activeElement)) {
+            //     setValues({ ...values, anchorEl: event.currentTarget.activeElement })
+            // }
+
+        }
+
+        const handleClick = (event, url) => {
+
+            if (!popupOpen && anchorEl && event) {
+
+                setValues({ ...values, anchorEl: event.currentTarget, popupOpen: true });
+
+            }
+            else if (popupOpen && anchorEl && event.currentTarget.contains(anchorEl)) {
+
+                setValues({ ...values, anchorEl: event.currentTarget });
+
+            }
+
+        }
+
+        const printMenuTree = () => {
+
+            var menutree = menuTree && menuTree.map((menuItem, index) => {
+
+                const printMenuTreeItem = (item) => {
+                    if (item.children) {
+                        if(item.children.children){
+                            return (
+                                <Typography className={classes.menuItem} variant="p" noWrap>
+                                    <ClickAwayListener onClickAway={handleClose}>
+                                        <div id={item.id}>
+                                            <Button id={item.id} aria-controls="simple-menu" aria-haspopup="true"
+                                                onClick={(event) => {
+                                                    handleClick(event, item.url)
+                                                }}>
+                                                {item.title}
+                                            </Button>
+                                        </div>
+                                    </ClickAwayListener>
+                                    {/* && item.id == anchorEl.id */}
+                                    <Popper
+                                        keepMounted
+                                        anchorEl={anchorEl}
+                                        open={anchorEl && popupOpen && item.id == anchorEl.id}
+                                    >
+                                        <div>
+                                        {item.children && item.children.map((child) => {
+                                            return (<MenuItem>
+                                                {printMenuTreeItem(child)}
+                                            </MenuItem>)
+                                        })}
+                                        </div>
+                                    </Popper>
+                                </Typography>
+                            )
+                        } 
+                        else {
+                            return (
+                                <Typography className={classes.menuItem} variant="p" noWrap>
+                                    <ClickAwayListener onClickAway={handleClose}>
+                                        <div id={item.id}>
+                                            <Button id={item.id} aria-controls="simple-menu" aria-haspopup="true"
+                                                onClick={(event) => {
+                                                    handleClick(event, item.url)
+                                                }}>
+                                                {item.title}
+                                            </Button>
+                                        </div>
+                                    </ClickAwayListener>
+                                    {/* && item.id == anchorEl.id */}
+                                    <Popper
+                                        keepMounted
+                                        anchorEl={anchorEl}
+                                        open={anchorEl && popupOpen && item.id == anchorEl.id}
+                                    >
+                                        <div>
+                                        {item.children && item.children.map((child) => {
+                                            return (<MenuItem>
+                                                {printMenuTreeItem(child)}
+                                            </MenuItem>)
+                                        })}
+                                        </div>
+                                    </Popper>
+                                </Typography>
+                            )
+                        }
+                    } else {
+                        return (
+                            <Typography className={classes.menuItem} variant="p" noWrap>
+                                <Link to={menuItem.url} style={isActive(menuItem.url, match)} >{menuItem.title}</Link>
+                            </Typography>
+                        )
+                    }
+                }
+
+             
+                return (
+                    printMenuTreeItem(menuItem)
+                )
+            })
+
+            return menutree
+        }
+
         return (
             <React.Fragment>
-                <Navbar style={{ zIndex: "20" }} bg={HomepageActive ? "transparent" : "dark"} expand="md">
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Brand><Link to="/" className="nav-link" style={isActive('/', match)}>Home</Link></Navbar.Brand>
-                    <Navbar.Collapse id="basic-navbar-nav">
-                        {/* Blogs button  */}
-                        <Nav.Link className="nav-item" >
-                            <Link className="nav-link" to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
-                        </Nav.Link>
-                        {/* Shop button */}
-                        <Nav.Link className="nav-item" >
-                            <Link className="nav-link" to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
-                        </Nav.Link>
-                    </Navbar.Collapse>
-                    <Navbar.Collapse className="justify-content-end" id="basic-navbar-nav">
-                        <Nav className="mr-0">
+                <div style={isHomepageActive("/", match) ? { backgroundColor: "transparent" } : { backgroundColor: "black" }} className={classes.root}>
+                    <AppBar style={{ boxShadow: "none" }} position="static">
+                        <Toolbar className={classes.menu} >
+                            <Typography className={classes.title} variant="h5" noWrap>
+                                <Link to="/" style={isActive('/', match)}>Home</Link>
+                            </Typography>
+                            <div className={classes.menuItems}>
+                                <Typography className={classes.menuItem} variant="p" noWrap>
+                                    <Link to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
+                                </Typography>
+                                <Typography className={classes.menuItem} variant="p" noWrap>
+                                    <Link to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
+                                </Typography>
+                            </div>
+                            {printMenuTree()}
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon />
+                                </div>
+                                <InputBase
+                                    placeholder="Search…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
+                            </div>
+
                             {!isAuth() && (
                                 <Fragment>
-                                    <Nav.Link className="nav-item"><Link to="/signup" className="nav-link" style={isActive('/signup', match)}>Sign up</Link></Nav.Link>
-                                    <Nav.Link className="nav-item"><Link to="/signin" className="nav-link" style={isActive('/signin', match)}>Sign in</Link></Nav.Link>
+                                    <Typography>
+                                        <Link to="/signup" className="nav-link" style={isActive('/signup', match)}>Sign up</Link>
+                                    </Typography>
+                                    <Typography>
+                                        <Link to="/signin" className="nav-link" style={isActive('/signin', match)}>Sign in</Link>
+                                    </Typography>
                                 </Fragment>
                             )}
-
-                            {/* admin dashboard */}
-                            {isAuth() && isAuth().category.title == 'admin' && (
-                                <Nav.Link className="nav-item" >
-                                    <Link className="nav-link" to="/admin/home" style={isActive('/admin/home', match)} >{`Admin home`}</Link>
-                                </Nav.Link>
-                            )}
-                            {/* Open admin sidebar page */}
-                            {isAuth() && isAuth().category.title == 'admin' && (
-                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={toggleDrawer}>{adminButtonText}</button>
-                            )}
-                            {/* profile page */}
                             {isAuth() && (
-                                <Nav.Link className="nav-item" >
-                                    <Link style={isActive('/profile', match)} to="/profile" className="nav-link">{`${isAuth().firstname} ${isAuth().surname}`}</Link>
-                                </Nav.Link>
-                            )}
-                            {/* messenger */}
-                            {isAuth() && isAuth().category.title == 'admin' && (
-                                <Nav.Link className="nav-item" >
-                                    <Link className="nav-link" to="/messenger" style={isActive('/messenger', match)} >{`Messenger`}</Link>
-                                </Nav.Link>
-                            )}
 
-                            {/* signout button  */}
-                            {isAuth() && (
-                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={() => {
-                                    signout(() => {
-                                        history.push('/')
-                                    })
-                                }}>Signout</button>
-                            )}
+                                <Typography className={classes.menuItem} variant="p" noWrap>
+                                    <ClickAwayListener onClickAway={handleClose}>
+                                        <div>
+                                            <Button id="customized-menu" style={{ backgroundColor: "transparent", border: "none", marginBottom: "5px", boxShadow: "none" }} aria-controls="simple-menu" aria-haspopup="true"
+                                                onClick={(event) => {
+                                                    handleClick(event, '/profile')
+                                                }}>
+                                                <Avatar src="/broken-image.jpg" />
+                                            </Button>
+                                        </div>
+                                    </ClickAwayListener>
 
-                            <FormGroup row>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={checked}
-                                            onChange={toggleEditMode}
-                                            name="Edit"
-                                            color="primary"
-                                        />
+                                    <Popper
+                                        keepMounted
+                                        anchorEl={anchorEl && "customized-menu" == anchorEl.id ? anchorEl : null}
+                                        open={popupOpen && "customized-menu" == anchorEl.id}
+                                    >
+                                        <MenuItem > <Link style={isActive('/profile', match)} to="/profile" >{`${isAuth().firstname} ${isAuth().surname}`}</Link></MenuItem>
+                                        <MenuItem ><Link to="/messenger" style={isActive('/messenger', match)} >{`Messenger`}</Link></MenuItem>
+                                        <MenuItem ><button className="btn btn-link" style={{ cursor: 'pointer' }} onClick={() => {
+                                            signout(() => {
+                                                history.push('/')
+                                            })
+                                        }}>Signout</button></MenuItem>
+                                    </Popper>
+                                </Typography>
+                            )}
+                            {isAuth() && isAuth().category.title == "admin" && (
+                                <Link to="/admin/home" className="nav-link" style={isActive('/admin/home', match)}> <SupervisorAccountIcon></SupervisorAccountIcon></Link>
+                            )}
+                            {isEdit() && isAuth() && isAuth().category.title == 'admin' && (
+                                <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
+                                    () => {
+                                        updatePublishAnimatedBanners();
+                                        updatePublishEditableAreas();
                                     }
-                                    label="Edit"
-                                />
-                            </FormGroup>
-
-                            {/* Publish */}
-                            {
-                                isEdit() && isAuth() && isAuth().category.title == 'admin' && (
-                                    <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
-                                        () => {
-                                            updatePublishAnimatedBanners();
-                                            updatePublishEditableAreas();
-                                        }
-                                    }>Publish</button>
-                                )}
-
-                            {/* Edit page */}
+                                }><PublishIcon></PublishIcon></button>
+                            )}
                             {!isEdit() && isAuth() && isAuth().category.title == 'admin' && (
                                 <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={() => {
                                     history.push({
                                         search: '?edit=true'
                                     })
-                                }}>Edit</button>
+                                }}><EditIcon></EditIcon></button>
                             )}
-                        </Nav>
-                        <Form inline>
-                            <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-                            <Button variant="outline-success">Search</Button>
-                        </Form>
-                    </Navbar.Collapse>
-                </Navbar>
+                        </Toolbar>
+                    </AppBar>
+                </div>
             </React.Fragment>
         )
 
     }
 
     const messengerVar = isMessengerActive(match) ? "messenger p-0" : ""
+    const hamburgerMessage = sidebarIsOpen ? "Close" : ""
 
     return (
         <div className="wrapper">
             <Drawer style={{ width: '220px' }} variant="persistent" anchor="left" open={sidebarIsOpen} classes={{ paper: classes.drawerPaper }}>
-                <Sidebar items={items} />
+                <Sidebar toggleDrawer={toggleDrawer} items={items} />
             </Drawer>
             <div>
                 <ToastContainer></ToastContainer>
-                {nav()}
+                <IconButton
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit"
+                    aria-label="open drawer"
+                >
+
+                    <Hamburger style={classes.smallMenu} toggled={sidebarIsOpen} toggle={toggleDrawer} />
+                    <span>{hamburgerMessage}</span>
+                </IconButton>
+                {nav(this)}
                 {isHomepageActive(match) && (
                     <div className="overlay_above_nav">
                         <div className="banner_wrapper" style={{

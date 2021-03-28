@@ -211,12 +211,12 @@ const Banner = ({ title, size, alwaysOn = false }) => {
           return (
             <Carousel.Item style={{ height, width }} >
               {!isVideo && (
-                <img src={source} style={{ minWidth: "100%", maxHeight: "100%" }} className="image-fluid">
+                <img src={source} style={{ minWidth: "100%", maxHeight: "100%", filter: "contrast(0.5)" }} className="image-fluid">
                 </img>
               )}
 
               {isVideo && (
-                <video style={{ height: "100%", width: "100%", objectFit: "cover" }} className="video-fluid image-fluid" autoPlay loop muted>
+                <video style={{ height: "100%", width: "100%", objectFit: "cover", filter: "contrast(1)" }} className="video-fluid image-fluid" autoPlay loop muted>
                   <source src={source} type="video/mp4" />
                 </video>
               )}
