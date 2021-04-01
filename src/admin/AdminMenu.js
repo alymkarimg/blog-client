@@ -10,6 +10,7 @@ import { generateData, gData } from './utils/dataUtils';
 import Nestable from 'react-nestable';
 import EditableArea from '../core/components/EditableArea';
 import $ from 'jquery'
+import FullScreenDialog from '../admin/components/AdminCreateEditDialog'
 
 const AdminMenu = () => {
 
@@ -17,10 +18,51 @@ const AdminMenu = () => {
         menuItems: [],
         autoExpandParent: true,
         expandedKeys: ['0-0-key', '0-0-0-key', '0-0-0-0-key'],
-        menuTree: []
+        menuTree: [],
+        dialogOpen: false,
+        prototype: null
     });
 
-    const { menuItems, autoExpandParent, expandedKeys, menuTree } = values
+    const getURL = `${process.env.REACT_APP_API}/blogs`
+
+    const handleDeleteClick = () => {
+        // axios post
+    }
+
+    const handleEditClick = () => {
+        // open dialog
+        setValues({ ...values, dialogOpen: true })
+
+    }
+
+    const handleAddClick = () => {
+         // open dialog
+         setValues({ ...values, dialogOpen: true })
+    }
+
+
+    const { menuItems, autoExpandParent, expandedKeys, menuTree, dialogOpen, prototype } = values
+
+    useEffect(function () {
+        axios({
+            method: 'GET',
+            url: `${getURL}`,
+            headers: {
+                Authorization: `Bearer ${getCookie('token')}`
+            }
+        }).then(response => {
+
+            setValues({
+                ...values, prototype: response.data.prototype 
+            })
+
+        }).catch(error => {
+            console.log('Error loading articles', error.response.data);
+            error.response.data.errors.forEach((error) => {
+                toast.error(error.message)
+            })
+        })
+    }, [dialogOpen])
 
     const renderItem = ({ item }) => item.id;
 
@@ -94,7 +136,7 @@ const AdminMenu = () => {
                 })
             }
         }).catch(error => {
-            console.log('Error loading blog articles', error.response.data);
+            console.log('Error loading menu items', error.response.data);
             error.response.data.errors.forEach((error) => {
                 toast.error(error.message)
             })
@@ -105,6 +147,10 @@ const AdminMenu = () => {
     $('document').ready(function () {
         loadRowText()
     });
+
+    useEffect(() => {
+        loadRowText();
+    })
 
     const loadRowText = () => {
         var nestedItems = document.querySelectorAll(".nestable-item-name");
@@ -134,11 +180,17 @@ const AdminMenu = () => {
                         // edit/delete buttons
                         let div3 = document.createElement("div")
                         let editButton = document.createElement("button")
+                        editButton.onclick = handleEditClick
                         editButton.textContent = "Edit"
                         let deleteButton = document.createElement("button")
+                        deleteButton.onclick = handleDeleteClick
                         deleteButton.textContent = "Delete"
+                        let addButton = document.createElement("button")
+                        document.onclick = handleAddClick
+                        addButton.textContent = "Add Child"
                         div3.append(editButton)
                         div3.append(deleteButton)
+                        div3.append(addButton)
                         nestedItem.append(div3)
                     }
                 })
@@ -153,6 +205,50 @@ const AdminMenu = () => {
         loadRowText()
     }
 
+    const handleCreateRow = (dbItem) => {
+
+        dbItem.categories = dbItem.categories.map(q => q.toLowerCase())
+        dbItem.slug = dbItem.title.toLowerCase();
+    
+        var bodyFormData = new FormData();
+    
+        // turn all dbitem keys into form data
+        for (var key in dbItem) {
+          if (key == "pictures") {
+            for (var i = 0; i < dbItem.pictures.length; i++) {
+              bodyFormData.append('image[' + i + ']', dbItem.pictures[i]);
+            }
+          } else {
+            bodyFormData.append(key, dbItem[key])
+          }
+        }
+    
+        axios({
+          method: 'POST',
+          url: `${getURL}/create`,
+          data: bodyFormData,
+          headers: {
+            Authorization: `Bearer ${getCookie('token')}`,
+            ContentType: 'multipart/form-data' 
+          }
+        }).then(response => {
+          console.log('Article Successfully created', response)
+          window.location.reload();
+          toast.success("Article Successfully created")
+    
+        }).catch(error => {
+          console.log('Error saving article', error);
+          // error.response.data.err.forEach((error) => {
+          //   toast.error(error)
+          // })
+        })
+        
+      }
+
+      const handleClose = () => {
+        setValues({...values, dialogOpen: false});
+      };
+
     return (
         <Layout>
             <div className="container">
@@ -164,6 +260,19 @@ const AdminMenu = () => {
                         items={menuTree}
                         renderItem={renderItem}
                     />
+                    {prototype && dialogOpen && (
+                        <div >
+                            <FullScreenDialog
+                                name={"Menu"}
+                                open={dialogOpen}
+                                prototype={prototype}
+                                title={"blog"}
+                                getURL={getURL}
+                                handleClose={handleClose}
+                                handleCreateRow={handleCreateRow}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </Layout>

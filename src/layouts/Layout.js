@@ -11,7 +11,7 @@ import Hamburger from 'hamburger-react'
 import axios from 'axios'
 import { toast, ToastContainer } from 'react-toastify'
 import '../../node_modules/react-toastify/dist/ReactToastify.min.css'
-import { Drawer, makeStyles, fade, Menu, MenuItem, Avatar, ClickAwayListener, Popper } from '@material-ui/core';
+import { Drawer, makeStyles, fade, Avatar, ClickAwayListener, Popper } from '@material-ui/core';
 import '../assets/css/Style.css'
 import { isHomepageActive, isActive, isFullscreen, isMessengerActive } from '../helpers/Default'
 import { Navbar, Nav, NavDropdown, Line, Form, FormControl, Button } from 'react-bootstrap'
@@ -27,6 +27,14 @@ import SearchIcon from '@material-ui/icons/Search';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import EditIcon from '@material-ui/icons/Edit';
 import PublishIcon from '@material-ui/icons/Publish';
+import {
+    Menu,
+    MenuItem,
+    MenuButton,
+    SubMenu
+} from '@szhsin/react-menu';
+import '@szhsin/react-menu/dist/index.css';
+
 
 const Layout = function ({ children, match, history }) {
 
@@ -153,10 +161,11 @@ const Layout = function ({ children, match, history }) {
         checked: false,
         menuTree: null,
         anchorEl: null,
+        anchorEl2: null,
         popupOpen: false,
     })
 
-    let { sidebarIsOpen, menuTree, anchorEl, popupOpen } = values
+    let { sidebarIsOpen, menuTree, anchorEl, anchorEl2, popupOpen } = values
 
     const toggleDrawer = () => {
         setValues({ ...values, sidebarIsOpen: !sidebarIsOpen })
@@ -171,7 +180,6 @@ const Layout = function ({ children, match, history }) {
             method: 'GET',
             url: `${process.env.REACT_APP_API}/menu/`,
         }).then(response => {
-            console.log(response.data.menuTree)
             setValues({ ...values, menuTree: response.data.menuTree })
         }).catch(error => {
             console.log('Error loading menu items', error.response.data);
@@ -228,50 +236,19 @@ const Layout = function ({ children, match, history }) {
         },
     ]
 
+    var popper1 = useRef()
 
-    
 
     const nav = () => {
+        const handleClose = (event, url) => {
 
-        const handleClose = (event, anchor) => {
-
-
-            if (event == null) {
-                setValues({ ...values, anchorEl: null, popupOpen: false });
-            }
-            else {
-                console.log(event.currentTarget.activeElement)
-                setValues({ ...values, anchorEl: event.currentTarget.activeElement, popupOpen: true })
-
-                if(document.contains(event.currentTarget.activeElement)){
-                    console.log(event.currentTarget.activeElement)
-                }else{
-                    setValues({ ...values, popupOpen: true})
-                    console.log(event.currentTarget.activeElement)
-                }
-
-            }
-            // else if (event && event.currentTarget && event.currentTarget.activeElement ) {
-            //     setValues({ ...values, anchorEl: event.currentTarget.activeElement })
-            // }
-            // else if (event && event.currentTarget && event.currentTarget.activeElement && anchorEl.contains(event.currentTarget.activeElement)) {
-            //     setValues({ ...values, anchorEl: event.currentTarget.activeElement })
-            // }
-
+            setValues({ ...values, anchorEl: null, popupOpen: true });
         }
 
         const handleClick = (event, url) => {
+            setValues({ ...values, anchorEl: event.currentTarget, popupOpen: true });
+            event.preventDefault();
 
-            if (!popupOpen && anchorEl && event) {
-
-                setValues({ ...values, anchorEl: event.currentTarget, popupOpen: true });
-
-            }
-            else if (popupOpen && anchorEl && event.currentTarget.contains(anchorEl)) {
-
-                setValues({ ...values, anchorEl: event.currentTarget });
-
-            }
 
         }
 
@@ -279,80 +256,41 @@ const Layout = function ({ children, match, history }) {
 
             var menutree = menuTree && menuTree.map((menuItem, index) => {
 
+                const onClick = () => {
+
+                }
+
                 const printMenuTreeItem = (item) => {
-                    if (item.children) {
-                        if(item.children.children){
+                    if (item.children.length > 0) {
+                        return (
+                            item.children.map((child) => {
+                                return (<SubMenu className="menu" label={item.title}>
+                                    {printMenuTreeItem(child)}
+                                </SubMenu >)
+                            })
+                        )
+                    }
+                    else {
+                        if (item) {
                             return (
-                                <Typography className={classes.menuItem} variant="p" noWrap>
-                                    <ClickAwayListener onClickAway={handleClose}>
-                                        <div id={item.id}>
-                                            <Button id={item.id} aria-controls="simple-menu" aria-haspopup="true"
-                                                onClick={(event) => {
-                                                    handleClick(event, item.url)
-                                                }}>
-                                                {item.title}
-                                            </Button>
-                                        </div>
-                                    </ClickAwayListener>
-                                    {/* && item.id == anchorEl.id */}
-                                    <Popper
-                                        keepMounted
-                                        anchorEl={anchorEl}
-                                        open={anchorEl && popupOpen && item.id == anchorEl.id}
-                                    >
-                                        <div>
-                                        {item.children && item.children.map((child) => {
-                                            return (<MenuItem>
-                                                {printMenuTreeItem(child)}
-                                            </MenuItem>)
-                                        })}
-                                        </div>
-                                    </Popper>
-                                </Typography>
-                            )
-                        } 
-                        else {
-                            return (
-                                <Typography className={classes.menuItem} variant="p" noWrap>
-                                    <ClickAwayListener onClickAway={handleClose}>
-                                        <div id={item.id}>
-                                            <Button id={item.id} aria-controls="simple-menu" aria-haspopup="true"
-                                                onClick={(event) => {
-                                                    handleClick(event, item.url)
-                                                }}>
-                                                {item.title}
-                                            </Button>
-                                        </div>
-                                    </ClickAwayListener>
-                                    {/* && item.id == anchorEl.id */}
-                                    <Popper
-                                        keepMounted
-                                        anchorEl={anchorEl}
-                                        open={anchorEl && popupOpen && item.id == anchorEl.id}
-                                    >
-                                        <div>
-                                        {item.children && item.children.map((child) => {
-                                            return (<MenuItem>
-                                                {printMenuTreeItem(child)}
-                                            </MenuItem>)
-                                        })}
-                                        </div>
-                                    </Popper>
-                                </Typography>
+                                <MenuItem className="menuItem"> 
+                                    {item.title}
+                                </MenuItem>
                             )
                         }
-                    } else {
-                        return (
-                            <Typography className={classes.menuItem} variant="p" noWrap>
-                                <Link to={menuItem.url} style={isActive(menuItem.url, match)} >{menuItem.title}</Link>
-                            </Typography>
-                        )
                     }
                 }
 
-             
                 return (
-                    printMenuTreeItem(menuItem)
+                    menuItem.children.map((menuitem) => {
+                        return (
+                            <Menu  onMouseOver={onClick} className="menu" menuButton={<MenuButton>{menuItem.title}</MenuButton>}>
+                                {
+                                    printMenuTreeItem(menuitem)
+                                }
+                            </Menu>
+                        )
+                    })
                 )
             })
 
@@ -368,14 +306,11 @@ const Layout = function ({ children, match, history }) {
                                 <Link to="/" style={isActive('/', match)}>Home</Link>
                             </Typography>
                             <div className={classes.menuItems}>
-                                <Typography className={classes.menuItem} variant="p" noWrap>
                                     <Link to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
-                                </Typography>
-                                <Typography className={classes.menuItem} variant="p" noWrap>
                                     <Link to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
-                                </Typography>
+                                {printMenuTree()}
                             </div>
-                            {printMenuTree()}
+
                             <div className={classes.search}>
                                 <div className={classes.searchIcon}>
                                     <SearchIcon />
@@ -401,33 +336,19 @@ const Layout = function ({ children, match, history }) {
                                 </Fragment>
                             )}
                             {isAuth() && (
-
-                                <Typography className={classes.menuItem} variant="p" noWrap>
-                                    <ClickAwayListener onClickAway={handleClose}>
-                                        <div>
-                                            <Button id="customized-menu" style={{ backgroundColor: "transparent", border: "none", marginBottom: "5px", boxShadow: "none" }} aria-controls="simple-menu" aria-haspopup="true"
-                                                onClick={(event) => {
-                                                    handleClick(event, '/profile')
-                                                }}>
-                                                <Avatar src="/broken-image.jpg" />
-                                            </Button>
-                                        </div>
-                                    </ClickAwayListener>
-
-                                    <Popper
-                                        keepMounted
-                                        anchorEl={anchorEl && "customized-menu" == anchorEl.id ? anchorEl : null}
-                                        open={popupOpen && "customized-menu" == anchorEl.id}
+                                    <Menu
+                                        className="menu"
+                                        direction={"bottom"}
+                                        menuButton={<MenuButton><Avatar src="/broken-image.jpg" /></MenuButton>}
                                     >
-                                        <MenuItem > <Link style={isActive('/profile', match)} to="/profile" >{`${isAuth().firstname} ${isAuth().surname}`}</Link></MenuItem>
+                                        <MenuItem  className="menuItem" ><Link style={isActive('/profile', match)} to="/profile" >{`${isAuth().firstname} ${isAuth().surname}`}</Link></MenuItem>
                                         <MenuItem ><Link to="/messenger" style={isActive('/messenger', match)} >{`Messenger`}</Link></MenuItem>
                                         <MenuItem ><button className="btn btn-link" style={{ cursor: 'pointer' }} onClick={() => {
                                             signout(() => {
                                                 history.push('/')
                                             })
                                         }}>Signout</button></MenuItem>
-                                    </Popper>
-                                </Typography>
+                                    </Menu>
                             )}
                             {isAuth() && isAuth().category.title == "admin" && (
                                 <Link to="/admin/home" className="nav-link" style={isActive('/admin/home', match)}> <SupervisorAccountIcon></SupervisorAccountIcon></Link>

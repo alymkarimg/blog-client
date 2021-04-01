@@ -28,6 +28,8 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
     open,
     dbItem: {
       slug: "new",
+      parent: null,
+      url: null,
       categories: [],
       editableArea: null,
       categories: [],
@@ -51,6 +53,18 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
     const form = [];
     arr.map((value) => {
       if (value == "title") {
+        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
+          <p>Title</p>
+          <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
+        </div>)
+      }
+      if (value == "parent") {
+        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
+          <p>Title</p>
+          <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
+        </div>)
+      }
+      if (value == "url") {
         form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
           <p>Title</p>
           <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
@@ -154,7 +168,9 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
            
             handleCreateRow(dbItem)
 
-            dbItem.animatedBanner.items[title].image = dbItem.animatedBanner.items[title].newImage;
+            if(dbItem.animatedBanner.items[title.newImage]){
+              dbItem.animatedBanner.items[title].image = dbItem.animatedBanner.items[title].newImage;
+            }
             // get current slide
             setValues({ ...values, dbItem})
 

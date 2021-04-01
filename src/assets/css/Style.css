@@ -17,6 +17,57 @@ a {
     text-decoration: none !important;
 }
 
+button, a {
+    appearance: auto;
+    -webkit-writing-mode: horizontal-tb !important;
+    text-rendering: auto;
+    color: whitesmoke;
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0em;
+    padding: 1px 6px;
+    border-width: 0;
+    border-style: none;
+    border-color: transparent;
+    border-image: none;
+    margin: 5px 10px;
+    outline: none !important;
+}
+
+.menuItem {
+
+}
+
+.menu {
+    color: white !important;
+    border-radius: 0.0rem !important;
+    box-shadow: 0 3px 7px rgb(0 0 0 / 13%), 0 0.6px 2px rgb(0 0 0 / 10%) !important;
+    min-width: 10rem ;
+    background-color: black !important;
+    padding: 0px!important;
+}
+
+.rc-menu__item--hover.menuItem {
+    background-color: #170000;
+}
+
+.rc-menu__item--focus.menuItem {
+    background-color: #170000;
+}
+
+.menu:hover {
+   background-color: transparent;
+}
+
 .btn-link {
     text-decoration: none;
     margin-top: 2px;
