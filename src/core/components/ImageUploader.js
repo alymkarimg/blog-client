@@ -112,7 +112,7 @@ const ImageUploader = (props) => {
               files.push(newFileData.file);
             });
       
-            this.setState({pictures: dataURLs, files: files});
+            this.setState({pictures: dataURLs.slice(), files: files.slice() });
           });
         }
       

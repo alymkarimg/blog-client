@@ -4,7 +4,7 @@ import AdminTable from './components/AdminTable';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { Button, IconButton, TableCell, TableHead, TableRow } from '@material-ui/core'
-import { getCookie } from '../helpers/Default'
+import { getCookie, isEdit } from '../helpers/Default'
 import Tree from 'rc-tree';
 import { generateData, gData } from './utils/dataUtils';
 import Nestable from 'react-nestable';
@@ -20,10 +20,11 @@ const AdminMenu = () => {
         expandedKeys: ['0-0-key', '0-0-0-key', '0-0-0-0-key'],
         menuTree: [],
         dialogOpen: false,
-        prototype: null
+        prototype: null,
+        currentTarget: null,
     });
 
-    const getURL = `${process.env.REACT_APP_API}/blogs`
+    const getURL = `${process.env.REACT_APP_API}/menu`
 
     const handleDeleteClick = () => {
         // axios post
@@ -35,60 +36,39 @@ const AdminMenu = () => {
 
     }
 
-    const handleAddClick = () => {
-         // open dialog
-         setValues({ ...values, dialogOpen: true })
+    const handleAddClick = (event) => {
+        // open dialog
+        setValues({ ...values, dialogOpen: true, currentTarget: event.currentTarget.parentNode.parentNode.id })
+
     }
 
 
-    const { menuItems, autoExpandParent, expandedKeys, menuTree, dialogOpen, prototype } = values
+    const { menuItems, currentTarget, menuTree, dialogOpen, prototype } = values
 
     useEffect(function () {
-        axios({
-            method: 'GET',
-            url: `${getURL}`,
-            headers: {
-                Authorization: `Bearer ${getCookie('token')}`
-            }
-        }).then(response => {
-
-            setValues({
-                ...values, prototype: response.data.prototype 
-            })
-
-        }).catch(error => {
-            console.log('Error loading articles', error.response.data);
-            error.response.data.errors.forEach((error) => {
-                toast.error(error.message)
-            })
+        setValues({
+            ...values, prototype
         })
-    }, [dialogOpen])
+    }, [])
 
     const renderItem = ({ item }) => item.id;
 
     function addDepth(arr, unfilteredArray, depth = 1) {
+
+        var treeDepth
         arr.forEach((obj, index) => {
 
-            obj.depth = depth
-
-            function romanize(num) {
-                if (isNaN(num))
-                    return NaN;
-                var digits = String(+num).split(""),
-                    key = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX",
-                        "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX",
-                        "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"],
-                    roman = "",
-                    i = 3;
-                while (i--)
-                    roman = (key[+digits.pop() + (i * 10)] || "") + roman;
-                return Array(+digits.join("") + 1).join("I") + roman;
+            const getArrayDepth = (arr) => {
+                return 1 + Math.max(0, ...arr.map(({ subs = [] }) => getArrayDepth(subs)));
             }
+            treeDepth = getArrayDepth(menuTree)
+
+            obj.depth = depth
 
             if (unfilteredArray) {
                 unfilteredArray.forEach(q => {
                     if (q.id == obj.id) {
-                        q.depth = romanize(obj.depth)
+                        q.depth = obj.depth.toString().replace(/1/g, "I")
                     }
                 })
             }
@@ -104,22 +84,25 @@ const AdminMenu = () => {
                 return 0;
             }
 
-            if (decimalCount(obj.depth) == 0) {
-                addDepth(obj.children, unfilteredArray, depth + 1 / 10)
-            } else if (decimalCount(obj.depth) == 1) {
-                addDepth(obj.children, unfilteredArray, depth + 1 / 100)
-            } else if (decimalCount(obj.depth) == 2) {
-                addDepth(obj.children, unfilteredArray, depth + 1 / 1000)
-            } else if (decimalCount(obj.depth) == 3) {
-                addDepth(obj.children, unfilteredArray, depth + 1 / 10000)
-            } else if (decimalCount(obj.depth) == 4) {
-                addDepth(obj.children, unfilteredArray, depth + 1 / 100000)
+            if (menuTree) {
+                if (decimalCount(obj.depth) == 0) {
+                    addDepth(obj.children, unfilteredArray, depth + 1 / 10)
+                } else if (decimalCount(obj.depth) == 1) {
+                    addDepth(obj.children, unfilteredArray, depth + 1 / 100)
+                } else if (decimalCount(obj.depth) == 2) {
+                    addDepth(obj.children, unfilteredArray, depth + 1 / 1000)
+                } else if (decimalCount(obj.depth) == 3) {
+                    addDepth(obj.children, unfilteredArray, depth + 1 / 10000)
+                } else if (decimalCount(obj.depth) == 4) {
+                    addDepth(obj.children, unfilteredArray, depth + 1 / 100000)
+                }
             }
         })
     }
 
 
     useEffect(function () {
+
         axios({
             method: 'GET',
             url: `${process.env.REACT_APP_API}/menu/`,
@@ -127,14 +110,14 @@ const AdminMenu = () => {
 
             if (response.data) {
 
-                var tree = response.data.menuTree
-
-                addDepth(response.data.menuTree, response.data.menuItems)
+                var tree = response.data.menutree.menuTree
+                addDepth(response.data.menutree.menuTree, response.data.menutree.menuItems)
 
                 setValues({
-                    ...values, menuItems: response.data.menuItems, menuTree: tree
+                    ...values, menuItems: response.data.menutree.menuItems, menuTree: tree, prototype: response.data.prototype
                 })
             }
+
         }).catch(error => {
             console.log('Error loading menu items', error.response.data);
             error.response.data.errors.forEach((error) => {
@@ -158,6 +141,7 @@ const AdminMenu = () => {
             nestedItems.forEach((nestedItem) => {
                 menuItems.forEach((menuItem) => {
                     if (nestedItem.textContent == menuItem.id) {
+                        nestedItem.id = nestedItem.textContent
                         nestedItem.textContent = "";
 
                         // title
@@ -180,18 +164,19 @@ const AdminMenu = () => {
                         // edit/delete buttons
                         let div3 = document.createElement("div")
                         let editButton = document.createElement("button")
-                        editButton.onclick = handleEditClick
+                        editButton.addEventListener("click", handleEditClick)
                         editButton.textContent = "Edit"
                         let deleteButton = document.createElement("button")
-                        deleteButton.onclick = handleDeleteClick
+                        deleteButton.addEventListener("click", handleDeleteClick)
                         deleteButton.textContent = "Delete"
                         let addButton = document.createElement("button")
-                        document.onclick = handleAddClick
+                        addButton.addEventListener("click", handleAddClick)
                         addButton.textContent = "Add Child"
                         div3.append(editButton)
                         div3.append(deleteButton)
                         div3.append(addButton)
                         nestedItem.append(div3)
+
                     }
                 })
             })
@@ -202,6 +187,30 @@ const AdminMenu = () => {
         var items;
         addDepth(items, menuItems)
         setValues({ ...values, menuTree: items, menuItems })
+        
+
+        //  
+        axios({
+            method: 'POST',
+            url: `${process.env.REACT_APP_API}/menu/reorder`,
+            data: { menuTree, menuItems },
+            headers: {
+                Authorization: `Bearer ${getCookie('token')}`
+            }
+        }).then(response => 
+            toast.success(response.data.message)
+            // reload the menu
+        ).catch(error => {
+            console.log('Error saving to the database', error.response.data);
+
+            error.response.data.errors.forEach((error) => {
+                toast.error(error.message)
+            })
+        })
+    
+        
+        
+
         loadRowText()
     }
 
@@ -209,45 +218,49 @@ const AdminMenu = () => {
 
         dbItem.categories = dbItem.categories.map(q => q.toLowerCase())
         dbItem.slug = dbItem.title.toLowerCase();
-    
+
         var bodyFormData = new FormData();
-    
+
         // turn all dbitem keys into form data
         for (var key in dbItem) {
-          if (key == "pictures") {
-            for (var i = 0; i < dbItem.pictures.length; i++) {
-              bodyFormData.append('image[' + i + ']', dbItem.pictures[i]);
+            if (key == "pictures") {
+                for (var i = 0; i < dbItem.pictures.length; i++) {
+                    bodyFormData.append('image[' + i + ']', dbItem.pictures[i]);
+                }
+            } else {
+                bodyFormData.append(key, dbItem[key])
             }
-          } else {
-            bodyFormData.append(key, dbItem[key])
-          }
         }
-    
-        axios({
-          method: 'POST',
-          url: `${getURL}/create`,
-          data: bodyFormData,
-          headers: {
-            Authorization: `Bearer ${getCookie('token')}`,
-            ContentType: 'multipart/form-data' 
-          }
-        }).then(response => {
-          console.log('Article Successfully created', response)
-          window.location.reload();
-          toast.success("Article Successfully created")
-    
-        }).catch(error => {
-          console.log('Error saving article', error);
-          // error.response.data.err.forEach((error) => {
-          //   toast.error(error)
-          // })
-        })
-        
-      }
 
-      const handleClose = () => {
-        setValues({...values, dialogOpen: false});
-      };
+        if (currentTarget) {
+            bodyFormData.append('parent', currentTarget)
+        }
+
+        axios({
+            method: 'POST',
+            url: `${getURL}/create`,
+            data: bodyFormData,
+            headers: {
+                Authorization: `Bearer ${getCookie('token')}`,
+                ContentType: 'multipart/form-data'
+            }
+        }).then(response => {
+            console.log('Article Successfully created', response)
+            window.location.reload();
+            toast.success("Article Successfully created")
+
+        }).catch(error => {
+            console.log('Error saving article', error);
+            // error.response.data.err.forEach((error) => {
+            //   toast.error(error)
+            // })
+        })
+
+    }
+
+    const handleClose = () => {
+        setValues({ ...values, dialogOpen: false });
+    };
 
     return (
         <Layout>
@@ -255,18 +268,20 @@ const AdminMenu = () => {
                 <EditableArea pathname="/admin/menu" guid="adminMenu"></EditableArea>
                 <div className="menuTableContainer" >
                     <Nestable
+                        confirmChange={isEdit() ? () => true : () => false}
+                        maxDepth={5}
                         threshhold={10}
                         onChange={onChange}
                         items={menuTree}
                         renderItem={renderItem}
                     />
-                    {prototype && dialogOpen && (
+                    {dialogOpen && (
                         <div >
                             <FullScreenDialog
                                 name={"Menu"}
                                 open={dialogOpen}
                                 prototype={prototype}
-                                title={"blog"}
+                                title={"Menu"}
                                 getURL={getURL}
                                 handleClose={handleClose}
                                 handleCreateRow={handleCreateRow}

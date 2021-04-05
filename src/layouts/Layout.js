@@ -178,9 +178,9 @@ const Layout = function ({ children, match, history }) {
     useEffect(() => {
         axios({
             method: 'GET',
-            url: `${process.env.REACT_APP_API}/menu/`,
+            url: `${process.env.REACT_APP_API}/menu`,
         }).then(response => {
-            setValues({ ...values, menuTree: response.data.menuTree })
+            setValues({ ...values, menuTree: response.data.menutree.menuTree, menuItems: response.data.menutree.MenuItems })
         }).catch(error => {
             console.log('Error loading menu items', error.response.data);
             error.response.data.errors.forEach((error) => {
@@ -198,43 +198,8 @@ const Layout = function ({ children, match, history }) {
     }, [match])
 
     const { updatePublishEditableAreas } = useContext(EditableAreaContext);
-    const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
+    const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext)
 
-    const items = [
-        { name: 'home', label: 'Home' },
-        {
-            name: 'billing',
-            label: 'Billing',
-            items: [
-                { name: 'statements', label: 'Statements' },
-                { name: 'reports', label: 'Reports' },
-            ],
-        },
-        {
-            name: 'settings',
-            label: 'Settings',
-            items: [
-                { name: 'profile', label: 'Profile' },
-                { name: 'insurance', label: 'Insurance' },
-                {
-                    name: 'notifications',
-                    label: 'Notifications',
-                    items: [
-                        { name: 'email', label: 'Email' },
-                        {
-                            name: 'desktop',
-                            label: 'Desktop',
-                            items: [
-                                { name: 'schedule', label: 'Schedule' },
-                                { name: 'frequency', label: 'Frequency' },
-                            ],
-                        },
-                        { name: 'sms', label: 'SMS' },
-                    ],
-                },
-            ],
-        },
-    ]
 
     var popper1 = useRef()
 
@@ -264,17 +229,21 @@ const Layout = function ({ children, match, history }) {
                     if (item.children.length > 0) {
                         return (
                             item.children.map((child) => {
-                                return (<SubMenu className="menu" label={item.title}>
-                                    {printMenuTreeItem(child)}
-                                </SubMenu >)
+                                return (
+                                    <MenuItem href={item.url} style={isActive(item.url, match)} className="menuItem">
+                                        <SubMenu className="menu" label={item.title}>
+                                            {printMenuTreeItem(child)}
+                                        </SubMenu >
+                                    </MenuItem>
+                                )
                             })
                         )
                     }
                     else {
                         if (item) {
                             return (
-                                <MenuItem className="menuItem"> 
-                                    {item.title}
+                                <MenuItem className="menuItem">
+                                    <Link to={item.url} style={isActive(item.url, match)}>{item.title}</Link>
                                 </MenuItem>
                             )
                         }
@@ -284,7 +253,7 @@ const Layout = function ({ children, match, history }) {
                 return (
                     menuItem.children.map((menuitem) => {
                         return (
-                            <Menu  onMouseOver={onClick} className="menu" menuButton={<MenuButton>{menuItem.title}</MenuButton>}>
+                            <Menu onMouseOver={onClick} className="menu" menuButton={<MenuButton>{menuItem.title}</MenuButton>}>
                                 {
                                     printMenuTreeItem(menuitem)
                                 }
@@ -306,9 +275,10 @@ const Layout = function ({ children, match, history }) {
                                 <Link to="/" style={isActive('/', match)}>Home</Link>
                             </Typography>
                             <div className={classes.menuItems}>
-                                    <Link to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
-                                    <Link to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
-                                {printMenuTree()}
+                                <Link to="/blogs" style={isActive('/blogs', match)} >{`Blog`}</Link>
+                                <Link to="/shop" style={isActive('/shop', match)} >{`Shop`}</Link>
+                                {menuTree && printMenuTree()}
+
                             </div>
 
                             <div className={classes.search}>
@@ -336,19 +306,19 @@ const Layout = function ({ children, match, history }) {
                                 </Fragment>
                             )}
                             {isAuth() && (
-                                    <Menu
-                                        className="menu"
-                                        direction={"bottom"}
-                                        menuButton={<MenuButton><Avatar src="/broken-image.jpg" /></MenuButton>}
-                                    >
-                                        <MenuItem  className="menuItem" ><Link style={isActive('/profile', match)} to="/profile" >{`${isAuth().firstname} ${isAuth().surname}`}</Link></MenuItem>
-                                        <MenuItem ><Link to="/messenger" style={isActive('/messenger', match)} >{`Messenger`}</Link></MenuItem>
-                                        <MenuItem ><button className="btn btn-link" style={{ cursor: 'pointer' }} onClick={() => {
-                                            signout(() => {
-                                                history.push('/')
-                                            })
-                                        }}>Signout</button></MenuItem>
-                                    </Menu>
+                                <Menu
+                                    className="menu"
+                                    direction={"bottom"}
+                                    menuButton={<MenuButton><Avatar src="/broken-image.jpg" /></MenuButton>}
+                                >
+                                    <MenuItem className="menuItem" ><Link style={isActive('/profile', match)} to="/profile" >{`${isAuth().firstname} ${isAuth().surname}`}</Link></MenuItem>
+                                    <MenuItem ><Link to="/messenger" style={isActive('/messenger', match)} >{`Messenger`}</Link></MenuItem>
+                                    <MenuItem ><button className="btn btn-link" style={{ cursor: 'pointer' }} onClick={() => {
+                                        signout(() => {
+                                            history.push('/')
+                                        })
+                                    }}>Signout</button></MenuItem>
+                                </Menu>
                             )}
                             {isAuth() && isAuth().category.title == "admin" && (
                                 <Link to="/admin/home" className="nav-link" style={isActive('/admin/home', match)}> <SupervisorAccountIcon></SupervisorAccountIcon></Link>
@@ -380,10 +350,13 @@ const Layout = function ({ children, match, history }) {
     const hamburgerMessage = sidebarIsOpen ? "Close" : ""
 
     return (
-        <div className="wrapper">
-            <Drawer style={{ width: '220px' }} variant="persistent" anchor="left" open={sidebarIsOpen} classes={{ paper: classes.drawerPaper }}>
-                <Sidebar toggleDrawer={toggleDrawer} items={items} />
-            </Drawer>
+        <div className="wrapper">{
+            menuTree && (
+                <Drawer style={{ width: '220px' }} variant="persistent" anchor="left" open={sidebarIsOpen} classes={{ paper: classes.drawerPaper }}>
+                    <Sidebar toggleDrawer={toggleDrawer} items={menuTree} />
+                </Drawer>
+            )
+        }
             <div>
                 <ToastContainer></ToastContainer>
                 <IconButton

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useSta} from 'react';
 import { Link } from 'react-router-dom'
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -8,9 +8,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { TextField } from '@material-ui/core';
 import EditableArea from '../../core/components/EditableArea';
 import { isEdit } from '../../helpers/Default'
 import PropTypes from 'prop-types';
+import { Fragment } from 'react';
 
 const useStyles = makeStyles({
     root: {
@@ -36,9 +38,11 @@ export default function MediaCard({ link, pathname, guid, size, fade }) {
 
     if (isEdit()) {
         return (
-            <Card raised={true} className={classes.roots}>
-                <EditableArea useloading={true} fade={fade} size={size} pathname={pathname} guid={`${guid}_image`}></EditableArea>
-            </Card>
+            <Fragment>
+                <Card raised={true} className={classes.roots}>
+                    <EditableArea useloading={true} fade={fade} size={size} pathname={pathname} guid={`${guid}_image`}></EditableArea>
+                </Card>
+            </Fragment>
         );
     } else {
         return (

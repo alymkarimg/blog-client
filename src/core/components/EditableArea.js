@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, Fragment } from 'react'
 import PropTypes from 'prop-types';
 import { ReactDOM, render } from "react-dom";
 import axios from 'axios'
@@ -11,6 +11,8 @@ import '../../assets/css/Style.css'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import InlineEditor from "@ckeditor/ckeditor5-build-inline/build/ckeditor.js";
 import { useRef } from 'react';
+import { TextField } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 DOMPurify.setConfig({ ADD_ATTR: ['target'] });
 
@@ -62,7 +64,7 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
+const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
@@ -75,10 +77,11 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
         loading: true,
         size,
         fade,
-        pageError: false
+        pageError: false,
+        link
     })
 
-    var { data, loading, pageError } = values
+    var { data, loading, pageError, link } = values
 
     // when the component mounts, set the state
     useEffect(() => {
@@ -89,9 +92,9 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
         }).then(response => {
 
             if (response.data.message) {
-                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), pageError: response.data.message });
+                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), pageError: response.data.message, link: response.data.link });
             } else {
-                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false });
+                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false, link: response.data.link });
             }
 
         }).catch(error => {
@@ -101,10 +104,17 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
         })
     }, [])
 
+    var { link } = values;
+
+    const handleChange = event => {
+        setValues({ ...values, link: event.target.value })
+    }
+
+
     // when the context changes (publish editable areas == true), update the context with new data
     useEffect(() => {
         if (publishEditableAreas) {
-            updateEditableAreas({ guid, pathname, data })
+            updateEditableAreas({ guid, pathname, data, link })
         }
     }, [publishEditableAreas])
 
@@ -124,54 +134,60 @@ const EditableArea = ({ onEditorChange, truncate = false, pathname, guid, size, 
             // if the area is not loading and is in edit mode and is focused
             else if (isEdit() && isAdmin() || alwaysOn) {
                 return (
-                    <CKEditor
-                        data-pathname={pathname}
-                        id={guid}
-                        className={`editableAreaContainer ${fadeVar}`}
-                        editor={InlineEditor}
-                        config={editorConfig}
-                        data={data}
-                        onChange={(evt, editor) => {
-                            if (isAdminArea() && alwaysOn || !alwaysOn) {
-                                setValues({ ...values, data: editor.getData() })
-                            }
-                        }}
-                        onReady={editor => {
-                            console.log(Array.from(editor.ui.componentFactory.names()));
-                            // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                            //     return new UploadAdapter(loader);
-                            // };
-                        }}
-                        onBlur={() => {
-                        }}
-                        onfocus={() => {
-                        }}
-                    />
+                    <Fragment>
+                        <TextField
+                            onChange={handleChange}
+                            label="URL"
+                            value={link} name={"url"} size="small" variant="outlined" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "120px" }} />
+                        <CKEditor
+                            data-pathname={pathname}
+                            id={guid}
+                            className={`editableAreaContainer ${fadeVar}`}
+                            editor={InlineEditor}
+                            config={editorConfig}
+                            data={data}
+                            onChange={(evt, editor) => {
+                                if (isAdminArea() && alwaysOn || !alwaysOn) {
+                                    setValues({ ...values, data: editor.getData() })
+                                }
+                            }}
+                            onReady={editor => {
+                                console.log(Array.from(editor.ui.componentFactory.names()));
+                                // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                                //     return new UploadAdapter(loader);
+                                // };
+                            }}
+                            onBlur={() => {
+                            }}
+                            onfocus={() => {
+                            }}
+                        />
+                    </Fragment>
                 )
             }
             // if the area is not loading and is in view mode or is in edit mode without being focused
             else if (truncate != false) {
                 return (
-                    <div ref={myRef}
+                    <Link to={link} ref={myRef}
                         className={`editableAreaContainer ${fadeVar}`} >
                         <div dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}>
                         </div>
-                    </div>
+                    </Link>
                 )
             }
             else {
                 return (
-                    <div ref={myRef}
+                    <Link to={link} ref={myRef}
                         className={`editableAreaContainer ${fadeVar}`} >
                         <div dangerouslySetInnerHTML={{ __html: data }}>
                         </div>
-                    </div>
+                    </Link>
                 )
             }
         }
         else {
             return (
-                <div style={{display:"flex", flexDirection: "column", justifyContent: "center", alignItems: "center"}}>
+                <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
                     <h1>404 Error</h1>
                     <p>{pageError}</p>
                 </div>

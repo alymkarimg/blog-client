@@ -18,7 +18,7 @@ import Banner from '../../core/components/AnimatedBanner'
 import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext'
 
-const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, handleCreateRow }) => {
+const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCreateRow }) => {
 
   const { updatePublishEditableAreas } = useContext(EditableAreaContext);
   const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
@@ -37,7 +37,7 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
     },
   })
 
-  var { dbItem } = values;
+  var { dbItem, prototype, open } = values;
 
   const handleChange = (name) => ((event) => {
     setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } })
@@ -58,16 +58,16 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
           <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
         </div>)
       }
-      if (value == "parent") {
-        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-          <p>Title</p>
-          <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
-        </div>)
-      }
+      // if (value == "parent") {
+      //   form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
+      //     <p>Title</p>
+      //     <TextField id={`${name}_`} onChange={handleChange(value)} fullWidth />
+      //   </div>)
+      // }
       if (value == "url") {
         form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-          <p>Title</p>
-          <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
+          <p>URL</p>
+          <TextField id={`${name}_Url`} onChange={handleChange(value)} fullWidth />
         </div>)
       }
       if (value == "author") {
@@ -141,7 +141,7 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
         >
           <div className="row">
             {createForm(textfieldsArray)}
-            {values.image == undefined &&
+            {prototype.includes("animatedBanner") &&
               (
                 <div className="row col-md-4" style={{ justifyContent: "center" }}>
                   <div>
@@ -168,7 +168,7 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
            
             handleCreateRow(dbItem)
 
-            if(dbItem.animatedBanner.items[title.newImage]){
+            if(dbItem.animatedBanner && dbItem.animatedBanner.items[title.newImage]){
               dbItem.animatedBanner.items[title].image = dbItem.animatedBanner.items[title].newImage;
             }
             // get current slide
@@ -177,6 +177,8 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, getURL, h
             // publish editable areas
             updatePublishAnimatedBanners();
             updatePublishEditableAreas();
+
+            
 
 
             handleClose()
@@ -193,7 +195,7 @@ FullScreenDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleCreateRow: PropTypes.func.isRequired,
-  prototype: PropTypes.object.isRequired,
+  prototype: PropTypes.array.isRequired,
   getURL: PropTypes.string.isRequired
 };
 

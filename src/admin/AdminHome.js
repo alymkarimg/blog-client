@@ -9,23 +9,23 @@ const fade = true
 const AdminHome = () => (
     <Layout>
         <div className="row">
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard  size={size} fade={fade} link='/admin/users' pathname="/admin/home" guid="users" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard  size={size} fade={fade} link={true} pathname="/admin/home" guid="users" ></AdminDashboardCard>
             </div>
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard  size={size} fade={fade} link='/admin/pages' pathname="/admin/home" guid="pages" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard   size={size} fade={fade} link={true} pathname="/admin/home" guid="pages" ></AdminDashboardCard>
             </div>
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard  size={size} fade={fade} link='/admin/menu' pathname="/admin/home" guid="menu" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard   size={size} fade={fade} link={true} pathname="/admin/home" guid="menu" ></AdminDashboardCard>
             </div>
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard  size={size} fade={fade} link='/admin/banners' pathname="/admin/home" guid="banners" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard  size={size} fade={fade} link={true} pathname="/admin/home" guid="banners" ></AdminDashboardCard>
             </div>
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard  size={size} fade={fade} link='/admin/blog' pathname="/admin/home" guid="products" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard  size={size} fade={fade} link={true} pathname="/admin/home" guid="products" ></AdminDashboardCard>
             </div>
-            <div className="col-md-4" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard size={size} fade={fade} fade={fade} link='/admin/products' pathname="/admin/home" guid="blog" ></AdminDashboardCard>
+            <div className="col-md-2 p-0" style={{marginTop: '20px', marginBottom: '20px'}}>
+                <AdminDashboardCard hasLink size={size} fade={fade} fade={fade} link={true} pathname="/admin/home" guid="blog" ></AdminDashboardCard>
             </div>
         </div>
     </Layout>
