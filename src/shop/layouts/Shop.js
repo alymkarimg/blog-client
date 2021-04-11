@@ -1,12 +1,12 @@
 import React from 'react';
-import Layout from '../layouts/Layout'
-import BlogCard from '../blog/components/BlogCard'
+import Layout from '../../layouts/Layout'
+import BlogCard from '../../blog/components/BlogCard'
 import { useState, useEffect } from 'react';
 import axios from 'axios'
-import EditableArea from '../core/components/EditableArea';
-import SimpleSelect from '../core/components/Select';
-import CheckboxList from '../core/components/Checklist'
-import MultipleSelect from '../core/components/MultipleSelect'
+import EditableArea from '../../core/components/EditableArea';
+import SimpleSelect from '../../core/components/Select';
+import CheckboxList from '../../core/components/Checklist'
+import MultipleSelect from '../../core/components/MultipleSelect'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import { TransitionGroup, CSSTransition } from 'react-transition-group'
@@ -17,13 +17,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import ShopSnippet from './components/ShopSnippet';
-import "../assets/css/Style.css"
+import ShopSnippet from '../components/ShopSnippet';
+import Banner from '../../core/components/AnimatedBanner'
+import "../../assets/css/Style.css"
 
 const Shop = () => {
 
     const [values, setValues] = useState({
-        posts: [1, 2, 3],
+        products: [1, ,2, 3],
     });
 
     const useStyles = makeStyles((theme) => ({
@@ -38,7 +39,7 @@ const Shop = () => {
 
     const classes = useStyles();
 
-    const { posts } = values;
+    const { products } = values;
 
     useEffect(() => {
 
@@ -67,6 +68,7 @@ const Shop = () => {
 
     return (
         <Layout>
+           
             <div style={{marginBottom: "20px", paddingBottom: "20px"}} className="shopContainer">
                 <div className="row">
                     <div className="col-md-12">
@@ -81,8 +83,7 @@ const Shop = () => {
                     </div>
 
                     <div className="col-md-12" >
-                        {/* <EditableArea fade={true} pathname="/shop" guid="EA_shop_food"></EditableArea> */}
-                        <ShopSnippet></ShopSnippet>
+                            <ShopSnippet title={"food"}></ShopSnippet>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
@@ -93,7 +94,7 @@ const Shop = () => {
                     </div>
                     <div className="col-md-12" >
                         {/* <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea> */}
-                        <ShopSnippet></ShopSnippet>
+                        <ShopSnippet title={"drink"}></ShopSnippet>
                     </div>
                 </div>
         </div>

@@ -28,7 +28,7 @@ const EditableAreaContextProvider = (props) => {
 
     // when pubisheditableareas changes, update db if there are editable areas to update
     useEffect(() => {
-        if (publishEditableAreas && isEdit() && editableAreas.length > 0) {
+        if (publishEditableAreas && editableAreas.length > 0) {
             axios({
                 method: 'POST',
                 url: `${process.env.REACT_APP_API}/editable-area/save`,
@@ -37,7 +37,7 @@ const EditableAreaContextProvider = (props) => {
                     Authorization: `Bearer ${getCookie('token')}`
                 }
             }).then(response => {
-                removeQuery('edit');
+                removeQuery("edit")
                 setValues({ ...editableAreavalues, editableAreas: [], publishEditableAreas: false })
                 toast.success(response.data.message)
             }).catch(error => {

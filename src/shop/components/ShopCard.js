@@ -17,6 +17,8 @@ import ShareIcon from '@material-ui/icons/Share';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { getImageURL } from '../../helpers/Default'
+import Rating from './Rating'
+import Banner from '../../core/components/AnimatedBanner'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,12 +27,14 @@ const useStyles = makeStyles((theme) => ({
     details: {
         display: 'flex',
         flexDirection: 'column',
+        maxWidth: "100%",
     },
     content: {
         flex: '1 0 auto',
     },
     cover: {
         width: 400,
+        height: 200
     },
     controls: {
         display: 'flex',
@@ -70,20 +74,20 @@ function removeBackground(e) {
     e.target.className = '';
 }
 
-export default function BlogCard({ post }) {
+export default function ShopCard({ product, index, title }) {
     const classes = useStyles();
     const [values, setValues] = useState({
         expanded: false,
-        title: '',
         subtitle: '',
         contentSnippet: '',
         datePublished: '',
         comment: '',
         popular: '',
-        category: ''
+        category: '',
+
     });
 
-    const { title, content, datePublished, comments, popular, contentSnippet, expanded } = values
+    const { content, datePublished, comments, popular, contentSnippet, expanded } = values
 
     const handleExpandClick = () => {
         setValues({ ...values, expanded: !expanded });
@@ -91,38 +95,25 @@ export default function BlogCard({ post }) {
 
     return (
 
-        <Card className={classes.root
-} raised = { true} >
-    <div className={classes.details}>
-        <CardHeader
-            avatar={
-                <Avatar aria-label={title} className={classes.avatar}></Avatar>
-            }
-            title={title}
-            subheader={datePublished}
-        />
-        <CardContent>
-            <Typography style={{ flex: 1 }} variant="body2" color="textSecondary" component="p">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit corrupti temporibus libero ut dolorum numquam, voluptatem animi ad nisi placeat.{contentSnippet}...
+<Card className={classes.root
+            } raised={true} >
+                <div className={classes.details}>
+                    <Banner alwaysOn={false} size={{ width: "100%" }} title={`${title}-shopBanner-${product && product.title}-${index}`} ></Banner>
+                    <CardHeader
+                        title={product ? product.title : "dummy title"}>
+                    </CardHeader>
+                    <CardContent>
+                        <Rating value={product ? product.rating : 4.5} text={`${product ? product.numReviews : 10} reviews`}></Rating>
+                        <Typography className={classes.pos} color="textSecondary">
+                        £{product ? product.price : "2.50"}
                         </Typography>
-            <Link to='/auth/password/forgot' style={{ margin: "30px 0px" }} className="btn btn-sm btn-outline-info"> Read more </Link>
-        </CardContent>
-        <div className={classes.controls}>
-            <CardActions disableSpacing>
-                <IconButton aria-label="add to favorites">
-                    <FavoriteIcon />
-                </IconButton>
-                <IconButton aria-label="share">
-                    <ShareIcon />
-                </IconButton>
-            </CardActions>
-        </div>
-    </div>
-    <CardMedia
-        className={classes.cover}
-        image={getImageURL("paella.jpg")}
-        title="Paella dish"
-    />
-            </Card >
+                    </CardContent>
+                    <CardContent>
+                        <Link to={product ? `/product/${product.id}` : "/product/1"} style={{ display: "flex", justifyContent: "center", margin: "30px 0px" }} className="btn btn-sm btn-outline-info"> Read More </Link>
+                        <Link to='/auth/password/forgot' style={{ display: "flex", justifyContent: "center", margin: "30px 0px" }} className="btn btn-sm btn-outline-info"> Add to Cart </Link>
+                    </CardContent>
+                </div>
+            </Card>
+
     )
 }

@@ -132,7 +132,7 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
                 );
             }
             // if the area is not loading and is in edit mode and is focused
-            else if (isEdit() && isAdmin() || alwaysOn) {
+            else if (isEdit() || alwaysOn) {
                 return (
                     <Fragment>
                         <TextField
