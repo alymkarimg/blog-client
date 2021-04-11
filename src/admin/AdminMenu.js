@@ -22,6 +22,7 @@ const AdminMenu = () => {
         dialogOpen: false,
         prototype: null,
         currentTarget: null,
+        changes: []
     });
 
     const getURL = `${process.env.REACT_APP_API}/menu`
@@ -43,7 +44,7 @@ const AdminMenu = () => {
     }
 
 
-    const { menuItems, currentTarget, menuTree, dialogOpen, prototype } = values
+    const { menuItems, currentTarget, menuTree, dialogOpen, prototype, changes } = values
 
     useEffect(function () {
         setValues({
@@ -185,33 +186,39 @@ const AdminMenu = () => {
 
     const onChange = (items, item) => {
         var items;
+        var item;
         addDepth(items, menuItems)
         setValues({ ...values, menuTree: items, menuItems })
-        
+    
+        loadRowText()
+    }
 
-        //  
+    const onConfirmChange = (dragItem, destinationParent) => {
+        // var dragItem, destinationParent;
+        // setValues({...values, changes: changes.concat[dragItem, destinationParent]})
+
+        if(isEdit()){
+            //
+        
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/menu/reorder`,
-            data: { menuTree, menuItems },
+            data: {dragItem, destinationParent},
             headers: {
                 Authorization: `Bearer ${getCookie('token')}`
             }
-        }).then(response => 
-            toast.success(response.data.message)
-            // reload the menu
-        ).catch(error => {
+        }).then(response => {
+            toast.success(response.data.message);
+
+        }).catch(error => {
             console.log('Error saving to the database', error.response.data);
 
             error.response.data.errors.forEach((error) => {
                 toast.error(error.message)
             })
         })
-    
-        
-        
-
-        loadRowText()
+            return true
+        }
     }
 
     const handleCreateRow = (dbItem) => {
@@ -268,7 +275,7 @@ const AdminMenu = () => {
                 <EditableArea pathname="/admin/menu" guid="adminMenu"></EditableArea>
                 <div className="menuTableContainer" >
                     <Nestable
-                        confirmChange={isEdit() ? () => true : () => false}
+                        confirmChange={onConfirmChange}
                         maxDepth={5}
                         threshhold={10}
                         onChange={onChange}

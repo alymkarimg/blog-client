@@ -32,7 +32,7 @@ const AnimatedBannerContextProvider = (props) => {
 
     // when pubisheditableareas changes, update db if there are editable areas to update
     useEffect(() => {
-        if (publishAnimatedBanners && isEdit() && animatedBanners.length > 0) {
+        if (publishAnimatedBanners && animatedBanners.length > 0) {
 
             var bodyFormData = new FormData();
 
@@ -43,6 +43,7 @@ const AnimatedBannerContextProvider = (props) => {
                         for (var i = 0; i < banner.items.length; i++) {
                             if (banner.items[i].newImage) {
                                 bodyFormData.append("guid", banner.items[i].guid)
+                                // append the image
                                 bodyFormData.append(`${banner.title} ${banner.items[i].guid} ${banner.items[i].newImage.name}`, banner.items[i].newImage);
                             }
                             
@@ -64,7 +65,6 @@ const AnimatedBannerContextProvider = (props) => {
                     Authorization: `Bearer ${getCookie('token')}`
                 }
             }).then(response => {
-                removeQuery('edit');
                 var urlsObjects = response.data.urlsObjects;
 
                 urlsObjects.forEach((urlObject, index) => {
@@ -80,7 +80,7 @@ const AnimatedBannerContextProvider = (props) => {
                         });
                     }
                 })
-
+                removeQuery("edit")
                 setValues({ ...animatedBannerValues, animatedBanners: [], publishAnimatedBanners: false })
                 toast.success(response.data.message)
             }).catch(error => {

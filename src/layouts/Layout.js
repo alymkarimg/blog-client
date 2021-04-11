@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useContext, useRef, createRef } from 'react';
 import reactDOM from 'react-dom';
 import { Link, withRouter } from 'react-router-dom';
-import { isEdit, isAuth, signout } from '../helpers/Default';
+import { isEdit, isAuth, signout, isAdminMenu, isAdmin, removeQuery } from '../helpers/Default';
 import EditableArea from '../core/components/EditableArea'
 import { EditableAreaContext } from '../contexts/EditableAreaContext'
 import { AnimatedBannerContext } from '../contexts/AnimatedBannerContext'
@@ -34,6 +34,7 @@ import {
     SubMenu
 } from '@szhsin/react-menu';
 import '@szhsin/react-menu/dist/index.css';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 
 const Layout = function ({ children, match, history }) {
@@ -219,11 +220,11 @@ const Layout = function ({ children, match, history }) {
 
         const printMenuTree = () => {
 
+            const onClick = () => {
+
+            }
+
             var menutree = menuTree && menuTree.map((menuItem, index) => {
-
-                const onClick = () => {
-
-                }
 
                 const printMenuTreeItem = (item) => {
                     if (item.children.length > 0) {
@@ -239,28 +240,33 @@ const Layout = function ({ children, match, history }) {
                             })
                         )
                     }
-                    else {
-                        if (item) {
-                            return (
-                                <MenuItem className="menuItem">
-                                    <Link to={item.url} style={isActive(item.url, match)}>{item.title}</Link>
-                                </MenuItem>
-                            )
-                        }
-                    }
+                    return (
+                        <MenuItem className="menuItem">
+                            <Link to={item.url} style={isActive(item.url, match)}>{item.title}</Link>
+                        </MenuItem>
+                    )
                 }
 
-                return (
-                    menuItem.children.map((menuitem) => {
-                        return (
-                            <Menu onMouseOver={onClick} className="menu" menuButton={<MenuButton>{menuItem.title}</MenuButton>}>
-                                {
-                                    printMenuTreeItem(menuitem)
-                                }
-                            </Menu>
-                        )
-                    })
-                )
+                if (menuItem.children && menuItem.children.length > 0) {
+                    return (
+                        menuItem.children.map((menuitem) => {
+                            return (
+                                <Menu onMouseOver={onClick} className="menu" menuButton={<MenuButton>{menuItem.title}</MenuButton>}>
+                                    {
+                                        printMenuTreeItem(menuitem)
+                                    }
+                                </Menu>
+                            )
+                        })
+                    )
+                } else {
+                    return (
+                        <MenuItem className="menuItem">
+                            <Link to={menuItem.url} style={isActive(menuItem.url, match)}>{menuItem.title}</Link>
+                        </MenuItem>
+                    )
+                }
+
             })
 
             return menutree
@@ -323,11 +329,16 @@ const Layout = function ({ children, match, history }) {
                             {isAuth() && isAuth().category.title == "admin" && (
                                 <Link to="/admin/home" className="nav-link" style={isActive('/admin/home', match)}> <SupervisorAccountIcon></SupervisorAccountIcon></Link>
                             )}
+                            {(
+                                <Link to="/cart" className="nav-link" style={isActive('/cart', match)}> <ShoppingCartIcon></ShoppingCartIcon></Link>
+                            )}
+
                             {isEdit() && isAuth() && isAuth().category.title == 'admin' && (
                                 <button className="btn btn-link" style={{ cursor: 'pointer', color: 'white' }} onClick={
                                     () => {
                                         updatePublishAnimatedBanners();
                                         updatePublishEditableAreas();
+                                        removeQuery("edit")
                                     }
                                 }><PublishIcon></PublishIcon></button>
                             )}

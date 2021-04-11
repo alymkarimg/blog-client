@@ -15,7 +15,7 @@ import EditableAreaContextProvider from './contexts/EditableAreaContext'
 import AnimatedBannerContextProvider from './contexts/AnimatedBannerContext'
 import GlobalContextProvider from './contexts/GlobalContext';
 import Blogs from './blog/Blogs';
-import Shop from './shop/Shop';
+import Shop from './shop/layouts/Shop';
 import AdminBlogs from './admin/AdminBlog'
 import BlogLayout from './blog/layouts/BlogLayout'
 import EditablePage from './core/EditablePage'
@@ -23,6 +23,7 @@ import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import './assets/css/Style.css'
 import EditableArea from './core/components/EditableArea';
+import ProductScreen from './shop/components/ProductScreen';
 
 const theme = createMuiTheme({
     typography: {
@@ -59,6 +60,7 @@ const Routes = () => {
                                 <AdminRoute path="/admin/blog" exact component={AdminBlogs} />
                                 <AdminRoute path="/admin/blog/create/:title/:id" exact component={BlogLayout} />
                                 {/* for any page with a param, render editable page */}
+                                <Route path="/product/:id" exact component={ProductScreen} />
                                 <Route path="/:page" exact component={EditablePage} />
                             </Switch>
                         </AnimatedBannerContextProvider>
