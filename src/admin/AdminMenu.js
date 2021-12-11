@@ -37,6 +37,16 @@ const AdminMenu = () => {
 
     }
 
+    const handleHideClick = () => {
+        var hideButton = document.querySelector(".hideButton")
+
+        if(hideButton.className.includes("ToggledOn")){
+            hideButton.className = "hideButton"
+        } else {
+            hideButton.className = "hideButton ToggledOn"
+        }
+    }   
+
     const handleAddClick = (event) => {
         // open dialog
         setValues({ ...values, dialogOpen: true, currentTarget: event.currentTarget.parentNode.parentNode.id })
@@ -66,10 +76,22 @@ const AdminMenu = () => {
 
             obj.depth = depth
 
+            const depthToHumanReadableString = () => {
+                if (depth == 1){
+                    return "Level 1"
+                }
+                if(depth == 1.1){
+                    return "Level 2"
+                }
+                if(depth == 1.11){
+                    return "Level 3"
+                } 
+            }
+
             if (unfilteredArray) {
                 unfilteredArray.forEach(q => {
                     if (q.id == obj.id) {
-                        q.depth = obj.depth.toString().replace(/1/g, "I")
+                        q.depth = `${depthToHumanReadableString(obj.depth.toString())}`
                     }
                 })
             }
@@ -145,9 +167,9 @@ const AdminMenu = () => {
                         nestedItem.id = nestedItem.textContent
                         nestedItem.textContent = "";
 
-                        // title
+                        // depth
                         let div0 = document.createElement("div")
-                        div0.textContent = `${menuItem.depth}.`
+                        div0.textContent = `${menuItem.depth}`
                         nestedItem.append(div0)
 
 
@@ -173,9 +195,15 @@ const AdminMenu = () => {
                         let addButton = document.createElement("button")
                         addButton.addEventListener("click", handleAddClick)
                         addButton.textContent = "Add Child"
+                        let hideButton = document.createElement("button")
+                        hideButton.className = `hideButton`
+                        hideButton.id = `${menuItem.id}`
+                        hideButton.addEventListener("click", handleHideClick)
+                        hideButton.textContent = "Hide from navigation"
                         div3.append(editButton)
                         div3.append(deleteButton)
                         div3.append(addButton)
+                        div3.append(hideButton)
                         nestedItem.append(div3)
 
                     }

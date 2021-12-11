@@ -30,7 +30,7 @@ const AnimatedBannerContextProvider = (props) => {
         setValues({ ...animatedBannerValues, animatedBanners })
     }
 
-    // when pubisheditableareas changes, update db if there are editable areas to update
+    // when pubishAnimatedBanner changes, update db if there are editable areas to update
     useEffect(() => {
         if (publishAnimatedBanners && animatedBanners.length > 0) {
 
@@ -42,9 +42,8 @@ const AnimatedBannerContextProvider = (props) => {
                         bodyFormData.append(key, banner[key])
                         for (var i = 0; i < banner.items.length; i++) {
                             if (banner.items[i].newImage) {
-                                bodyFormData.append("guid", banner.items[i].guid)
                                 // append the image
-                                bodyFormData.append(`${banner.title} ${banner.items[i].guid} ${banner.items[i].newImage.name}`, banner.items[i].newImage);
+                                bodyFormData.append(`${banner.title}::${banner.items[i].guid}::${banner.items[i].newImage.name}`, banner.items[i].newImage);
                             }
                             
                         }
@@ -53,9 +52,6 @@ const AnimatedBannerContextProvider = (props) => {
                     }
                 }
             })
-
-
-
 
             axios({
                 method: 'POST',

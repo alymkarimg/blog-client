@@ -14,7 +14,7 @@ const AdminBlog = () => {
         <Layout>
             <AdminTable
                 name="Blog"
-                deletepathname="blogs/deleteAdmin"
+                routePrefix="blogs"
                 getURL={getURL}
                 ></AdminTable>
 

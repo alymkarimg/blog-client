@@ -93,7 +93,7 @@ const Shop = () => {
                         </div>
                     </div>
                     <div className="col-md-12" >
-                        {/* <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea> */}
+                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
                         <ShopSnippet title={"drink"}></ShopSnippet>
                     </div>
                 </div>

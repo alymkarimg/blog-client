@@ -90,7 +90,7 @@ const Blogs = () => {
                         {blogs.map((blog, i) => {
                             return (
                                 <React.Fragment>
-                                    <div className="fade-in" style={{ marginBottom: "20px" }}>
+                                    <div className="fade-in blogCard" style={{ marginBottom: "20px" }}>
                                         <BlogCard blog={blog} />
                                     </div>
                                 </React.Fragment>

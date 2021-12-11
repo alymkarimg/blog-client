@@ -14,7 +14,7 @@ import { useRef } from 'react';
 import { TextField } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
-DOMPurify.setConfig({ ADD_ATTR: ['target'] });
+// DOMPurify.setConfig({ ADD_ATTR: ['target'] });
 
 var editorConfig = {
     toolbar: ['link', 'list', "alignment", "blockQuote", "bold", "code", "codeBlock", "selectAll", "undo", "redo", "fontBackgroundColor", "fontColor", "fontFamily", "fontSize", "heading", "highlight", "removeHighlight", "horizontalLine", "imageUpload", "indent", "outdent", "italic", "link", "numberedList", "bulletedList", "mediaEmbed", "pageBreak", "removeFormat", "specialCharacters", "strikethrough", "subscript", "superscript", "insertTable", "todoList", "underline"],
@@ -55,10 +55,10 @@ var editorConfig = {
     heading: {
         options: [
             { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+            { model: 'paragraph', title: 'Paragraph 2', class: 'ck-heading_paragraph' },
             { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
             { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-            { model: 'heading3', view: 'h3', title: 'Heading 2', class: 'ck-heading_heading3' },
-
+            { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' },
         ]
     },
     removePlugins: ['Title'],
@@ -92,9 +92,10 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
         }).then(response => {
 
             if (response.data.message) {
-                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), pageError: response.data.message, link: response.data.link });
+                setValues({ ...values, data: response.data.content, pageError: response.data.message, link: response.data.link });
             } else {
-                setValues({ ...values, data: DOMPurify.sanitize(response.data.content), loading: false, link: response.data.link });
+                // DOMPurify.sanitize(
+                setValues({ ...values, data: response.data.content, loading: false, link: response.data.link });
             }
 
         }).catch(error => {
@@ -138,7 +139,7 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
                         <TextField
                             onChange={handleChange}
                             label="URL"
-                            value={link} name={"url"} size="small" variant="outlined" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "120px" }} />
+                            value={link} name={"url"} size="small" variant="filled" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "100px" , maxHeight: "20px !important"}} />
                         <CKEditor
                             data-pathname={pathname}
                             id={guid}
@@ -149,13 +150,14 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
                             onChange={(evt, editor) => {
                                 if (isAdminArea() && alwaysOn || !alwaysOn) {
                                     setValues({ ...values, data: editor.getData() })
+                                    console.log(editor.getData())
                                 }
                             }}
                             onReady={editor => {
                                 console.log(Array.from(editor.ui.componentFactory.names()));
-                                // editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                                //     return new UploadAdapter(loader);
-                                // };
+                                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                                return new MyUploadAdapter(loader);
+                                };
                             }}
                             onBlur={() => {
                             }}
@@ -177,11 +179,13 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
             }
             else {
                 return (
-                    <Link to={link} ref={myRef}
-                        className={`editableAreaContainer ${fadeVar}`} >
+                    // <Link to={link} ref={myRef}
+                    //     className={`editableAreaContainer ${fadeVar}`} >
+                    //     <div dangerouslySetInnerHTML={{ __html: data }}>
+                    //     </div>
+                    // </Link>
                         <div dangerouslySetInnerHTML={{ __html: data }}>
                         </div>
-                    </Link>
                 )
             }
         }
@@ -198,8 +202,80 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
     return renderEditableArea()
 }
 
-const UploadAdapter = () => {
+class MyUploadAdapter {
+    constructor( loader ) {
+        // CKEditor 5's FileLoader instance.
+        this.loader = loader;
 
+        // URL where to send files.
+        this.url = `${process.env.REACT_APP_API}/editable-area/upload-image?token=${getCookie('token')}`;
+    }
+
+    // Starts the upload process.
+    async upload() {
+        
+        return await new Promise( ( resolve, reject ) => {
+            this._initRequest();
+            this._initListeners( resolve, reject );
+            this._sendRequest();
+        } );
+    }
+
+    // Aborts the upload process.
+    abort() {
+        if ( this.xhr ) {
+            this.xhr.abort();
+        }
+    }
+
+    // Example implementation using XMLHttpRequest.
+    _initRequest() {
+        const xhr = this.xhr = new XMLHttpRequest();
+
+        xhr.open( 'POST', this.url, true );
+        xhr.responseType = 'json';
+    }
+
+    // Initializes XMLHttpRequest listeners.
+    _initListeners( resolve, reject ) {
+        const xhr = this.xhr;
+        const loader = this.loader;
+        const genericErrorText = 'Couldn\'t upload file:' + ` ${ loader.file.name }.`;
+
+        xhr.addEventListener( 'error', () => reject( genericErrorText ) );
+        xhr.addEventListener( 'abort', () => reject() );
+        xhr.addEventListener( 'load', () => {
+            const response = xhr.response;
+
+            if ( !response || response.error ) {
+                return reject( response && response.error ? response.error.message : genericErrorText );
+            }
+
+            // If the upload is successful, resolve the upload promise with an object containing
+            // at least the "default" URL, pointing to the image on the server.
+            resolve( {
+                default: response
+            } );
+        } );
+
+        if ( xhr.upload ) {
+            xhr.upload.addEventListener( 'progress', evt => {
+                if ( evt.lengthComputable ) {
+                    loader.uploadTotal = evt.total;
+                    loader.uploaded = evt.loaded;
+                }
+            } );
+        }
+    }
+
+    // Prepares the data and sends the request.
+    async _sendRequest() {
+        const data = new FormData();
+
+        data.append( 'upload', await Promise.resolve(this.loader.file) );
+
+        this.xhr.send( data );
+    }
 }
 
 EditableArea.propTypes = {
