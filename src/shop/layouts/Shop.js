@@ -24,7 +24,7 @@ import "../../assets/css/Style.css"
 const Shop = () => {
 
     const [values, setValues] = useState({
-        products: [1, ,2, 3],
+        products: [],
     });
 
     const useStyles = makeStyles((theme) => ({
@@ -45,15 +45,15 @@ const Shop = () => {
 
         axios({
             method: 'GET',
-            url: `${process.env.REACT_APP_API}/blogs/`
+            url: `${process.env.REACT_APP_API}/shop/`
         }).then(response => {
             if (response.data.errors && response.data.errors.length > 0) {
                 response.data.errors.forEach((error) => {
                     toast.error(error.message)
                 })
             }
-            else if (response.data.blogs.length > 0) {
-                setValues({ ...values, posts: response.data.blogs });
+            else if (response.data.products.length > 0) {
+                setValues({ ...values, products: response.data.products });
             }
             else {
 
@@ -83,7 +83,8 @@ const Shop = () => {
                     </div>
 
                     <div className="col-md-12" >
-                            <ShopSnippet title={"food"}></ShopSnippet>
+                            {/* products.filter(q => q.category == "food") */}
+                            <ShopSnippet products={products} title={"food"}></ShopSnippet>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
@@ -93,8 +94,9 @@ const Shop = () => {
                         </div>
                     </div>
                     <div className="col-md-12" >
+                        {/* products.filter(q => q.category == "drink") */}
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
-                        <ShopSnippet title={"drink"}></ShopSnippet>
+                        <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
                     </div>
                 </div>
         </div>

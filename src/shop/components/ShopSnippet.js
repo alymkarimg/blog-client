@@ -38,14 +38,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function ShopSnippet({ title }) {
+function ShopSnippet({ title, products = [] }) {
   const [values, setValues] = useState({
-    products: [1, 2, 3, 4, 5],
     largeScreen: window.matchMedia("(min-width: 991px)").matches,
     screenChanged: false,
   });
-
-  const { products } = values;
 
   let { largeScreen, screenChanged } = values;
 
@@ -81,7 +78,13 @@ function ShopSnippet({ title }) {
   if (largeScreen) {
     return (
       <div>
-        <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
+          }}
+        >
           <Tooltip title="Previous" ref={navigationPrevRef}>
             <IconButton aria-label={`Previous`}>
               <ChevronLeftIcon />
@@ -115,7 +118,7 @@ function ShopSnippet({ title }) {
           modules={[Navigation, Pagination]}
           pagination={{ clickable: true }}
           spaceBetween={10}
-          slidesPerView={4}
+          slidesPerView={5}
           onSlideChange={() => console.log("slide change")}
           onSwiper={(swiper) => console.log(swiper)}
         >
@@ -124,7 +127,7 @@ function ShopSnippet({ title }) {
             return (
               <Fragment>
                 <SwiperSlide>
-                  <ShopCard title={title} index={index}></ShopCard>
+                  <ShopCard product={product}></ShopCard>
                 </SwiperSlide>
               </Fragment>
             );
@@ -152,8 +155,12 @@ function ShopSnippet({ title }) {
                 <SwiperSlide>
                   <ShopCard title={title} index={index}></ShopCard>
                 </SwiperSlide>
-                <div ref={navigationPrevRef}>Prev</div>
-                <div ref={navigationNextRef}>Next</div>
+                {products && (
+                  <React.Fragment>
+                    <div ref={navigationPrevRef}>Prev</div>
+                    <div ref={navigationNextRef}>Next</div>
+                  </React.Fragment>
+                )}
               </React.Fragment>
             );
           })}

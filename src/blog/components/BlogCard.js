@@ -133,7 +133,7 @@ export default function BlogCard({ blog }) {
             useloading={true}
             fade={false}
             pathname={`blog editableArea`}
-            guid={`blog ${blog.slug}`}
+            guid={`blog ${blog && blog.slug}`}
           />
         </CardContent>
         <div className={classes.controls}>

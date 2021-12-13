@@ -13,6 +13,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import "../../assets/css/Style.css";
 import ImageUploader from "../../core/components/ImageUploader";
+import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import {
   getFieldsFromPrototype,
   uploadImage,
@@ -21,6 +22,7 @@ import {
 import Banner from "../../core/components/AnimatedBanner";
 import { EditableAreaContext } from "../../contexts/EditableAreaContext";
 import { AnimatedBannerContext } from "../../contexts/AnimatedBannerContext";
+import SimpleSelect from "../../core/components/Select";
 
 const FullScreenDialog = ({
   title,
@@ -30,28 +32,29 @@ const FullScreenDialog = ({
   handleClose,
   handleCreateRow,
   handleEditRow,
-  row
+  row,
 }) => {
   const { updatePublishEditableAreas } = useContext(EditableAreaContext);
   const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
-  console.log(row)
+  console.log(row);
 
   const [values, setValues] = useState({
     prototype,
     open,
-    dbItem: {...row, categories: row.categories == undefined ? [] : row.categories },
+    dbItem: {
+      ...row,
+      categories: row == undefined ? [] : row.categories,
+    },
   });
 
   useEffect(() => {
-    row && setValues({...values, dbItem: {
-      
-    }})
-  }, [])
+    row && setValues({ ...values, dbItem: {} });
+  }, []);
 
   var { dbItem, prototype, open, row } = values;
 
-  const handleChange = (name) => (event) => {
+  const handleChange = (name, event) => (event) => {
     setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } });
   };
 
@@ -64,48 +67,35 @@ const FullScreenDialog = ({
   const createForm = (arr) => {
     const form = [];
     arr.map((value) => {
-      if (value == "title") {
+      if (
+        value == "title" ||
+        value == "username" ||
+        value == "firstname" ||
+        value == "surname" ||
+        value == "url" ||
+        value == "author"
+      ) {
         form.push(
           <div className="col-md-12" style={{ marginBottom: "10px" }}>
-            <p>Title</p>
+            <p>{value.charAt(0).toUpperCase() + value.slice(1)}</p>
             <TextField
-              value={dbItem.title}
-              id={`${name}_Title`}
+              value={dbItem[value]}
+              id={`${name}_${value}`}
               onChange={handleChange(value)}
               fullWidth
             />
           </div>
         );
       }
-      // if (value == "parent") {
-      //   form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-      //     <p>Title</p>
-      //     <TextField id={`${name}_`} onChange={handleChange(value)} fullWidth />
-      //   </div>)
-      // }
-      if (value == "url") {
+      if (value == "category") {
         form.push(
           <div className="col-md-12" style={{ marginBottom: "10px" }}>
-            <p>URL</p>
-            <TextField
-              value={dbItem.url}
-              id={`${name}_Url`}
-              onChange={handleChange(value)}
-              fullWidth
-            />
-          </div>
-        );
-      }
-      if (value == "author") {
-        form.push(
-          <div className="col-md-12" style={{ marginBottom: "10px" }}>
-            <p>Author</p>
-            <TextField
-              value={dbItem.author}
-              id={`${name}_Author`}
-              onChange={handleChange(value)}
-              fullWidth
-            />
+            <SimpleSelect
+              value={dbItem[value]}
+              sort="Newest listed"
+              title="Category"
+              menuitems={["Most popular", "Newest listed", "Oldest listed"]}
+            ></SimpleSelect>
           </div>
         );
       }
@@ -134,6 +124,40 @@ const FullScreenDialog = ({
               id="datetime-local"
               type="datetime-local"
               defaultValue={Date.now()}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        );
+      }
+      if (value == "price") {
+        form.push(
+          <div className="col-md-12">
+            <p>Price</p>
+            <CurrencyTextField
+              id="pricefield"
+              variant="standard"
+              value={dbItem.price}
+              currencySymbol="£"
+              outputFormat="string"
+              onChange={handleChange(value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        );
+      }
+      if (value == "countInStock") {
+        form.push(
+          <div className="col-md-12">
+            <p>Count In Stock</p>
+            <TextField
+              value={dbItem.countInStock}
+              onChange={handleChange(value)}
+              id="stockfield"
+              type="number"
               InputLabelProps={{
                 shrink: true,
               }}
@@ -176,7 +200,7 @@ const FullScreenDialog = ({
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
     >
-      <h2 style={{ textAlign: "center", padding: "20px" }}> Add a blog </h2>
+      <h2 style={{ textAlign: "center", padding: "20px" }}> Add a {name} </h2>
       <DialogContent dividers={scroll === "paper"}>
         <DialogContentText
           id="scroll-dialog-description"
@@ -189,8 +213,7 @@ const FullScreenDialog = ({
               <div
                 className="row col-md-4"
                 style={{ justifyContent: "center" }}
-              >
-              </div>
+              ></div>
             }
           </div>
         </DialogContentText>
@@ -207,7 +230,7 @@ const FullScreenDialog = ({
             // replace image with newImage
             // if new image is present, display new image on the slide
 
-            if(dbItem && dbItem.slug){
+            if (dbItem && dbItem.slug) {
               handleEditRow(dbItem);
             } else {
               handleCreateRow(dbItem);
@@ -218,7 +241,7 @@ const FullScreenDialog = ({
             handleClose();
           }}
         >
-          Create {name}
+          {!dbItem.slug ? "Create" : "Edit"} {name}
         </Button>
       </DialogActions>
     </Dialog>

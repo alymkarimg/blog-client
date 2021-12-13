@@ -76,7 +76,7 @@ function removeBackground(e) {
   e.target.className = "";
 }
 
-export default function ShopCard({ product, index, title }) {
+export default function ShopCard({ product }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     expanded: false,
@@ -106,8 +106,8 @@ export default function ShopCard({ product, index, title }) {
       <div className={classes.details}>
         <Banner
           alwaysOn={false}
-          size={{ width: "100%", height: "400px" }}
-          title={`shopBanner-${product && product.title}`}
+          size={{ width: "100%", height: "200px" }}
+          title={`shop ${product && product.title}`}
         ></Banner>
         <CardHeader
           title={product ? product.title : "dummy title"}
@@ -120,7 +120,7 @@ export default function ShopCard({ product, index, title }) {
               useloading={true}
               fade={false}
               pathname={`shop editableArea`}
-              guid={`shop ${index}`}
+              guid={`shop ${product && product.slug}`}
             />
           </Typography>
           <Rating

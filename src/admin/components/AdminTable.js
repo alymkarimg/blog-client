@@ -113,6 +113,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
         },
       })
         .then((response) => {
+          console.log(response)
           setValues({
             ...values,
             prototype: response.data.prototype,
@@ -149,9 +150,9 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
     });
     const selectedIndex = selectedTitles
       .map((q) => {
-        return q.title;
+        return q.title ? q.title : q.username;
       })
-      .indexOf(row.title);
+      .indexOf(row.title ? row.title : row.username);
     let newSelected = [];
 
     if (selectedIndex === -1) {
@@ -274,9 +275,9 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
   const isSelected = (row) =>
     selectedTitles
       .map((q) => {
-        return q.title;
+        return q.title ? q.title : q.username;
       })
-      .indexOf(row.title) !== -1;
+      .indexOf(row.title ? row.title : row.username) !== -1;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -310,7 +311,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
             setRow={setRow}
             setOpen={setOpen}
             open={open}
-            name={`Manage ${name}`}
+            name={`Manage ${name}s`}
             numSelected={selected.length}
             selected={selected}
             deletepathname={deletepathname}
