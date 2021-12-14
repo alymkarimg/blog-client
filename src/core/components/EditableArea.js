@@ -65,12 +65,11 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = (props, { link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
+const EditableArea = (props, { isEditablePage, link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
     const myRef = useRef()
-
     const location = useLocation();
 
     const [values, setValues] = useState({
@@ -81,13 +80,14 @@ const EditableArea = (props, { link, onEditorChange, truncate = false, pathname,
         size,
         fade,
         pageError: false,
-        link,
-        url: location
+        isEditablePage: props.isEditablePage == "/:page" ? true : false,
+        url: location.pathname
     })
     var { data, loading, pageError, link } = values
 
     // when the component mounts, set the state
     useEffect(() => {
+
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/editable-area`,
