@@ -21,7 +21,7 @@ import DOMPurify from 'dompurify';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext';
 
-const Banner = ({ title, size, alwaysOn = false }) => {
+const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
 
   const { animatedBannerValues, updateAnimatedBanners, updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
   const { publishAnimatedBanner } = animatedBannerValues;
@@ -29,6 +29,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
   const bannerImageUploader = useRef();
 
   const [values, setValues] = useState({
+    title,
     animatedBanner: null,
     loading: true,
     editBar: false,
@@ -56,10 +57,6 @@ const Banner = ({ title, size, alwaysOn = false }) => {
   var { loading, animatedBanner, editBar, currentSlide, source } = values
 
   const dataSlideTo = useRef(null);
-
-  useEffect(() => {
-
-  }, [animatedBanner])
 
   const removeCurrentSlide = () => {
 
@@ -139,14 +136,6 @@ const Banner = ({ title, size, alwaysOn = false }) => {
   const handleSelect = (currentSlide, e) => {
     reloadEditableArea()
     setValues({ ...values, currentSlide });
-
-    // var bannerImageUploaders = document.querySelector('.imageUploader');
-    // bannerImageUploaders.children[0].children[2].value = null
-
-
-
-
-
   };
 
   const reloadEditableArea = () => {
@@ -249,35 +238,19 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         {
           ((isAdmin() && isEdit()) || isAdminArea() && alwaysOn) && (
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", zIndex: 3 }}>
-              {(bigOrSmall) && (
-                <div className={bigOrSmall ? "bannerEditorButtons" : "bannerEditorButtonsSmall"} >
+              {<div className={bigOrSmall ? "bannerEditorButtons" : "bannerEditorButtonsSmall"} >
                   {/* <Button border={0} onClick={() => {
               setValues({ ...values, hideBannerToolbar: !hideBannerToolbar })
               }} className="" containedSizeSmall variant="contained">Upload Image</Button> */}
                   <ImageUploader className="imageUploader" onClick={(e) => { e.preventDefault() }} singleImage onImageDrop={onImageDrop}
                     singleImage={true} withPreview={false} onImageDrop={onImageDrop} getURL={getURL} buttonText={"Choose Image"} withLabel={false} withIcon={false} ></ImageUploader>
-                  <div style={{ position: "relative", top: "8px", margin: "5px" }}>
-                    <TextField
-                      label="Slide Interval"
-                      InputProps={{
-                        inputProps: {
-                          max: 100, min: 0,
-                        }
-                      }}
-                      InputLabelProps={{
-                        shrink: true,
-                      }}
-                      value={animatedBanner.interval} size="small" type="number" id="autoplayInterval" variant="outlined" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "120px" }} />
-
-                  </div>
                   <div>
                     <Button style={{ margin: "5px" }} onClick={addSlide} border={0} variant="contained" color="secondary"><PlusOneRoundedIcon /> Slide</Button>
                     <Button style={{ margin: "5px" }} onClick={removeCurrentSlide} border={0} variant="contained" color="primary"><DeleteSweepRoundedIcon /> Slide </Button>
                   </div>
                   {/* <Toggle labelPlacement="top" className={"BannerToggle"} label={"Hide Editable Area"} onToggle={onToggle} containedSizeSmall variant="contained" color="primary"></Toggle> */}
-                </div>
-
-              )}
+                </div>}
+                
             </div>
           )
         }

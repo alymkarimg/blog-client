@@ -54,16 +54,19 @@ function getStyles(name, content, theme) {
     };
 }
 
-export default function MultipleSelect({ title, menuitems, value, onChange }) {
+export default function MultipleSelect({ title, menuitems, value, onChange = null }) {
     const classes = useStyles();
     const theme = useTheme();
     const [values, setValues] = React.useState({ content: menuitems, selected: value});
 
     let { content, selected } = values;
 
-    useEffect(() => {
-        setValues({...values, selected: value})
-    }, [value])
+    const handleChange = (e) => {
+        const {
+            target: { value },
+          } = e;
+          setValues({...values, selected: value})
+    }
 
     return (
         <React.Fragment>
@@ -74,7 +77,9 @@ export default function MultipleSelect({ title, menuitems, value, onChange }) {
                     id="demo-mutiple-checkbox"
                     multiple
                     value={selected}
-                    onChange={onChange}
+                    onChange={(e) => {
+                        onChange ? onChange() : handleChange(e)
+                    }}
                     input={<Input />}
                     renderValue={(selected) => selected.join(', ')}
                     MenuProps={MenuProps}
@@ -89,3 +94,4 @@ export default function MultipleSelect({ title, menuitems, value, onChange }) {
         </React.Fragment>
     )
 }
+

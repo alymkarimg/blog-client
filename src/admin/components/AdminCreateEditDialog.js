@@ -1,117 +1,185 @@
-import React, { setState, useState, useEffect, useContext } from 'react'
-import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios'
-import PropTypes from 'prop-types';
-import { Button } from 'react-bootstrap';
+import React, { setState, useState, useEffect, useContext } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import PropTypes from "prop-types";
+import { Button } from "react-bootstrap";
 import EditableArea from "../../core/components/EditableArea";
-import MultipleSelect from '../../core/components/MultipleSelect'
-import 'react-toastify/dist/ReactToastify.min.css';
-import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogActions from '@material-ui/core/DialogActions';
-import '../../assets/css/Style.css'
-import ImageUploader from '../../core/components/ImageUploader'
-import { getFieldsFromPrototype, uploadImage, getCookie } from '../../helpers/Default'
-import Banner from '../../core/components/AnimatedBanner'
-import { EditableAreaContext } from '../../contexts/EditableAreaContext'
-import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext'
+import MultipleSelect from "../../core/components/MultipleSelect";
+import "react-toastify/dist/ReactToastify.min.css";
+import Dialog from "@material-ui/core/Dialog";
+import TextField from "@material-ui/core/TextField";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogActions from "@material-ui/core/DialogActions";
+import "../../assets/css/Style.css";
+import ImageUploader from "../../core/components/ImageUploader";
+import CurrencyTextField from "@unicef/material-ui-currency-textfield";
+import {
+  getFieldsFromPrototype,
+  uploadImage,
+  getCookie,
+} from "../../helpers/Default";
+import Banner from "../../core/components/AnimatedBanner";
+import { EditableAreaContext } from "../../contexts/EditableAreaContext";
+import { AnimatedBannerContext } from "../../contexts/AnimatedBannerContext";
+import SimpleSelect from "../../core/components/Select";
 
-const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCreateRow }) => {
-
+const FullScreenDialog = ({
+  title,
+  name,
+  open,
+  prototype,
+  handleClose,
+  handleCreateRow,
+  handleEditRow,
+  row,
+}) => {
   const { updatePublishEditableAreas } = useContext(EditableAreaContext);
   const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
+
+  console.log(row);
 
   const [values, setValues] = useState({
     prototype,
     open,
     dbItem: {
-      slug: "new",
-      parent: null,
-      url: null,
-      categories: [],
-      editableArea: null,
-      categories: [],
-      animatedBanner: null
+      ...row,
+      categories: row == undefined ? [] : row.categories,
     },
-  })
+  });
 
-  var { dbItem, prototype, open } = values;
+  useEffect(() => {
+    row && setValues({ ...values, dbItem: {} });
+  }, []);
 
-  const handleChange = (name) => ((event) => {
-    setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } })
-  })
+  var { dbItem, prototype, open, row } = values;
+
+  const handleChange = (name, event) => (event) => {
+    setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } });
+  };
 
   const onEditorChange = (editableArea) => {
-    setValues({ ...values, dbItem: { ...dbItem, editableArea } })
-  }
+    setValues({ ...values, dbItem: { ...dbItem, editableArea } });
+  };
 
-  var textfieldsArray = getFieldsFromPrototype(prototype, true)
+  var textfieldsArray = getFieldsFromPrototype(prototype, true);
 
   const createForm = (arr) => {
     const form = [];
     arr.map((value) => {
-      if (value == "title") {
-        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-          <p>Title</p>
-          <TextField id={`${name}_Title`} onChange={handleChange(value)} fullWidth />
-        </div>)
+      if (
+        value == "title" ||
+        value == "username" ||
+        value == "firstname" ||
+        value == "surname" ||
+        value == "url" ||
+        value == "author"
+      ) {
+        form.push(
+          <div className="col-md-12" style={{ marginBottom: "10px" }}>
+            <p>{value.charAt(0).toUpperCase() + value.slice(1)}</p>
+            <TextField
+              value={dbItem[value]}
+              id={`${name}_${value}`}
+              onChange={handleChange(value)}
+              fullWidth
+            />
+          </div>
+        );
       }
-      // if (value == "parent") {
-      //   form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-      //     <p>Title</p>
-      //     <TextField id={`${name}_`} onChange={handleChange(value)} fullWidth />
-      //   </div>)
-      // }
-      if (value == "url") {
-        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-          <p>URL</p>
-          <TextField id={`${name}_Url`} onChange={handleChange(value)} fullWidth />
-        </div>)
-      }
-      if (value == "author") {
-        form.push(<div className="col-md-12" style={{ marginBottom: "10px" }}>
-          <p>Author</p>
-          <TextField id={`${name}_Author`} onChange={handleChange(value)} fullWidth />
-        </div>)
+      if (value == "category") {
+        form.push(
+          <div className="col-md-12" style={{ marginBottom: "10px" }}>
+            <SimpleSelect
+              value={dbItem[value]}
+              sort="Newest listed"
+              title="Category"
+              menuitems={["Most popular", "Newest listed", "Oldest listed"]}
+            ></SimpleSelect>
+          </div>
+        );
       }
       if (value == "categories") {
-        form.push(<div className="col-md-12" style={{ marginLeft: "-10px", marginBottom: "10px" }}>
-          <MultipleSelect value={values.dbItem[value]} onChange={handleChange(value)} title="Categories" menuitems={["Vegetarian", "Recipes", "Articles"]} />
-        </div>)
-      }
-      if (value == "editableArea") {
-
-        form.push(<div className="col-md-12" >
-          <p>Content</p>
-          <div style={{ marginBottom: "10px", marginLeft: "-10px" }}>
-            <EditableArea onEditorChange={onEditorChange} alwaysOn={true} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`editableArea_create`} guid={`${dbItem.slug}`} />
-            {/* <EditableArea onEditorChange={onEditorChange} alwaysOn={true} size={{ width: "100%", height: "100%" }} useloading={true} fade={false} pathname={`editableArea_create`} guid={`${dbItem.slug}`} /> */}
+        form.push(
+          <div
+            className="col-md-12"
+            style={{ marginLeft: "-10px", marginBottom: "10px" }}
+          >
+            <MultipleSelect
+              value={values.dbItem[value]}
+              onChange={handleChange(value)}
+              title="Categories"
+              menuitems={["Vegetarian", "Recipes", "Articles"]}
+            />
           </div>
-        </div>)
+        );
       }
       if (value == "publishedDate") {
-
-        form.push(<div className="col-md-12" >
-          <p>Published Date</p>
-          <TextField
-            onChange={handleChange(value)}
-            id="datetime-local"
-            type="datetime-local"
-            defaultValue={Date.now()}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </div>)
+        form.push(
+          <div className="col-md-12">
+            <p>Published Date</p>
+            <TextField
+              value={dbItem.published}
+              onChange={handleChange(value)}
+              id="datetime-local"
+              type="datetime-local"
+              defaultValue={Date.now()}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        );
       }
-    })
+      if (value == "price") {
+        form.push(
+          <div className="col-md-12">
+            <p>Price</p>
+            <CurrencyTextField
+              id="pricefield"
+              variant="standard"
+              value={dbItem.price}
+              currencySymbol="£"
+              outputFormat="string"
+              onChange={handleChange(value)}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        );
+      }
+      if (value == "countInStock") {
+        form.push(
+          <div className="col-md-12">
+            <p>Count In Stock</p>
+            <TextField
+              value={dbItem.countInStock}
+              onChange={handleChange(value)}
+              id="stockfield"
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </div>
+        );
+      }
+    });
 
-    return <div className={`row ${values.image == undefined ? "col-md-8" : "col-md-12"}`} > {form} </div>;
-  }
+    return (
+      <div
+        className={`row ${
+          values.image == undefined ? "col-md-8" : "col-md-12"
+        }`}
+      >
+        {" "}
+        {form}{" "}
+      </div>
+    );
+  };
 
-  const scroll = 'paper';
+  const scroll = "paper";
   const descriptionElementRef = React.useRef(null);
   useEffect(() => {
     if (open) {
@@ -132,8 +200,8 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCre
       aria-labelledby="scroll-dialog-title"
       aria-describedby="scroll-dialog-description"
     >
-      <h2 style={{ textAlign: "center", padding: "20px" }}> Add a blog </h2>
-      <DialogContent dividers={scroll === 'paper'}>
+      <h2 style={{ textAlign: "center", padding: "20px" }}> Add a {name} </h2>
+      <DialogContent dividers={scroll === "paper"}>
         <DialogContentText
           id="scroll-dialog-description"
           ref={descriptionElementRef}
@@ -141,15 +209,11 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCre
         >
           <div className="row">
             {createForm(textfieldsArray)}
-            {prototype.includes("animatedBanner") &&
-              (
-                <div className="row col-md-4" style={{ justifyContent: "center" }}>
-                  <div>
-                    <p>Image</p>
-                    <Banner alwaysOn={true} size={{ width: "250px", height: "180px" }} title={`blogBanner ${title}`} ></Banner>
-                  </div>
-                </div>
-              )
+            {
+              <div
+                className="row col-md-4"
+                style={{ justifyContent: "center" }}
+              ></div>
             }
           </div>
         </DialogContentText>
@@ -157,7 +221,7 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCre
       <DialogActions>
         <Button onClick={handleClose} color="secondary">
           Cancel
-            </Button>
+        </Button>
         <Button
           variant="contained"
           component="label"
@@ -165,38 +229,33 @@ const FullScreenDialog = ({ title, name, open, prototype, handleClose, handleCre
             e.preventDefault();
             // replace image with newImage
             // if new image is present, display new image on the slide
-           
-            handleCreateRow(dbItem)
 
-            if(dbItem.animatedBanner && dbItem.animatedBanner.items[title.newImage]){
-              dbItem.animatedBanner.items[title].image = dbItem.animatedBanner.items[title].newImage;
+            if (dbItem && dbItem.slug) {
+              handleEditRow(dbItem);
+            } else {
+              handleCreateRow(dbItem);
             }
+
             // get current slide
-            setValues({ ...values, dbItem})
-
-            // publish editable areas
-            updatePublishAnimatedBanners();
-            updatePublishEditableAreas();
-
-            
-
-
-            handleClose()
+            setValues({ ...values, dbItem });
+            handleClose();
           }}
         >
-          Create {name}
+          {!dbItem.slug ? "Create" : "Edit"} {name}
         </Button>
       </DialogActions>
-    </Dialog>);
-}
+    </Dialog>
+  );
+};
 
 FullScreenDialog.propTypes = {
   name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   handleCreateRow: PropTypes.func.isRequired,
+  handleEditRow: PropTypes.func.isRequired,
   prototype: PropTypes.array.isRequired,
-  getURL: PropTypes.string.isRequired
+  getURL: PropTypes.string.isRequired,
 };
 
 export default FullScreenDialog;

@@ -116,7 +116,7 @@ const Signin = ({ history }) => {
             <div className="col-md-3">
                 <ToastContainer />
                 {isAuth() && isAuth().category.title != "admin" ? <Redirect to="/" /> : null}
-                <h1 className="p-4 text-center">Signin</h1>
+                <h1 className="text-center">Signin</h1>
                 <Google history={history}></Google>
                 <Facebook history={history}></Facebook>
                 {signinForm()}

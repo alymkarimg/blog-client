@@ -21,7 +21,7 @@ import ShopSnippet from '../components/ShopSnippet';
 import Banner from '../../core/components/AnimatedBanner'
 import "../../assets/css/Style.css"
 
-const Shop = () => {
+const ShopSingleItem = () => {
 
     const [values, setValues] = useState({
         products: [],
@@ -104,4 +104,4 @@ const Shop = () => {
     )
 }
 
-export default Shop;
+export default ShopSingleItem;

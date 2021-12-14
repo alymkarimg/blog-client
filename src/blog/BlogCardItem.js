@@ -19,7 +19,7 @@ import Card from '@material-ui/core/Card';
 import TextField from '@material-ui/core/TextField';
 import CardContent from '@material-ui/core/CardContent';
 
-const Blogs = () => {
+const BlogCardItem = () => {
 
     const [values, setValues] = useState({
         blogs: [],
@@ -120,4 +120,4 @@ const Blogs = () => {
     )
 }
 
-export default Blogs;
+export default BlogCardItem;

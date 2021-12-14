@@ -149,6 +149,10 @@
     position: relative;
 }
 
+.blogCard .banner {
+    margin-bottom: 0px !important;
+}
+
 .bannerEditorButtons {
     bottom: 0px;
     left: 0%;
@@ -206,7 +210,6 @@ a {
     display: flex !important;
     align-items: center;
     border-radius: 0px;
-    outline: 1px solid grey;
     animation: fadein 0.5s linear;
 }
 
