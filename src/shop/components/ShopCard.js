@@ -140,7 +140,7 @@ export default function ShopCard({ product }) {
         </CardContent>
         <CardContent>
           <Link
-            to={product ? `/product/${product.id}` : "/product/1"}
+            to={product ? `/product/${product.slug}` : "/product/tester::"}
             style={{
               display: "flex",
               justifyContent: "center",

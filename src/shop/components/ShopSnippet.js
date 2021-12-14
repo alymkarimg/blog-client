@@ -153,7 +153,7 @@ function ShopSnippet({ title, products = [] }) {
             return (
               <React.Fragment>
                 <SwiperSlide>
-                  <ShopCard title={title} index={index}></ShopCard>
+                  <ShopCard product={product} title={title} index={index}></ShopCard>
                 </SwiperSlide>
                 {products && (
                   <React.Fragment>

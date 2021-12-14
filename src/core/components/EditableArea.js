@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, Fragment } from 'react'
 import PropTypes from 'prop-types';
 import { ReactDOM, render } from "react-dom";
 import axios from 'axios'
+import { useLocation } from 'react-router';
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import DOMPurify from 'dompurify';
@@ -64,11 +65,13 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
+const EditableArea = (props, { link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
     const myRef = useRef()
+
+    const location = useLocation();
 
     const [values, setValues] = useState({
         pathname,
@@ -78,9 +81,9 @@ const EditableArea = ({ link, onEditorChange, truncate = false, pathname, guid, 
         size,
         fade,
         pageError: false,
-        link
+        link,
+        url: location
     })
-
     var { data, loading, pageError, link } = values
 
     // when the component mounts, set the state

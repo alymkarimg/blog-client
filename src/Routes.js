@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './core/App';
 import Signup from './auth/Signup';
@@ -16,6 +16,8 @@ import AnimatedBannerContextProvider from './contexts/AnimatedBannerContext'
 import GlobalContextProvider from './contexts/GlobalContext';
 import Blogs from './blog/Blogs';
 import Shop from './shop/layouts/Shop';
+import ShopSingleItem from './shop/layouts/ShopSingleItem';
+import BlogCardItem from './blog/BlogCardItem';
 import AdminBlogs from './admin/AdminBlog'
 import EditablePage from './core/EditablePage'
 import { createMuiTheme } from '@material-ui/core/styles';
@@ -38,6 +40,10 @@ const theme = createMuiTheme({
 });
 
 const Routes = () => {
+
+    useEffect(() => { 
+    }, [])
+
     return (
         <ThemeProvider theme={theme}>
             <BrowserRouter>
@@ -61,6 +67,8 @@ const Routes = () => {
                                 <AdminRoute path="/admin/shop" exact component={AdminShop} />
                                 <AdminRoute path="/admin/users" exact component={AdminUsers} />
                                 {/* for any page with a param, render editable page */}
+                                <Route path="/product/:slug" exact component={ShopSingleItem} />
+                                <Route path="/blog/:slug" exact component={BlogCardItem} />
                                 <Route path="/:page" exact component={EditablePage} />
                             </Switch>
                         </AnimatedBannerContextProvider>
