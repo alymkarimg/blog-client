@@ -65,7 +65,7 @@ var editorConfig = {
     removePlugins: ['Title'],
 }
 
-const EditableArea = (props, { isEditablePage, link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
+const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, pathname, guid, size, fade = false, useloading = false, alwaysOn = false }) => {
 
     const { editableAreavalues, updateEditableAreas } = useContext(EditableAreaContext);
     const { publishEditableAreas } = editableAreavalues;
@@ -80,10 +80,10 @@ const EditableArea = (props, { isEditablePage, link, onEditorChange, truncate = 
         size,
         fade,
         pageError: false,
-        isEditablePage: props.isEditablePage == "/:page" ? true : false,
+        isEditablePage: isEditablePage == "/:page" ? true : false,
         url: location.pathname
     })
-    var { data, loading, pageError, link } = values
+    var { pathname, guid, data, loading, pageError, link } = values
 
     // when the component mounts, set the state
     useEffect(() => {
