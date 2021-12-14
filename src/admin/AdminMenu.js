@@ -32,7 +32,7 @@ const AdminMenu = () => {
     }
 
     const handleEditClick = () => {
-        // open dialog
+        // open dialog, set current target
         setValues({ ...values, dialogOpen: true })
 
     }
@@ -48,7 +48,7 @@ const AdminMenu = () => {
     }   
 
     const handleAddClick = (event) => {
-        // open dialog
+        // open dialog, set current target 
         setValues({ ...values, dialogOpen: true, currentTarget: event.currentTarget.parentNode.parentNode.id })
 
     }
@@ -180,7 +180,7 @@ const AdminMenu = () => {
 
                         // url
                         let div2 = document.createElement("div")
-                        div2.textContent = `URL: \"\~${menuItem.url}\"`
+                        div2.textContent = `URL: ~/${menuItem.url}`
                         nestedItem.append(div2)
 
 
@@ -320,6 +320,7 @@ const AdminMenu = () => {
                                 getURL={getURL}
                                 handleClose={handleClose}
                                 handleCreateRow={handleCreateRow}
+                                handleDeleteClick
                             />
                         </div>
                     )}
