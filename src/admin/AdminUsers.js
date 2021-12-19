@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Layout from '../layouts/Layout';
 import AdminTable from './components/AdminTable';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import { Button } from '@material-ui/core'
 
 const AdminUsers = () => {
 
@@ -15,7 +12,7 @@ const AdminUsers = () => {
                 name="User"
                 routePrefix="user"
                 getURL={getURL}
-                ></AdminTable>
+            />
         </Layout >
     )
 };

@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './core/App';
 import Signup from './auth/Signup';
@@ -23,7 +23,6 @@ import EditablePage from './core/EditablePage'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
 import './assets/css/Style.css'
-import EditableArea from './core/components/EditableArea';
 import AdminShop from './admin/AdminShop';
 import AdminUsers from './admin/AdminUsers'
 
@@ -41,8 +40,6 @@ const theme = createMuiTheme({
 
 const Routes = () => {
 
-    useEffect(() => { 
-    }, [])
 
     return (
         <ThemeProvider theme={theme}>

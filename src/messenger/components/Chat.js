@@ -1,4 +1,4 @@
-import React, { setState, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Avatar, IconButton } from '@material-ui/core'
 import "../Default.css"
 import AttachFile from '@material-ui/icons/AttachFile';
@@ -9,16 +9,12 @@ import MicIcon from '@material-ui/icons/Mic';
 
 const CreateChat = () => {
 
-    // set values
-    const [values, setValues] = useState({ input: ""})
+    const [values, setValues] = useState({ input: "" })
 
-
-    // destructure values
     let { input } = values
 
-    // functions
-    const setInput  = (updatedVal) => {
-        setValues({...values, input: updatedVal})
+    const setInput = (updatedVal) => {
+        setValues({ ...values, input: updatedVal })
 
     }
 
@@ -29,7 +25,7 @@ const CreateChat = () => {
     return (
         <div className="messengerChat">
             <div className="chatHeader">
-                <Avatar></Avatar>
+                <Avatar />
                 <div className="chatHeaderInfo">
                     <h3>Room name</h3>
                     <p>Last seen at...</p>
@@ -58,20 +54,20 @@ const CreateChat = () => {
                 </p>
             </div>
             <div className="chatFooter">
-                    <InsertEmoticon></InsertEmoticon>
-                    <form>
-                        <input
-                            value={input}
-                            onChange={(e) => setInput(e.target.value)}
-                            placeholder="Type a message"
-                            type="text" 
-                            />
-                            <button onClick={sendMessage} type="submit">
-                                Send a message
-                            </button>
-                    </form>
-                    <MicIcon/>
-                </div>
+                <InsertEmoticon></InsertEmoticon>
+                <form>
+                    <input
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        placeholder="Type a message"
+                        type="text"
+                    />
+                    <button onClick={sendMessage} type="submit">
+                        Send a message
+                    </button>
+                </form>
+                <MicIcon />
+            </div>
         </div>
     )
 

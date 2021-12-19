@@ -1,17 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useState,
   useEffect,
   useRef,
-  useContext,
   Fragment,
-  usewindow,
 } from "react";
-import Card from "@material-ui/core/Card";
-import EditableArea from "../../core/components/EditableArea";
 import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import TextField from "@material-ui/core/TextField";
-import CardContent from "@material-ui/core/CardContent";
 import ShopCard from "./ShopCard";
 // Core modules imports are same as usual
 import { Navigation, Pagination } from "swiper";
@@ -46,12 +40,12 @@ function ShopSnippet({ title, products = [] }) {
 
   let { largeScreen, screenChanged } = values;
 
-  const classes = useStyles();
+  // const classes = useStyles();
 
-  const events = {
-    onDragged: function (event) {},
-    onChanged: function (event) {},
-  };
+  // const events = {
+  //   onDragged: function (event) { },
+  //   onChanged: function (event) { },
+  // };
 
   const handleResize = () => {
     setValues({
@@ -120,12 +114,10 @@ function ShopSnippet({ title, products = [] }) {
           spaceBetween={10}
           slidesPerView={5}
           onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
         >
           {products.map((product, i) => {
-            let index = i;
             return (
-              <Fragment>
+              <Fragment key={`elem${i}`}>
                 <SwiperSlide>
                   <ShopCard product={product}></ShopCard>
                 </SwiperSlide>
@@ -151,17 +143,17 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, index) => {
             return (
-              <React.Fragment>
+              <Fragment key={`product${index}`}>
                 <SwiperSlide>
                   <ShopCard product={product} title={title} index={index}></ShopCard>
                 </SwiperSlide>
                 {products && (
-                  <React.Fragment>
+                  <>
                     <div ref={navigationPrevRef}>Prev</div>
                     <div ref={navigationNextRef}>Next</div>
-                  </React.Fragment>
+                  </>
                 )}
-              </React.Fragment>
+              </Fragment>
             );
           })}
         </Swiper>

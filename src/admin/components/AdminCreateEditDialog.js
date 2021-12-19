@@ -1,9 +1,6 @@
-import React, { setState, useState, useEffect, useContext } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
-import EditableArea from "../../core/components/EditableArea";
 import MultipleSelect from "../../core/components/MultipleSelect";
 import "react-toastify/dist/ReactToastify.min.css";
 import Dialog from "@material-ui/core/Dialog";
@@ -12,16 +9,10 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import "../../assets/css/Style.css";
-import ImageUploader from "../../core/components/ImageUploader";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
 import {
-  getFieldsFromPrototype,
-  uploadImage,
-  getCookie,
+  getFieldsFromPrototype
 } from "../../helpers/Default";
-import Banner from "../../core/components/AnimatedBanner";
-import { EditableAreaContext } from "../../contexts/EditableAreaContext";
-import { AnimatedBannerContext } from "../../contexts/AnimatedBannerContext";
 import SimpleSelect from "../../core/components/Select";
 
 const FullScreenDialog = ({
@@ -34,25 +25,21 @@ const FullScreenDialog = ({
   handleEditRow,
   row,
 }) => {
-  const { updatePublishEditableAreas } = useContext(EditableAreaContext);
-  const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
-
-  console.log(row);
 
   const [values, setValues] = useState({
     prototype,
     open,
     dbItem: {
       ...row,
-      categories: row == undefined ? [] : row.categories,
+      categories: row === undefined ? [] : row.categories,
     },
   });
 
   useEffect(() => {
     row && setValues({ ...values, dbItem: {} });
-  }, []);
+  }, [row, values]);
 
-  var { dbItem, prototype, open, row } = values;
+  var { dbItem } = values;
 
   const handleChange = (name, event) => (event) => {
     setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } });
@@ -68,12 +55,12 @@ const FullScreenDialog = ({
     const form = [];
     arr.map((value) => {
       if (
-        value == "title" ||
-        value == "username" ||
-        value == "firstname" ||
-        value == "surname" ||
-        value == "url" ||
-        value == "author"
+        value === "title" ||
+        value === "username" ||
+        value === "firstname" ||
+        value === "surname" ||
+        value === "url" ||
+        value === "author"
       ) {
         form.push(
           <div className="col-md-12" style={{ marginBottom: "10px" }}>
@@ -87,19 +74,19 @@ const FullScreenDialog = ({
           </div>
         );
       }
-      if (value == "category") {
+      if (value === "category") {
         form.push(
           <div className="col-md-12" style={{ marginBottom: "10px" }}>
             <SimpleSelect
-              value={dbItem[value]}
+              value={dbItem[value] || ""}
               sort="Newest listed"
               title="Category"
               menuitems={["Most popular", "Newest listed", "Oldest listed"]}
-            ></SimpleSelect>
+            />
           </div>
         );
       }
-      if (value == "categories") {
+      if (value === "categories") {
         form.push(
           <div
             className="col-md-12"
@@ -114,7 +101,7 @@ const FullScreenDialog = ({
           </div>
         );
       }
-      if (value == "publishedDate") {
+      if (value === "publishedDate") {
         form.push(
           <div className="col-md-12">
             <p>Published Date</p>
@@ -131,7 +118,7 @@ const FullScreenDialog = ({
           </div>
         );
       }
-      if (value == "price") {
+      if (value === "price") {
         form.push(
           <div className="col-md-12">
             <p>Price</p>
@@ -149,7 +136,7 @@ const FullScreenDialog = ({
           </div>
         );
       }
-      if (value == "countInStock") {
+      if (value === "countInStock") {
         form.push(
           <div className="col-md-12">
             <p>Count In Stock</p>
@@ -169,9 +156,8 @@ const FullScreenDialog = ({
 
     return (
       <div
-        className={`row ${
-          values.image == undefined ? "col-md-8" : "col-md-12"
-        }`}
+        className={`row ${values.image === undefined ? "col-md-8" : "col-md-12"
+          }`}
       >
         {" "}
         {form}{" "}

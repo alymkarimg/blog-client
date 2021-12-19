@@ -1,9 +1,10 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import { Link, Redirect } from 'react-router-dom'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react'
 import Layout from '../layouts/Layout';
-import { updateUserCookie, isAuth, getCookie, signout } from '../helpers/Default'
-import axios from 'axios'
-import { ToastContainer, toast } from 'react-toastify'
+// import { updateUserCookie, isAuth, getCookie, signout } from '../helpers/Default'
+import { isAuth } from '../helpers/Default'
+// import axios from 'axios'
+// import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
 import EditableArea from '../core/components/EditableArea';
 import Sidebar from './components/Sidebar'
@@ -38,81 +39,79 @@ const CreateMessenger = ({ history }) => {
         }, []
     )
 
-    const { firstname, surname, username, description, password, confirmPassword, role, email, buttonText, showPassword } = values;
+    // const { firstname, surname, username, description, password, confirmPassword, showPassword } = values;
 
-    const handleChange = (name) => ((event) => {
-        // console.log(event.target.value);
-        setValues({ ...values, [name]: event.target.value })
-    })
+    // const handleChange = (name) => ((event) => {
+    //     setValues({ ...values, [name]: event.target.value })
+    // })
 
-    const changePassword = (event) => {
-        event.preventDefault()
-        setValues({ ...values, showPassword: !showPassword })
-    }
+    // const changePassword = (event) => {
+    //     event.preventDefault()
+    //     setValues({ ...values, showPassword: !showPassword })
+    // }
 
-    const clickSubmit = (event) => {
-        event.preventDefault()
-        setValues({ ...values, buttonText: 'Submitting' })
-        var data = {
-            firstname,
-            surname,
-            username,
-            description,
-        }
-        if (showPassword) {
-            data.password = password
-            data.confirmPassword = confirmPassword
-        }
+    // const clickSubmit = (event) => {
+    //     event.preventDefault()
+    //     setValues({ ...values, buttonText: 'Submitting' })
+    //     var data = {
+    //         firstname,
+    //         surname,
+    //         username,
+    //         description,
+    //     }
+    //     if (showPassword) {
+    //         data.password = password
+    //         data.confirmPassword = confirmPassword
+    //     }
 
-        if (showPassword && password === "") {
-            toast.error("Please enter a new password")
-            setValues({ ...values, buttonText: 'Submit' })
-        } else {
-            axios({
-                method: 'PUT',
-                url: `${process.env.REACT_APP_API}/user/${user._id}`,
-                data,
-                headers: {
-                    Authorization: `Bearer ${getCookie('token')}`
-                }
-            }).then(response => {
-                // save the response (user, token) in localstorage/cookie, update the values
-                updateUserCookie(response, () => {
+    //     if (showPassword && password === "") {
+    //         toast.error("Please enter a new password")
+    //         setValues({ ...values, buttonText: 'Submit' })
+    //     } else {
+    //         axios({
+    //             method: 'PUT',
+    //             url: `${process.env.REACT_APP_API}/user/${user._id}`,
+    //             data,
+    //             headers: {
+    //                 Authorization: `Bearer ${getCookie('token')}`
+    //             }
+    //         }).then(response => {
+    //             updateUserCookie(response, () => {
 
-                    user = isAuth();
+    //                 user = isAuth();
 
-                    setValues({
-                        ...values,
-                        firstname: user.firstname,
-                        surname: user.surname,
-                        username: user.username,
-                        description: user.description,
-                        buttonText: 'Submit'
-                    })
-                    if (showPassword) {
-                        toast.success('You have changed your password!')
-                    }
-                    toast.success(`You have updated your profile information!`);
-                })
+    //                 setValues({
+    //                     ...values,
+    //                     firstname: user.firstname,
+    //                     surname: user.surname,
+    //                     username: user.username,
+    //                     description: user.description,
+    //                     buttonText: 'Submit'
+    //                 })
+    //                 if (showPassword) {
+    //                     toast.success('You have changed your password!')
+    //                 }
+    //                 toast.success(`You have updated your profile information!`);
+    //             })
 
-                setValues({ ...values, password: '', confirmPassword: '', showPassword: false })
+    //             setValues({ ...values, password: '', confirmPassword: '', showPassword: false })
 
-                toast.success(response.data.message)
-            }).catch(error => {
+    //             toast.success(response.data.message)
+    //         }).catch(error => {
 
-                if (error.response.status === 401) {
-                    signout(() => {
-                        history.push('/')
-                    })
-                } else {
-                    error.response.data.errors.forEach((error) => {
-                        toast.error(error.message)
-                    })
-                }
-            })
-        }
+    //             if (error.response.status === 401) {
+    //                 signout(() => {
+    //                     history.push('/')
+    //                 })
+    //             } else {
+    //                 error.response.data.errors.forEach((error) => {
+    //                     toast.error(error.message)
+    //                 })
+    //             }
+    //         })
+    //     }
 
-    }
+    // }
 
     const MessengerDefault = () => (
         <div className="messenger">

@@ -8,8 +8,7 @@ import { GlobalContext } from '../../contexts/GlobalContext'
 
 const Facebook = (props) => {
 
-    const { globalValues, updateLoggedIn } = useContext(GlobalContext);
-    const { loggedIn } = globalValues;
+    const { updateLoggedIn } = useContext(GlobalContext);
 
     const responseFacebook = (response) => {
         console.log(response)
@@ -22,7 +21,7 @@ const Facebook = (props) => {
             // save the response (user, token) in localstorage/cookie
             authenticate(response, async () => {
                 updateLoggedIn();
-                isAuth() && isAuth().category.title == "admin" ? props.history.push('/admin/home') : props.history.push('/profile')
+                isAuth() && isAuth().category.title === "admin" ? props.history.push('/admin/home') : props.history.push('/profile')
             })
 
         }).catch(error => {
@@ -41,8 +40,8 @@ const Facebook = (props) => {
                 autoLoad={false}
                 callback={responseFacebook}
                 render={renderProps => (
-                    <button className="btn btn-primary btn-large btn-block" 
-                    onClick={renderProps.onClick} 
+                    <button className="btn btn-primary btn-large btn-block"
+                        onClick={renderProps.onClick}
                     >Login with Facebook</button>
                 )}
             />

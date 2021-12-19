@@ -3,9 +3,6 @@ import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import EditableArea from '../../core/components/EditableArea'
-import { Button } from '@material-ui/core'
-import { isEdit, isAuth, signout } from '../../helpers/Default';
-import { HamburgerArrow } from 'react-animated-burgers'
 
 function SidebarItem({ label, items, depthStep = 10, depth = 0, ...rest }) {
   return (

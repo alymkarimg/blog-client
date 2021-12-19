@@ -1,9 +1,9 @@
-import React, { createContext, Component, useEffect, useState } from 'react';
-import { isEdit, getCookie } from '../helpers/Default'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { createContext, useEffect, useState } from 'react';
+import { getCookie } from '../helpers/Default'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { removeQuery } from '../helpers/Default';
-import animatedBanner from '../core/components/AnimatedBanner';
 
 export const AnimatedBannerContext = createContext(null);
 
@@ -18,10 +18,10 @@ const AnimatedBannerContextProvider = (props) => {
     // add a value to the animated banner state
     const updateAnimatedBanners = (animatedBanner) => {
 
-        if (!animatedBanners.find(q => q.title == animatedBanner.title)) {
+        if (!animatedBanners.find(q => q.title === animatedBanner.title)) {
             animatedBanners.push(animatedBanner)
         } else {
-            var bannerToEdit = animatedBanners.find(q => q.title == animatedBanner.title)
+            var bannerToEdit = animatedBanners.find(q => q.title === animatedBanner.title)
             if (bannerToEdit) {
                 bannerToEdit.title = animatedBanner.title;
                 bannerToEdit.items = animatedBanner.items
@@ -38,14 +38,14 @@ const AnimatedBannerContextProvider = (props) => {
 
             animatedBanners.forEach((banner) => {
                 for (var key in banner) {
-                    if (key == "items") {
+                    if (key === "items") {
                         bodyFormData.append(key, banner[key])
                         for (var i = 0; i < banner.items.length; i++) {
                             if (banner.items[i].newImage) {
                                 // append the image
                                 bodyFormData.append(`${banner.title}::${banner.items[i].guid}::${banner.items[i].newImage.name}`, banner.items[i].newImage);
                             }
-                            
+
                         }
                     } else {
                         bodyFormData.append(key, banner[key])
@@ -65,12 +65,11 @@ const AnimatedBannerContextProvider = (props) => {
 
                 urlsObjects.forEach((urlObject, index) => {
                     var fileProps = urlObject.fileProps
-                    var item;
 
-                    var bannerToEdit = animatedBanners.find(q => q.title == fileProps[0])
+                    var bannerToEdit = animatedBanners.find(q => q.title === fileProps[0])
                     if (bannerToEdit) {
                         bannerToEdit.items.forEach((item) => {
-                            if (item.pathname == fileProps[0] && item.guid == fileProps[1]) {
+                            if (item.pathname === fileProps[0] && item.guid === fileProps[1]) {
                                 item.image = urlObject.url
                             }
                         });

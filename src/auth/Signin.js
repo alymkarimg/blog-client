@@ -12,8 +12,7 @@ import Facebook from './components/Facebook'
 
 const Signin = ({ history }) => {
 
-    const { globalValues, updateLoggedIn } = useContext(GlobalContext);
-    const { loggedIn } = globalValues;
+    const { updateLoggedIn } = useContext(GlobalContext);
 
     const [values, setValues] = useState({
         step: 1,
@@ -53,7 +52,7 @@ const Signin = ({ history }) => {
                 })
 
                 updateLoggedIn();
-                isAuth() && isAuth().category.title == "admin" ? history.push('/admin/home') : history.push('/profile')
+                isAuth() && isAuth().category.title === "admin" ? history.push('/admin/home') : history.push('/profile')
 
                 // toast.success(`Hey ${response.data.user.firstname} ${response.data.user.surname}, Welecome back!`);
             })
@@ -107,27 +106,29 @@ const Signin = ({ history }) => {
                         </div>
                     </form>
                 )
+            default:
+                return null
         }
     };
 
     return (
-    <Layout>
-        <div className="row">
-            <div className="col-md-3">
-                <ToastContainer />
-                {isAuth() && isAuth().category.title != "admin" ? <Redirect to="/" /> : null}
-                <h1 className="text-center">Signin</h1>
-                <Google history={history}></Google>
-                <Facebook history={history}></Facebook>
-                {signinForm()}
-                <Link to='/auth/password/forgot' className="btn btn-sm btn-outline-danger"> Forgot Password </Link>
+        <Layout>
+            <div className="row">
+                <div className="col-md-3">
+                    <ToastContainer />
+                    {isAuth() && isAuth().category.title !== "admin" ? <Redirect to="/" /> : null}
+                    <h1 className="text-center">Signin</h1>
+                    <Google history={history}></Google>
+                    <Facebook history={history}></Facebook>
+                    {signinForm()}
+                    <Link to='/auth/password/forgot' className="btn btn-sm btn-outline-danger"> Forgot Password </Link>
+                </div>
+                <div className="d-none d-lg-block col-md-9" style={{ paddingRight: "0px", paddingLeft: "0px" }}>
+                    <EditableArea guid="EA_signin" pathname="/signin/"></EditableArea>
+                </div >
             </div>
-            <div className="d-none d-lg-block col-md-9" style={{paddingRight: "0px", paddingLeft: "0px"}}>
-                <EditableArea guid="EA_signin" pathname="/signin/"></EditableArea>
-            </div >
-        </div>
 
-    </Layout>
+        </Layout>
     )
 };
 

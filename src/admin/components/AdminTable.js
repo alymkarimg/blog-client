@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import { getCookie } from "../../helpers/Default";
-import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import { lighten, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import { Button } from "react-bootstrap";
@@ -12,7 +12,7 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import Checkbox from "@material-ui/core/Checkbox";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import axios from "axios";
 import "../../assets/css/Style.css";
@@ -20,7 +20,6 @@ import FullScreenDialog from "./AdminCreateEditDialog";
 import EnhancedTableToolbar from "./AdminTableToolbar";
 import EnhancedTableHead from "./AdminTableHead";
 import { getFieldsFromPrototype, toHumanString } from "../../helpers/Default";
-import { AnimatedBannerContext } from "../../contexts/AnimatedBannerContext";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -81,20 +80,19 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
   };
 
   const setRow = (selected = []) => {
-    setValues({...values, row: selected.length > 0 ? selected[0] : null});
+    setValues({ ...values, row: selected.length > 0 ? selected[0] : null });
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const [open, setOpen] = React.useState(false);
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("publishedDate");
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [scroll, setScroll] = useState("paper");
+  const [open, setOpen] = useState(false);
+  const [order, setOrder] = useState("asc");
+  const [orderBy, setOrderBy] = useState("publishedDate");
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [values, setValues] = useState({
     prototype: null,
     rows: [],
@@ -180,12 +178,6 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
     setPage(0);
   };
 
-  const {
-    animatedBannerValues,
-    updateAnimatedBanners,
-    updatePublishAnimatedBanners,
-  } = useContext(AnimatedBannerContext);
-  const { publishAnimatedBanner } = animatedBannerValues;
 
   const handleCreateRow = (dbItem) => {
     dbItem.categories = dbItem.categories.map((q) => q.toLowerCase());
@@ -197,7 +189,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
 
     // turn all dbitem keys into form data
     for (var key in dbItem) {
-      if (key == "pictures") {
+      if (key === "pictures") {
         for (var i = 0; i < dbItem.pictures.length; i++) {
           bodyFormData.append("image[" + i + "]", dbItem.pictures[i]);
         }
@@ -238,7 +230,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
 
     // turn all dbitem keys into form data
     for (var key in dbItem) {
-      if (key == "pictures") {
+      if (key === "pictures") {
         for (var i = 0; i < dbItem.pictures.length; i++) {
           bodyFormData.append("image[" + i + "]", dbItem.pictures[i]);
         }
@@ -297,7 +289,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
           <FullScreenDialog
             name={name}
             open={open}
-            row={{...row}}
+            row={{ ...row }}
             prototype={prototype}
             title={rows.length - 1}
             getURL={getURL}
@@ -361,7 +353,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
                         </TableRow>
                       );
                     })}
-                    {rowsToMap.length == 0 && (
+                    {rowsToMap.length === 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>
                         <TableCell
                           style={{ textAlign: "center", verticalAlign: "top" }}
@@ -416,7 +408,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
 const createRow = (row, prototype) => {
   const form = [];
   getFieldsFromPrototype(prototype).map((q) => {
-    if (q == "categories") {
+    if (q === "categories") {
       const categories = row[q].map((q) => q.title);
 
       return form.push(
@@ -426,8 +418,8 @@ const createRow = (row, prototype) => {
       );
     }
 
-    if (q == "publishedDate" && q) {
-      if (q != undefined) {
+    if (q === "publishedDate" && q) {
+      if (q !== undefined) {
         var testDate = row[q].slice(0, 10);
       }
 
@@ -443,6 +435,7 @@ const createRow = (row, prototype) => {
         {row[q]}
       </TableCell>
     );
+    return true
   });
 
   return form;

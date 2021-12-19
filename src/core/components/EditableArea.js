@@ -1,12 +1,11 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, useContext, Fragment } from 'react'
 import PropTypes from 'prop-types';
-import { ReactDOM, render } from "react-dom";
 import axios from 'axios'
 import { useLocation } from 'react-router';
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import DOMPurify from 'dompurify';
-import { isAdmin, isEdit, isAdminArea, getCookie, trunc } from '../../helpers/Default'
+import { isEdit, isAdminArea, getCookie, trunc } from '../../helpers/Default'
 import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import '../../assets/css/Style.css'
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -80,10 +79,10 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
         size,
         fade,
         pageError: false,
-        isEditablePage: isEditablePage == "/:page" ? true : false,
+        isEditablePage: isEditablePage === "/:page" ? true : false,
         url: location.pathname
     })
-    var { pathname, guid, data, loading, pageError, link } = values
+    const { data, loading, pageError } = values
 
     // when the component mounts, set the state
     useEffect(() => {
@@ -97,7 +96,6 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
             if (response.data.message) {
                 setValues({ ...values, data: response.data.content, pageError: response.data.message, link: response.data.link });
             } else {
-                // DOMPurify.sanitize(
                 setValues({ ...values, data: response.data.content, loading: false, link: response.data.link });
             }
 
@@ -108,14 +106,12 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
         })
     }, [])
 
-    var { link } = values;
-
     const handleChange = event => {
         setValues({ ...values, link: event.target.value })
     }
 
 
-    // when the context changes (publish editable areas == true), update the context with new data
+    // when the context changes (publish editable areas === true), update the context with new data
     useEffect(() => {
         if (publishEditableAreas) {
             updateEditableAreas({ guid, pathname, data, link })
@@ -130,8 +126,8 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
             if (loading && useloading) {
                 return (
                     <div style={size} className={`editableAreaContainer loading loader`} >
-                        <div class="loader-wheel"></div>
-                        <div class="loader-text"></div>
+                        <div className="loader-wheel"></div>
+                        <div className="loader-text"></div>
                     </div>
                 );
             }
@@ -142,7 +138,7 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                         <TextField
                             onChange={handleChange}
                             label="URL"
-                            value={link} name={"url"} size="small" variant="filled" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "100px" , maxHeight: "20px !important"}} />
+                            value={link} name={"url"} size="small" variant="filled" style={{ position: "relative", right: "3px", padding: "0px 5px", marginBottom: "13px", width: "100px", maxHeight: "20px !important" }} />
                         <CKEditor
                             data-pathname={pathname}
                             id={guid}
@@ -151,7 +147,7 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                             config={editorConfig}
                             data={data}
                             onChange={(evt, editor) => {
-                                if (isAdminArea() && alwaysOn || !alwaysOn) {
+                                if ((isAdminArea() && alwaysOn) || !alwaysOn) {
                                     setValues({ ...values, data: editor.getData() })
                                     console.log(editor.getData())
                                 }
@@ -159,7 +155,7 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                             onReady={editor => {
                                 console.log(Array.from(editor.ui.componentFactory.names()));
                                 editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-                                return new MyUploadAdapter(loader);
+                                    return new MyUploadAdapter(loader);
                                 };
                             }}
                             onBlur={() => {
@@ -171,9 +167,9 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                 )
             }
             // if the area is not loading and is in view mode or is in edit mode without being focused
-            else if (truncate != false) {
+            else if (truncate !== false) {
                 return (
-                    <Link to={link} ref={myRef}
+                    <Link to={link || "/"} ref={myRef}
                         className={`editableAreaContainer ${fadeVar}`} >
                         <div dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}>
                         </div>
@@ -187,8 +183,8 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                     //     <div dangerouslySetInnerHTML={{ __html: data }}>
                     //     </div>
                     // </Link>
-                        <div dangerouslySetInnerHTML={{ __html: data }}>
-                        </div>
+                    <div dangerouslySetInnerHTML={{ __html: data }}>
+                    </div>
                 )
             }
         }
@@ -206,7 +202,7 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
 }
 
 class MyUploadAdapter {
-    constructor( loader ) {
+    constructor(loader) {
         // CKEditor 5's FileLoader instance.
         this.loader = loader;
 
@@ -216,17 +212,17 @@ class MyUploadAdapter {
 
     // Starts the upload process.
     async upload() {
-        
-        return await new Promise( ( resolve, reject ) => {
+
+        return await new Promise((resolve, reject) => {
             this._initRequest();
-            this._initListeners( resolve, reject );
+            this._initListeners(resolve, reject);
             this._sendRequest();
-        } );
+        });
     }
 
     // Aborts the upload process.
     abort() {
-        if ( this.xhr ) {
+        if (this.xhr) {
             this.xhr.abort();
         }
     }
@@ -235,39 +231,39 @@ class MyUploadAdapter {
     _initRequest() {
         const xhr = this.xhr = new XMLHttpRequest();
 
-        xhr.open( 'POST', this.url, true );
+        xhr.open('POST', this.url, true);
         xhr.responseType = 'json';
     }
 
     // Initializes XMLHttpRequest listeners.
-    _initListeners( resolve, reject ) {
+    _initListeners(resolve, reject) {
         const xhr = this.xhr;
         const loader = this.loader;
-        const genericErrorText = 'Couldn\'t upload file:' + ` ${ loader.file.name }.`;
+        const genericErrorText = `Couldn't upload file: ${loader.file.name}.`;
 
-        xhr.addEventListener( 'error', () => reject( genericErrorText ) );
-        xhr.addEventListener( 'abort', () => reject() );
-        xhr.addEventListener( 'load', () => {
+        xhr.addEventListener('error', () => reject(genericErrorText));
+        xhr.addEventListener('abort', () => reject());
+        xhr.addEventListener('load', () => {
             const response = xhr.response;
 
-            if ( !response || response.error ) {
-                return reject( response && response.error ? response.error.message : genericErrorText );
+            if (!response || response.error) {
+                return reject(response && response.error ? response.error.message : genericErrorText);
             }
 
             // If the upload is successful, resolve the upload promise with an object containing
             // at least the "default" URL, pointing to the image on the server.
-            resolve( {
+            resolve({
                 default: response
-            } );
-        } );
+            });
+        });
 
-        if ( xhr.upload ) {
-            xhr.upload.addEventListener( 'progress', evt => {
-                if ( evt.lengthComputable ) {
+        if (xhr.upload) {
+            xhr.upload.addEventListener('progress', evt => {
+                if (evt.lengthComputable) {
                     loader.uploadTotal = evt.total;
                     loader.uploaded = evt.loaded;
                 }
-            } );
+            });
         }
     }
 
@@ -275,9 +271,9 @@ class MyUploadAdapter {
     async _sendRequest() {
         const data = new FormData();
 
-        data.append( 'upload', await Promise.resolve(this.loader.file) );
+        data.append('upload', await Promise.resolve(this.loader.file));
 
-        this.xhr.send( data );
+        this.xhr.send(data);
     }
 }
 

@@ -1,6 +1,4 @@
 import cookie from "js-cookie";
-import axios from "axios";
-import { toast } from "react-toastify";
 
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1);
@@ -97,18 +95,10 @@ export const isAdminArea = () => {
   //since we do not need example.com
   url_parts.shift();
 
-  if (url_parts[2] == "admin") {
+  if (url_parts[2] === "admin") {
     return true;
   } else {
     return false;
-  }
-};
-
-export const bigOrSmall = (width) => {
-  if (width) {
-    var isPercent = width.charAt(width.length - 1) === "%" ? true : false; //   is it a percent
-    var threshold = isPercent ? 50 : 500; // the value that it must be > to be classed as "big"
-    const bigOrSmall = parseInt(width, 10) > threshold;
   }
 };
 
@@ -177,20 +167,20 @@ export const getFieldsFromPrototype = (
     console.log(property);
 
     if (
-      property == "_id" ||
-      property == "__v" ||
-      property == "slug" ||
-      property == "createdAt" ||
-      property == "updatedAt" ||
-      property == "resetPasswordLink" ||
-      property == "hashed_password" ||
-      property == "password" ||
-      property == "description"
+      property === "_id" ||
+      property === "__v" ||
+      property === "slug" ||
+      property === "createdAt" ||
+      property === "updatedAt" ||
+      property === "resetPasswordLink" ||
+      property === "hashed_password" ||
+      property === "password" ||
+      property === "description"
     ) {
       return false;
     }
 
-    if (includeEditableArea == false && property == "editableArea") {
+    if (includeEditableArea === false && property === "editableArea") {
       return false;
     }
 
@@ -205,8 +195,8 @@ function isIsoDate(str) {
 }
 
 export const toHumanString = (a) => {
-  if (a != undefined && a.constructor === Array && a.length > 0) {
-    return a.length == 1
+  if (a !== undefined && a.constructor === Array && a.length > 0) {
+    return a.length === 1
       ? a[0]
       : [a.slice(0, a.length - 1).join(", "), a[a.length - 1]].join(" and ");
   } else if (isIsoDate(a)) {

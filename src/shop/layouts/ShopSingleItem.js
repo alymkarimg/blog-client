@@ -1,24 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from 'react';
 import Layout from '../../layouts/Layout'
-import BlogCard from '../../blog/components/BlogCard'
 import { useState, useEffect } from 'react';
 import axios from 'axios'
 import EditableArea from '../../core/components/EditableArea';
-import SimpleSelect from '../../core/components/Select';
-import CheckboxList from '../../core/components/Checklist'
 import MultipleSelect from '../../core/components/MultipleSelect'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-import { TransitionGroup, CSSTransition } from 'react-transition-group'
-import FadeIn from 'react-fade-in';
-import InputLabel from '@material-ui/core/InputLabel';
-import Avatar from '@material-ui/core/Avatar';
-import { makeStyles } from '@material-ui/core/styles';
-import { red } from '@material-ui/core/colors';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+// import { makeStyles } from '@material-ui/core/styles';
+// import { red } from '@material-ui/core/colors';
 import ShopSnippet from '../components/ShopSnippet';
-import Banner from '../../core/components/AnimatedBanner'
 import "../../assets/css/Style.css"
 
 const ShopSingleItem = () => {
@@ -27,17 +18,17 @@ const ShopSingleItem = () => {
         products: [],
     });
 
-    const useStyles = makeStyles((theme) => ({
-        avatar: {
-            backgroundColor: red[500],
-        },
+    // const useStyles = makeStyles((theme) => ({
+    //     avatar: {
+    //         backgroundColor: red[500],
+    //     },
 
-        sort: {
-            marginRight: "20px"
-        }
-    }));
+    //     sort: {
+    //         marginRight: "20px"
+    //     }
+    // }));
 
-    const classes = useStyles();
+    // const classes = useStyles();
 
     const { products } = values;
 
@@ -68,8 +59,8 @@ const ShopSingleItem = () => {
 
     return (
         <Layout>
-           
-            <div style={{marginBottom: "20px", paddingBottom: "20px"}} className="shopContainer">
+
+            <div style={{ marginBottom: "20px", paddingBottom: "20px" }} className="shopContainer">
                 <div className="row">
                     <div className="col-md-12">
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_title"></EditableArea>
@@ -83,8 +74,8 @@ const ShopSingleItem = () => {
                     </div>
 
                     <div className="col-md-12" >
-                            {/* products.filter(q => q.category == "food") */}
-                            <ShopSnippet products={products} title={"food"}></ShopSnippet>
+                        {/* products.filter(q => q.category === "food") */}
+                        <ShopSnippet products={products} title={"food"}></ShopSnippet>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
@@ -94,12 +85,12 @@ const ShopSingleItem = () => {
                         </div>
                     </div>
                     <div className="col-md-12" >
-                        {/* products.filter(q => q.category == "drink") */}
+                        {/* products.filter(q => q.category === "drink") */}
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
                         <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
                     </div>
                 </div>
-        </div>
+            </div>
         </Layout>
     )
 }

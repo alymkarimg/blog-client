@@ -1,12 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import { render } from 'react-dom';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
@@ -53,7 +50,7 @@ export default function SimpleSelect({ title, menuitems, nonefirst = false, none
                 <Select
                     labelId="demo-simple-select-label"
                     id={`select_${title}`}
-                    value={sortBy}
+                    value={sortBy || ""}
                     MenuProps={MenuProps}
                     onChange={handleChange}
                     label={title}
@@ -66,8 +63,8 @@ export default function SimpleSelect({ title, menuitems, nonefirst = false, none
                     }
                     {
                         menuitems.length > 0 && (
-                            menuitems.map(item => {
-                                return <MenuItem value={item}>{item}</MenuItem>
+                            menuitems.map((item, i) => {
+                                return <MenuItem value={item || ""} key={`menuitem${i}`}>{item}</MenuItem>
                             })
                         )
                     }

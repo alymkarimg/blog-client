@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
@@ -13,7 +13,7 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
     const createSortHandler = (property) => (event) => {
         onRequestSort(event, property);
     };
-    
+
     var headCells = getFieldsFromPrototype(prototype).map((property) => {
 
         let column = {
@@ -23,16 +23,16 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
             label: property.capitalize()
         }
 
-        if (property == "publishedDate"){
+        if (property === "publishedDate") {
             column.label = 'Published Date'
         }
 
-        if (property == "edit"){
+        if (property === "edit") {
             column.label = ''
         }
-        
+
         return column;
-    }) 
+    })
 
     return (
         <TableHead>
@@ -40,7 +40,7 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
                 <TableCell padding="checkbox">
                     <Checkbox
                         indeterminate={numSelected > 0 && numSelected < rowCount}
-                         checked={rowCount > 0 && numSelected === rowCount}
+                        checked={rowCount > 0 && numSelected === rowCount}
                         onChange={onSelectAllClick}
                         inputProps={{ 'aria-label': 'select all desserts' }}
                     />

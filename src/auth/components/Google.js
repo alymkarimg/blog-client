@@ -1,28 +1,27 @@
-import React,{useContext} from 'react';
+import React, { useContext } from 'react';
 import { authenticate, isAuth } from '../../helpers/Default';
 import axios from 'axios';
 import GoogleLogin from 'react-google-login';
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.min.css'
-import {GlobalContext} from '../../contexts/GlobalContext'
+import { GlobalContext } from '../../contexts/GlobalContext'
 
 const Google = (props) => {
 
-    const { globalValues, updateLoggedIn } = useContext(GlobalContext);
-    const { loggedIn } = globalValues;
+    const { updateLoggedIn } = useContext(GlobalContext);
 
     const responseGoogle = (response) => {
         console.log(response)
         axios({
             method: 'POST',
-            url:  `${process.env.REACT_APP_API}/google-login`,
-            data: {idToken: response.tokenId}
+            url: `${process.env.REACT_APP_API}/google-login`,
+            data: { idToken: response.tokenId }
         }).then(response => {
 
             // save the response (user, token) in localstorage/cookie
             authenticate(response, async () => {
                 updateLoggedIn();
-                isAuth() && isAuth().category.title == "admin" ? props.history.push('/admin/home') : props.history.push('/profile')
+                isAuth() && isAuth().category.title === "admin" ? props.history.push('/admin/home') : props.history.push('/profile')
             })
 
         }).catch(error => {

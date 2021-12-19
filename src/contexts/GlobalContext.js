@@ -1,8 +1,7 @@
-import React, { createContext, Component, useEffect, useState } from 'react';
-import { isEdit, getCookie, isAuth } from '../helpers/Default'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { createContext, useEffect, useState } from 'react';
+import { isAuth } from '../helpers/Default'
 import { ToastContainer, toast } from 'react-toastify';
-import axios from 'axios'
-import { removeQuery } from '../helpers/Default';
 
 export const GlobalContext = createContext(null);
 

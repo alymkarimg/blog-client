@@ -1,12 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import Layout from '../layouts/Layout';
-import AdminTable from './components/AdminTable';
 import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import { Button, IconButton, TableCell, TableHead, TableRow } from '@material-ui/core'
+import { toast } from 'react-toastify';
 import { getCookie, isEdit } from '../helpers/Default'
-import Tree from 'rc-tree';
-import { generateData, gData } from './utils/dataUtils';
 import Nestable from 'react-nestable';
 import EditableArea from '../core/components/EditableArea';
 import $ from 'jquery'
@@ -40,12 +37,12 @@ const AdminMenu = () => {
     const handleHideClick = () => {
         var hideButton = document.querySelector(".hideButton")
 
-        if(hideButton.className.includes("ToggledOn")){
+        if (hideButton.className.includes("ToggledOn")) {
             hideButton.className = "hideButton"
         } else {
             hideButton.className = "hideButton ToggledOn"
         }
-    }   
+    }
 
     const handleAddClick = (event) => {
         // open dialog, set current target 
@@ -60,37 +57,31 @@ const AdminMenu = () => {
         setValues({
             ...values, prototype
         })
-    }, [])
+    }, [prototype, values])
 
     const renderItem = ({ item }) => item.id;
 
     function addDepth(arr, unfilteredArray, depth = 1) {
 
-        var treeDepth
         arr.forEach((obj, index) => {
-
-            const getArrayDepth = (arr) => {
-                return 1 + Math.max(0, ...arr.map(({ subs = [] }) => getArrayDepth(subs)));
-            }
-            treeDepth = getArrayDepth(menuTree)
 
             obj.depth = depth
 
             const depthToHumanReadableString = () => {
-                if (depth == 1){
+                if (depth === 1) {
                     return "Level 1"
                 }
-                if(depth == 1.1){
+                if (depth === 1.1) {
                     return "Level 2"
                 }
-                if(depth == 1.11){
+                if (depth === 1.11) {
                     return "Level 3"
-                } 
+                }
             }
 
             if (unfilteredArray) {
                 unfilteredArray.forEach(q => {
-                    if (q.id == obj.id) {
+                    if (q.id === obj.id) {
                         q.depth = `${depthToHumanReadableString(obj.depth.toString())}`
                     }
                 })
@@ -108,15 +99,15 @@ const AdminMenu = () => {
             }
 
             if (menuTree) {
-                if (decimalCount(obj.depth) == 0) {
+                if (decimalCount(obj.depth) === 0) {
                     addDepth(obj.children, unfilteredArray, depth + 1 / 10)
-                } else if (decimalCount(obj.depth) == 1) {
+                } else if (decimalCount(obj.depth) === 1) {
                     addDepth(obj.children, unfilteredArray, depth + 1 / 100)
-                } else if (decimalCount(obj.depth) == 2) {
+                } else if (decimalCount(obj.depth) === 2) {
                     addDepth(obj.children, unfilteredArray, depth + 1 / 1000)
-                } else if (decimalCount(obj.depth) == 3) {
+                } else if (decimalCount(obj.depth) === 3) {
                     addDepth(obj.children, unfilteredArray, depth + 1 / 10000)
-                } else if (decimalCount(obj.depth) == 4) {
+                } else if (decimalCount(obj.depth) === 4) {
                     addDepth(obj.children, unfilteredArray, depth + 1 / 100000)
                 }
             }
@@ -163,7 +154,7 @@ const AdminMenu = () => {
         if (menuItems && nestedItems) {
             nestedItems.forEach((nestedItem) => {
                 menuItems.forEach((menuItem) => {
-                    if (nestedItem.textContent == menuItem.id) {
+                    if (nestedItem.textContent === menuItem.id) {
                         nestedItem.id = nestedItem.textContent
                         nestedItem.textContent = "";
 
@@ -213,11 +204,9 @@ const AdminMenu = () => {
     }
 
     const onChange = (items, item) => {
-        var items;
-        var item;
         addDepth(items, menuItems)
         setValues({ ...values, menuTree: items, menuItems })
-    
+
         loadRowText()
     }
 
@@ -225,26 +214,26 @@ const AdminMenu = () => {
         // var dragItem, destinationParent;
         // setValues({...values, changes: changes.concat[dragItem, destinationParent]})
 
-        if(isEdit()){
+        if (isEdit()) {
             //
-        
-        axios({
-            method: 'POST',
-            url: `${process.env.REACT_APP_API}/menu/reorder`,
-            data: {dragItem, destinationParent},
-            headers: {
-                Authorization: `Bearer ${getCookie('token')}`
-            }
-        }).then(response => {
-            toast.success(response.data.message);
 
-        }).catch(error => {
-            console.log('Error saving to the database', error.response.data);
+            axios({
+                method: 'POST',
+                url: `${process.env.REACT_APP_API}/menu/reorder`,
+                data: { dragItem, destinationParent },
+                headers: {
+                    Authorization: `Bearer ${getCookie('token')}`
+                }
+            }).then(response => {
+                toast.success(response.data.message);
 
-            error.response.data.errors.forEach((error) => {
-                toast.error(error.message)
+            }).catch(error => {
+                console.log('Error saving to the database', error.response.data);
+
+                error.response.data.errors.forEach((error) => {
+                    toast.error(error.message)
+                })
             })
-        })
             return true
         }
     }
@@ -258,7 +247,7 @@ const AdminMenu = () => {
 
         // turn all dbitem keys into form data
         for (var key in dbItem) {
-            if (key == "pictures") {
+            if (key === "pictures") {
                 for (var i = 0; i < dbItem.pictures.length; i++) {
                     bodyFormData.append('image[' + i + ']', dbItem.pictures[i]);
                 }

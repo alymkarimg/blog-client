@@ -1,22 +1,17 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {
   useState,
   useEffect,
   Fragment,
-  useContext,
-  useRef,
-  createRef,
+  useContext
 } from "react";
-import reactDOM from "react-dom";
 import { Link, withRouter } from "react-router-dom";
 import {
   isEdit,
   isAuth,
   signout,
-  isAdminMenu,
-  isAdmin,
   removeQuery,
 } from "../helpers/Default";
-import EditableArea from "../core/components/EditableArea";
 import { EditableAreaContext } from "../contexts/EditableAreaContext";
 import { AnimatedBannerContext } from "../contexts/AnimatedBannerContext";
 import Sidebar from "../core/components/Sidebar";
@@ -29,9 +24,7 @@ import {
   Drawer,
   makeStyles,
   fade,
-  Avatar,
-  ClickAwayListener,
-  Popper,
+  Avatar
 } from "@material-ui/core";
 import "../assets/css/Style.css";
 import {
@@ -39,24 +32,13 @@ import {
   isActive,
   isFullscreen,
   isMessengerActive,
-} from "../helpers/Default";
-import {
-  Navbar,
-  Nav,
-  NavDropdown,
-  Line,
-  Form,
-  FormControl,
-  Button,
-} from "react-bootstrap";
-import { Switch, FormGroup, FormControlLabel } from "@material-ui/core";
-import $, { contains, nodeName } from "jquery";
+} from "../helpers/Default"
+import $ from "jquery";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import InputBase from "@material-ui/core/InputBase";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
 import EditIcon from "@material-ui/icons/Edit";
@@ -66,7 +48,6 @@ import "@szhsin/react-menu/dist/index.css";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const Layout = function ({ children, match, history }) {
-  const elementsRef = useRef([]);
 
   $(document).ready(function () {
     $("a").on("click", function (e) {
@@ -196,13 +177,11 @@ const Layout = function ({ children, match, history }) {
     popupOpen: false,
   });
 
-  let { sidebarIsOpen, menuTree, anchorEl, anchorEl2, popupOpen } = values;
+  let { sidebarIsOpen, menuTree } = values;
 
   const toggleDrawer = () => {
     setValues({ ...values, sidebarIsOpen: !sidebarIsOpen });
   };
-
-  const toggleEditMode = () => {};
 
   useEffect(() => {
     axios({
@@ -238,29 +217,29 @@ const Layout = function ({ children, match, history }) {
   const { updatePublishEditableAreas } = useContext(EditableAreaContext);
   const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
-  var popper1 = useRef();
 
   const nav = () => {
-    const handleClose = (event, url) => {
-      setValues({ ...values, anchorEl: null, popupOpen: true });
-    };
+    // const handleClose = (event, url) => {
+    //   setValues({ ...values, anchorEl: null, popupOpen: true });
+    // };
 
-    const handleClick = (event, url) => {
-      setValues({ ...values, anchorEl: event.currentTarget, popupOpen: true });
-      event.preventDefault();
-    };
+    // const handleClick = (event, url) => {
+    //   setValues({ ...values, anchorEl: event.currentTarget, popupOpen: true });
+    //   event.preventDefault();
+    // };
 
     const printMenuTree = () => {
-      const onClick = () => {};
+      const onClick = () => { };
 
       var menutree =
         menuTree &&
         menuTree.map((menuItem, index) => {
           const printMenuTreeItem = (item) => {
             if (item.children.length > 0) {
-              return item.children.map((child) => {
+              return item.children.map((child, i) => {
                 return (
                   <MenuItem
+                    key={`item${i}`}
                     href={item.url}
                     style={isActive(item.url, match)}
                     className="menuItem"
@@ -273,7 +252,7 @@ const Layout = function ({ children, match, history }) {
               });
             }
             return (
-              <MenuItem className="menuItem">
+              <MenuItem className="menuItem" key={`menu-item${index}`}>
                 <Link to={item.url} style={isActive(item.url, match)}>
                   {item.title}
                 </Link>
@@ -286,6 +265,7 @@ const Layout = function ({ children, match, history }) {
               <Menu
                 onMouseOver={onClick}
                 className="menu"
+                key={`menu-elem${index}`}
                 menuButton={<MenuButton>{menuItem.title}</MenuButton>}
               >
                 {menuItem.children.map((menuitem) => {
@@ -295,7 +275,7 @@ const Layout = function ({ children, match, history }) {
             );
           } else {
             return (
-              <MenuItem className="menuItem">
+              <MenuItem className="menuItem" key={`menu-el${index}`}>
                 <Link to={menuItem.url} style={isActive(menuItem.url, match)}>
                   {menuItem.title}
                 </Link>
@@ -308,7 +288,7 @@ const Layout = function ({ children, match, history }) {
     };
 
     return (
-      <React.Fragment>
+      <Fragment>
         <div
           style={
             isHomepageActive("/", match)
@@ -391,9 +371,8 @@ const Layout = function ({ children, match, history }) {
                   }
                 >
                   <MenuItem className="menuItem">
-                    <Link style={isActive("/profile", match)} to="/profile">{`${
-                      isAuth().firstname
-                    } ${isAuth().surname}`}</Link>
+                    <Link style={isActive("/profile", match)} to="/profile">{`${isAuth().firstname
+                      } ${isAuth().surname}`}</Link>
                   </MenuItem>
                   <MenuItem>
                     <Link
@@ -416,7 +395,7 @@ const Layout = function ({ children, match, history }) {
                   </MenuItem>
                 </Menu>
               )}
-              {isAuth() && isAuth().category.title == "admin" && (
+              {isAuth() && isAuth().category.title === "admin" && (
                 <Link
                   to="/admin/home"
                   className="nav-link"
@@ -437,7 +416,7 @@ const Layout = function ({ children, match, history }) {
                 </Link>
               }
 
-              {isEdit() && isAuth() && isAuth().category.title == "admin" && (
+              {isEdit() && isAuth() && isAuth().category.title === "admin" && (
                 <button
                   className="btn btn-link"
                   style={{ cursor: "pointer", color: "white" }}
@@ -450,7 +429,7 @@ const Layout = function ({ children, match, history }) {
                   <PublishIcon></PublishIcon>
                 </button>
               )}
-              {!isEdit() && isAuth() && isAuth().category.title == "admin" && (
+              {!isEdit() && isAuth() && isAuth().category.title === "admin" && (
                 <button
                   className="btn btn-link"
                   style={{ cursor: "pointer", color: "white" }}
@@ -466,7 +445,7 @@ const Layout = function ({ children, match, history }) {
             </Toolbar>
           </AppBar>
         </div>
-      </React.Fragment>
+      </Fragment>
     );
   };
 
@@ -487,11 +466,11 @@ const Layout = function ({ children, match, history }) {
         </Drawer>
       )}
       <div>
-        <ToastContainer></ToastContainer>
+        <ToastContainer />
         <IconButton
           edge="start"
           className={classes.menuButton}
-          color="white"
+          color="primary"
           aria-label="open drawer"
         >
           <Hamburger
@@ -554,7 +533,7 @@ const Layout = function ({ children, match, history }) {
                   marginTop: "0px",
                   marginBottom: "0px",
                 }}
-                className={`${messengerVar}`}
+                className={messengerVar}
               >
                 {children}
               </div>

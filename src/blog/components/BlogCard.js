@@ -1,22 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { getImageURL, toHumanString, truncate } from "../../helpers/Default";
+import { toHumanString } from "../../helpers/Default";
 import EditableArea from "../../core/components/EditableArea";
 import "../assets/css/Style.css";
 import Banner from "../../core/components/AnimatedBanner";
@@ -73,13 +68,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function changeBackground(e) {
-  e.target.className = "dark-overlay";
-}
-
-function removeBackground(e) {
-  e.target.className = "";
-}
 
 export default function BlogCard({ blog }) {
   const classes = useStyles();
@@ -96,12 +84,7 @@ export default function BlogCard({ blog }) {
 
   const {
     title,
-    content,
-    datePublished,
-    comments,
-    popular,
-    contentSnippet,
-    expanded,
+    expanded
   } = values;
 
   const handleExpandClick = () => {
@@ -121,7 +104,7 @@ export default function BlogCard({ blog }) {
             </Typography>
           }
           subheader={
-            <Typography gutterBottom variant="p" component="p">
+            <Typography gutterBottom variant="h6" component="p">
               {toHumanString(blog.publishedDate)}
             </Typography>
           }

@@ -1,32 +1,27 @@
+/* eslint-disable no-mixed-operators */
+/* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import EditableArea from '../../core/components/EditableArea'
 import React, { useState, useEffect, useRef, useContext } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { isAdmin, isEdit, isAdminArea, hasExtension } from '../../helpers/Default'
-import Toggle from "./Toggle";
 import 'react-toastify/dist/ReactToastify.css'
-import { Link } from 'react-router-dom';
 import '../assets/css/Style.css'
 import '../assets/css/banner.css'
-import { Button, TextField } from '@material-ui/core'
+import { Button } from '@material-ui/core'
 import ImageUploader from '../../core/components/ImageUploader'
 import PlusOneRoundedIcon from '@material-ui/icons/PlusOneRounded';
 import DeleteSweepRoundedIcon from '@material-ui/icons/DeleteSweepRounded';
 import { getCookie } from '../../helpers/Default'
-import ReactDOM from 'react-dom'
-import { EditableAreaContext } from '../../contexts/EditableAreaContext'
 import Carousel from 'react-bootstrap/Carousel'
 import DOMPurify from 'dompurify';
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext';
 
-const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
+const Banner = ({ title, size, alwaysOn = false }) => {
 
-  const { animatedBannerValues, updateAnimatedBanners, updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
+  const { animatedBannerValues, updateAnimatedBanners } = useContext(AnimatedBannerContext);
   const { publishAnimatedBanner } = animatedBannerValues;
-
-  const bannerImageUploader = useRef();
 
   const [values, setValues] = useState({
     title,
@@ -49,18 +44,16 @@ const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
   var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
   var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
   var bigOrSmall = parseInt(width, 10) > threshold
-  var autoplay = isAdmin() && isEdit() || alwaysOn ? false : 10000
-
 
   const getURL = `${process.env.REACT_APP_API}/animated-banner`;
 
-  var { loading, animatedBanner, editBar, currentSlide, source } = values
+  var { animatedBanner, currentSlide, source } = values
 
   const dataSlideTo = useRef(null);
 
   const removeCurrentSlide = () => {
 
-    if (animatedBanner.items.length == 1 && currentSlide == 0) {
+    if (animatedBanner.items.length === 1 && currentSlide === 0) {
       toast.success("Cannot delete the only slide")
       return
     }
@@ -142,21 +135,20 @@ const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
     var areaContainer = document.querySelectorAll('.editableAreaContainerBanner');
 
     // use active class to find the current ckeditor instance
-    var areaToChangeContainer;
     var content
     if (animatedBanner.items[currentSlide].EditableArea) {
       content = animatedBanner.items[currentSlide].EditableArea.content
       for (var i = 0; i < areaContainer.length - 1; i++) {
 
         var ckeditorContainerDiv = areaContainer[currentSlide]
-        if(ckeditorContainerDiv == undefined){
+        if (ckeditorContainerDiv === undefined) {
           ckeditorContainerDiv = areaContainer[currentSlide - 1]
         }
         var ckeditorDiv = ckeditorContainerDiv.children[0]
 
-        if (!isEdit() && content == ckeditorDiv.innerHTML) {
+        if (!isEdit() && content === ckeditorDiv.innerHTML) {
           ckeditorDiv.innerHTML = DOMPurify.sanitize(content);
-        } else if (ckeditorDiv.ckeditorInstance && ckeditorDiv.ckeditorInstance.getData() == content) {
+        } else if (ckeditorDiv.ckeditorInstance && ckeditorDiv.ckeditorInstance.getData() === content) {
           ckeditorDiv.ckeditorInstance.setData(content)
         }
 
@@ -186,22 +178,20 @@ const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
       return (
         animatedBanner.items.map(function (item, i) {
 
-          // get source
-          // animatedBanner.items[i].image
-
           if (item) {
-
             var imageName = item.newImage ? item.newImage.name : item.image;
             var isVideo = hasExtension(['.mp4'], imageName);
             source = item.newImage ? URL.createObjectURL(item.newImage) : item.image;
-
-
           }
           return (
-            <Carousel.Item style={{ height, width }} >
+            <Carousel.Item style={{ height, width }} key={`carouse-item${i}`}>
               {!isVideo && (
-                <img src={source} style={{ minWidth: "100%", maxHeight: "100%", filter: "contrast(0.5)" }} className="image-fluid">
-                </img>
+                <img
+                  src={source}
+                  style={{ minWidth: "100%", maxHeight: "100%", filter: "contrast(0.5)" }}
+                  className="image-fluid"
+                  alt={`item-${i}`}
+                />
               )}
 
               {isVideo && (
@@ -239,18 +229,26 @@ const Banner = ({ title, size, alwaysOn = false, substituteTitle = "" }) => {
           ((isAdmin() && isEdit()) || isAdminArea() && alwaysOn) && (
             <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", zIndex: 3 }}>
               {<div className={bigOrSmall ? "bannerEditorButtons" : "bannerEditorButtonsSmall"} >
-                  {/* <Button border={0} onClick={() => {
+                {/* <Button border={0} onClick={() => {
               setValues({ ...values, hideBannerToolbar: !hideBannerToolbar })
               }} className="" containedSizeSmall variant="contained">Upload Image</Button> */}
-                  <ImageUploader className="imageUploader" onClick={(e) => { e.preventDefault() }} singleImage onImageDrop={onImageDrop}
-                    singleImage={true} withPreview={false} onImageDrop={onImageDrop} getURL={getURL} buttonText={"Choose Image"} withLabel={false} withIcon={false} ></ImageUploader>
-                  <div>
-                    <Button style={{ margin: "5px" }} onClick={addSlide} border={0} variant="contained" color="secondary"><PlusOneRoundedIcon /> Slide</Button>
-                    <Button style={{ margin: "5px" }} onClick={removeCurrentSlide} border={0} variant="contained" color="primary"><DeleteSweepRoundedIcon /> Slide </Button>
-                  </div>
-                  {/* <Toggle labelPlacement="top" className={"BannerToggle"} label={"Hide Editable Area"} onToggle={onToggle} containedSizeSmall variant="contained" color="primary"></Toggle> */}
-                </div>}
-                
+                <ImageUploader
+                  className="imageUploader"
+                  onClick={(e) => { e.preventDefault() }}
+                  singleImage
+                  onImageDrop={onImageDrop}
+                  withPreview={false}
+                  getURL={getURL}
+                  buttonText={"Choose Image"}
+                  withLabel={false}
+                  withIcon={false} />
+                <div>
+                  <Button style={{ margin: "5px" }} onClick={addSlide} border={0} variant="contained" color="secondary"><PlusOneRoundedIcon /> Slide</Button>
+                  <Button style={{ margin: "5px" }} onClick={removeCurrentSlide} border={0} variant="contained" color="primary"><DeleteSweepRoundedIcon /> Slide </Button>
+                </div>
+                {/* <Toggle labelPlacement="top" className={"BannerToggle"} label={"Hide Editable Area"} onToggle={onToggle} containedSizeSmall variant="contained" color="primary"></Toggle> */}
+              </div>}
+
             </div>
           )
         }

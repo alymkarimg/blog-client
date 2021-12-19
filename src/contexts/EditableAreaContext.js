@@ -1,9 +1,9 @@
-import React, { createContext, Component, useEffect, useState } from 'react';
-import { isEdit, getCookie } from '../helpers/Default'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { createContext, useEffect, useState } from 'react';
+import { getCookie } from '../helpers/Default'
 import { toast } from 'react-toastify'
 import axios from 'axios'
 import { removeQuery } from '../helpers/Default';
-import EditableArea from '../core/components/EditableArea';
 
 export const EditableAreaContext = createContext(null);
 
