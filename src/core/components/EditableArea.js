@@ -96,7 +96,7 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
             if (response.data.message) {
                 setValues({ ...values, data: response.data.content, pageError: response.data.message, link: response.data.link });
             } else {
-                setValues({ ...values, data: response.data.content, loading: false, link: response.data.link });
+                setValues({ ...values, data: response.data.content, pageError: false, loading: false, link: response.data.link });
             }
 
         }).catch(error => {

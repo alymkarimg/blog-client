@@ -16,23 +16,23 @@ import CardContent from '@material-ui/core/CardContent';
 
 const BlogCardItem = (props) => {
     const [values, setValues] = useState({
-      product: null,
+      blog: null,
     });
   
-    const { product } = values;
+    const { blog } = values;
   
     useEffect(() => {
       axios({
         method: "GET",
-        url: `${process.env.REACT_APP_API}/shop/${props.match.params.slug}`,
+        url: `${process.env.REACT_APP_API}/blogs/${props.match.params.slug}`,
       })
         .then((response) => {
           if (response.data.errors && response.data.errors.length > 0) {
             response.data.errors.forEach((error) => {
               toast.error(error.message);
             });
-          } else if (response.data.product) {
-            setValues({ ...values, product: response.data.product });
+          } else if (response.data.blog) {
+            setValues({ ...values, blog: response.data.blog });
           } else {
           }
         })
@@ -46,10 +46,10 @@ const BlogCardItem = (props) => {
   
     return (
       <Layout>
-        {product && (
-          <div className="col-md-8 offset-md-2">
+        {blog && (
+          <div className="col-md-10 offset-md-1">
             <BlogCard
-              product={product}
+              blog={blog}
               size={{ height: "auto", width: "100%" }}
               truncate={false}
               readMoreButton={false}

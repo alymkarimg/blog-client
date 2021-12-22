@@ -6,7 +6,7 @@ const EditablePage = (props) => {
   return (
       <Layout>
         <div id="">
-        <EditableArea isEditablePage={props.match.path} fade={true} pathname="page" guid={`${props.location.pathname}`}></EditableArea>
+        <EditableArea key={props.location.pathname} isEditablePage={props.match.path} fade={true} pathname="page" guid={`${props.location.pathname}`}></EditableArea>
         </div>   
       </Layout>
   )

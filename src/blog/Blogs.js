@@ -85,7 +85,7 @@ const Blogs = () => {
                             return (
                                 <Fragment key={`blog${i}`}>
                                     <div className="fade-in blogCard" style={{ marginBottom: "20px" }}>
-                                        <BlogCard blog={blog} />
+                                        <BlogCard readMoreButton={true} blog={blog} />
                                     </div>
                                 </Fragment>
                             )
