@@ -53,9 +53,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-<<<<<<< Updated upstream
-export default function ShopCard({ product }) {
-=======
 function changeBackground(e) {
   e.target.className = "dark-overlay";
 }
@@ -70,7 +67,6 @@ export default function ShopCard({
   truncate = false,
   readMoreButton = false,
 }) {
->>>>>>> Stashed changes
   const classes = useStyles();
   
   return (
