@@ -56,11 +56,6 @@ const ShopSingleItem = (props) => {
     <Layout>
       {product && (
         <React.Fragment>
-          <EditableArea
-            fade={true}
-            pathname="/shop"
-            guid="EA_shop_single_item"
-          ></EditableArea>
           <div className="col-md-8 offset-md-2">
             <ShopCard
               product={product}

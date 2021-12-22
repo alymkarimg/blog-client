@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BlogCard({ blog, truncate, readMoreButton }) {
+export default function BlogCard({ blog, truncate, readMoreButton = true }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     expanded: false,

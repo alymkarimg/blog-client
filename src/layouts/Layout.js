@@ -1,17 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  useState,
-  useEffect,
-  Fragment,
-  useContext
-} from "react";
+import React, { useState, useEffect, Fragment, useContext } from "react";
 import { Link, withRouter } from "react-router-dom";
-import {
-  isEdit,
-  isAuth,
-  signout,
-  removeQuery,
-} from "../helpers/Default";
+import { isEdit, isAuth, signout, removeQuery } from "../helpers/Default";
 import { EditableAreaContext } from "../contexts/EditableAreaContext";
 import { AnimatedBannerContext } from "../contexts/AnimatedBannerContext";
 import Sidebar from "../core/components/Sidebar";
@@ -20,19 +10,14 @@ import Hamburger from "hamburger-react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "../../node_modules/react-toastify/dist/ReactToastify.min.css";
-import {
-  Drawer,
-  makeStyles,
-  fade,
-  Avatar
-} from "@material-ui/core";
+import { Drawer, makeStyles, fade, Avatar } from "@material-ui/core";
 import "../assets/css/Style.css";
 import {
   isHomepageActive,
   isActive,
   isFullscreen,
   isMessengerActive,
-} from "../helpers/Default"
+} from "../helpers/Default";
 import $ from "jquery";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -48,7 +33,6 @@ import "@szhsin/react-menu/dist/index.css";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 
 const Layout = function ({ children, match, history }) {
-
   $(document).ready(function () {
     $("a").on("click", function (e) {
       var url = e.target.parentNode.href;
@@ -217,7 +201,6 @@ const Layout = function ({ children, match, history }) {
   const { updatePublishEditableAreas } = useContext(EditableAreaContext);
   const { updatePublishAnimatedBanners } = useContext(AnimatedBannerContext);
 
-
   const nav = () => {
     // const handleClose = (event, url) => {
     //   setValues({ ...values, anchorEl: null, popupOpen: true });
@@ -229,7 +212,7 @@ const Layout = function ({ children, match, history }) {
     // };
 
     const printMenuTree = () => {
-      const onClick = () => { };
+      const onClick = () => {};
 
       var menutree =
         menuTree &&
@@ -238,22 +221,24 @@ const Layout = function ({ children, match, history }) {
             if (item.children.length > 0) {
               return item.children.map((child, i) => {
                 return (
-                  <MenuItem
-                    key={`item${i}`}
-                    href={item.url}
-                    style={isActive(item.url, match)}
-                    className="menuItem"
-                  >
-                    <SubMenu className="menu" label={item.title}>
-                      {printMenuTreeItem(child)}
-                    </SubMenu>
+                  <MenuItem>
+                    <Link
+                      key={`item${i}`}
+                      to={`/${item.url}`}
+                      style={isActive(item.url, match)}
+                      className="menuItem"
+                    >
+                      <SubMenu className="menu" label={item.title}>
+                        {printMenuTreeItem(child)}
+                      </SubMenu>
+                    </Link>
                   </MenuItem>
                 );
               });
             }
             return (
               <MenuItem className="menuItem" key={`menu-item${index}`}>
-                <Link to={item.url} style={isActive(item.url, match)}>
+                <Link to={`/${item.url}`} style={isActive(item.url, match)}>
                   {item.title}
                 </Link>
               </MenuItem>
@@ -276,7 +261,7 @@ const Layout = function ({ children, match, history }) {
           } else {
             return (
               <MenuItem className="menuItem" key={`menu-el${index}`}>
-                <Link to={menuItem.url} style={isActive(menuItem.url, match)}>
+                <Link to={`/${menuItem.url}`} style={isActive(menuItem.url, match)}>
                   {menuItem.title}
                 </Link>
               </MenuItem>
@@ -371,8 +356,9 @@ const Layout = function ({ children, match, history }) {
                   }
                 >
                   <MenuItem className="menuItem">
-                    <Link style={isActive("/profile", match)} to="/profile">{`${isAuth().firstname
-                      } ${isAuth().surname}`}</Link>
+                    <Link style={isActive("/profile", match)} to="/profile">{`${
+                      isAuth().firstname
+                    } ${isAuth().surname}`}</Link>
                   </MenuItem>
                   <MenuItem>
                     <Link

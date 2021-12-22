@@ -1,10 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  Fragment,
-} from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import ShopCard from "./ShopCard";
 import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
@@ -106,10 +101,23 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, i) => {
             return (
-              <Fragment>
-                <SwiperSlide>
-                  <ShopCard truncate={20} readMoreButton={true} product={product}></ShopCard>
+              <Fragment key={`product-${i}`}>
+                <SwiperSlide key={`productSlide-${i}`}>
+                  <ShopCard
+                    truncate={100}
+                    readMoreButton={true}
+                    key={`productCard-${i}`}
+                    product={product}
+                    title={title}
+                    index={i}
+                  ></ShopCard>
                 </SwiperSlide>
+                {products && (
+                  <>
+                    <div ref={navigationPrevRef}>Prev</div>
+                    <div ref={navigationNextRef}>Next</div>
+                  </>
+                )}
               </Fragment>
             );
           })}
@@ -132,9 +140,16 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, index) => {
             return (
-              <Fragment key={`product${index}`}>
-                <SwiperSlide>
-                  <ShopCard product={product} title={title} index={index}></ShopCard>
+              <Fragment key={`product-${index}`}>
+                <SwiperSlide key={`productSlide-${index}`}>
+                  <ShopCard
+                    truncate={100}
+                    readMoreButton={true}
+                    key={`productCard-${index}`}
+                    product={product}
+                    title={title}
+                    index={index}
+                  ></ShopCard>
                 </SwiperSlide>
                 {products && (
                   <>
