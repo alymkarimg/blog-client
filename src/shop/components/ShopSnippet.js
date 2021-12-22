@@ -106,9 +106,9 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, i) => {
             return (
-              <Fragment key={`elem${i}`}>
-                <SwiperSlide key={`elem_${i}`}>
-                  <ShopCard product={product}></ShopCard>
+              <Fragment>
+                <SwiperSlide>
+                  <ShopCard truncate={20} readMoreButton={true} product={product}></ShopCard>
                 </SwiperSlide>
               </Fragment>
             );

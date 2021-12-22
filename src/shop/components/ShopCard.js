@@ -23,10 +23,6 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flex: "1 0 auto",
   },
-  cover: {
-    width: 400,
-    height: 200,
-  },
   controls: {
     display: "flex",
     alignItems: "center",
@@ -57,7 +53,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+<<<<<<< Updated upstream
 export default function ShopCard({ product }) {
+=======
+function changeBackground(e) {
+  e.target.className = "dark-overlay";
+}
+
+function removeBackground(e) {
+  e.target.className = "";
+}
+
+export default function ShopCard({
+  product,
+  size = { width: "100%", height: "400px" },
+  truncate = false,
+  readMoreButton = false,
+}) {
+>>>>>>> Stashed changes
   const classes = useStyles();
   
   return (
@@ -65,7 +78,7 @@ export default function ShopCard({ product }) {
       <div className={classes.details}>
         <Banner
           alwaysOn={false}
-          size={{ width: "100%", height: "200px" }}
+          size={{ height: size.height, width: size.width }}
           title={`shop ${product && product.title}`}
         ></Banner>
         <CardHeader
@@ -74,8 +87,8 @@ export default function ShopCard({ product }) {
         <CardContent>
           <Typography component={'span'}>
             <EditableArea
-              truncate={200}
-              size={{ width: "100%", height: "400px" }}
+              truncate={truncate}
+              size={{ height: size.height, width: size.width }}
               useloading={true}
               fade={false}
               pathname={`shop editableArea`}
@@ -98,18 +111,20 @@ export default function ShopCard({ product }) {
           </Typography>
         </CardContent>
         <CardContent>
-          <Link
-            to={product ? `/product/${product.slug}` : "/product/tester::"}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "30px 0px",
-            }}
-            className="btn btn-sm btn-outline-info"
-          >
-            {" "}
-            Read More{" "}
-          </Link>
+          {readMoreButton && (
+            <Link
+              to={`/product/${product.slug}`}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "30px 0px",
+              }}
+              className="btn btn-sm btn-outline-info"
+            >
+              {" "}
+              Read More{" "}
+            </Link>
+          )}
           <Link
             to="/auth/password/forgot"
             style={{

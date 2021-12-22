@@ -178,13 +178,13 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
             }
             else {
                 return (
-                    // <Link to={link} ref={myRef}
-                    //     className={`editableAreaContainer ${fadeVar}`} >
-                    //     <div dangerouslySetInnerHTML={{ __html: data }}>
-                    //     </div>
-                    // </Link>
-                    <div dangerouslySetInnerHTML={{ __html: data }}>
-                    </div>
+                    <Link to={link} ref={myRef}
+                        className={`editableAreaContainer ${fadeVar}`} >
+                        <div dangerouslySetInnerHTML={{ __html: data }}>
+                        </div>
+                    </Link>
+                        // <div dangerouslySetInnerHTML={{ __html: data }}>
+                        // </div>
                 )
             }
         }
