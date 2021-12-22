@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react'
 import jwt from 'jsonwebtoken'
 import Layout from '../layouts/Layout'
@@ -19,11 +20,9 @@ const Reset = ({ match }) => {
     useEffect(() => {
         let token = match.params.token;
         let user = jwt.decode(token);
-
         if (token) {
             setValues({ ...values, user, token })
         }
-
     }, [])
 
 
@@ -66,7 +65,7 @@ const Reset = ({ match }) => {
                     <label className="text-muted">Confirm Password*</label>
                     <input type="text" className="form-control" onChange={handleChange('confirmPassword')} value={confirmPassword} />
                 </div>
-                <div className="col-sm-3"> 
+                <div className="col-sm-3">
                     <button className="btn btn-primary" onClick={clickSubmit}>{buttonText}</button>
                 </div>
             </div>
@@ -74,13 +73,13 @@ const Reset = ({ match }) => {
     );
 
     return (
-    <Layout>
-        <div className="col-md-6 offset-md-3">
-            <ToastContainer />
-            <h1 className="p-5 text-center">Hey, {user ? user.firstname + " " + user.surname : ""}, please enter your new password</h1>
-            {passwordResetForm()}
-        </div>
-    </Layout>
+        <Layout>
+            <div className="col-md-6 offset-md-3">
+                <ToastContainer />
+                <h1 className="p-5 text-center">Hey, {user ? user.firstname + " " + user.surname : ""}, please enter your new password</h1>
+                {passwordResetForm()}
+            </div>
+        </Layout>
     )
 };
 

@@ -17,7 +17,7 @@
     border-radius: 30px;
     border: 1px solid rgba(27, 18, 18, 0.582);
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     flex-direction: row;
     transition: width 0.5s 0.5s, height 0.5s 0.5s, opacity 0.3s;
 }
@@ -204,7 +204,7 @@ a {
     flex-direction: row;
     max-width: 800px;
     max-height: 58px;
-    align-items: end;
+    align-items: flex-end;
     background-color: whitesmoke;
     padding: 10px;
     display: flex !important;

@@ -1,12 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-import { Link, Redirect } from 'react-router-dom';
 import Layout from '../layouts/Layout';
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.min.css';
 
-const ActivateAccount = ({match}) => {
+const ActivateAccount = ({ match }) => {
     const [values, setValues] = useState({
         firstname: '',
         token: '',
@@ -17,23 +17,24 @@ const ActivateAccount = ({match}) => {
         let token = match.params.token;
         let user = jwt.decode(token)
 
-        if(user){
-            setValues({...values, firstname: user.firstname, token})
+        if (user) {
+            setValues({ ...values, firstname: user.firstname, token })
         }
 
     }, [])
 
-    const { firstname, token, show } = values;
+    const { firstname, token } = values;
 
     const clickSubmit = (event) => {
         event.preventDefault()
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/account-activation`,
-            data: {token}
+            data: { token }
         }).then(response => {
             console.log('Account activation success', response)
-            setValues({...values,
+            setValues({
+                ...values,
                 show: false
             })
             toast.success(response.data.message)
@@ -55,12 +56,12 @@ const ActivateAccount = ({match}) => {
     )
 
     return (
-    <Layout>
-        <ToastContainer />
-        <div className="col-md-6 offset-md-3">
-            {activationLink()}
-        </div>
-    </Layout>
+        <Layout>
+            <ToastContainer />
+            <div className="col-md-6 offset-md-3">
+                {activationLink()}
+            </div>
+        </Layout>
     )
 };
 

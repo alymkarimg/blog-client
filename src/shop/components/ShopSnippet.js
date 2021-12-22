@@ -5,32 +5,17 @@ import React, {
   useRef,
   Fragment,
 } from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import ShopCard from "./ShopCard";
-// Core modules imports are same as usual
 import { Navigation, Pagination } from "swiper";
-// Direct React component imports
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 
-// Styles must use direct files imports
 import "swiper/swiper.scss"; // core Swiper
 import "swiper/modules/navigation/navigation.scss"; // Navigation module
 import "swiper/modules/pagination/pagination.scss"; // Pagination module
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  paper: {
-    padding: theme.spacing(2),
-    textAlign: "center",
-    color: theme.palette.text.secondary,
-  },
-}));
 
 function ShopSnippet({ title, products = [] }) {
   const [values, setValues] = useState({
@@ -80,14 +65,18 @@ function ShopSnippet({ title, products = [] }) {
           }}
         >
           <Tooltip title="Previous" ref={navigationPrevRef}>
-            <IconButton aria-label={`Previous`}>
-              <ChevronLeftIcon />
-            </IconButton>
+            <span>
+              <IconButton aria-label={`Previous`}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="Next" ref={navigationNextRef}>
-            <IconButton aria-label={`Next`}>
-              <ChevronRightIcon />
-            </IconButton>
+            <span>
+              <IconButton aria-label={`Next`}>
+                <ChevronRightIcon />
+              </IconButton>
+            </span>
           </Tooltip>
         </div>
         <Swiper
@@ -118,7 +107,7 @@ function ShopSnippet({ title, products = [] }) {
           {products.map((product, i) => {
             return (
               <Fragment key={`elem${i}`}>
-                <SwiperSlide>
+                <SwiperSlide key={`elem_${i}`}>
                   <ShopCard product={product}></ShopCard>
                 </SwiperSlide>
               </Fragment>

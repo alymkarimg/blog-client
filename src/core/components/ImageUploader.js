@@ -40,15 +40,16 @@ const ImageUploader = (props) => {
         this.props.onChange(this.state.files, this.state.pictures);
       }
     }
-
+  
     /*
      Load image at the beggining if defaultImage prop exists
      */
-    componentWillReceiveProps(nextProps) {
+     UNSAFE_componentWillReceiveProps(nextProps) {
       if (nextProps.defaultImages !== this.props.defaultImages) {
         this.setState({ pictures: nextProps.defaultImages });
       }
     }
+    
 
     /*
        Check file extension (onDropFile)

@@ -1,3 +1,4 @@
+/* eslint-disable no-extend-native */
 import cookie from "js-cookie";
 
 String.prototype.capitalize = function () {

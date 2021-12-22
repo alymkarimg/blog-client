@@ -25,10 +25,10 @@ const AdminHome = () => (
                 <AdminDashboardCard  size={size} fade={fade} link={true} pathname="/admin/home" guid="products" ></AdminDashboardCard>
             </div>
             <div className="col-md-3 p-3" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard hasLink size={size} fade={fade} fade={fade} link={true} pathname="/admin/home" guid="blog" ></AdminDashboardCard>
+                <AdminDashboardCard hasLink size={size} fade={fade} link={true} pathname="/admin/home" guid="blog" ></AdminDashboardCard>
             </div>
             <div className="col-md-3 p-3" style={{marginTop: '20px', marginBottom: '20px'}}>
-                <AdminDashboardCard hasLink size={size} fade={fade} fade={fade} link={true} pathname="/admin/home" guid="orders" ></AdminDashboardCard>
+                <AdminDashboardCard hasLink size={size} fade={fade}  link={true} pathname="/admin/home" guid="orders" ></AdminDashboardCard>
             </div>
         </div>
     </Layout>

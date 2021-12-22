@@ -1,22 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
-import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
-import { getImageURL } from "../../helpers/Default";
 import Rating from "./Rating";
 import Banner from "../../core/components/AnimatedBanner";
 import EditableArea from "../../core/components/EditableArea";
@@ -68,39 +57,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function changeBackground(e) {
-  e.target.className = "dark-overlay";
-}
-
-function removeBackground(e) {
-  e.target.className = "";
-}
-
 export default function ShopCard({ product }) {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    expanded: false,
-    subtitle: "",
-    contentSnippet: "",
-    datePublished: "",
-    comment: "",
-    popular: "",
-    category: "",
-  });
-
-  const {
-    content,
-    datePublished,
-    comments,
-    popular,
-    contentSnippet,
-    expanded,
-  } = values;
-
-  const handleExpandClick = () => {
-    setValues({ ...values, expanded: !expanded });
-  };
-
+  
   return (
     <Card className={classes.root} raised={true}>
       <div className={classes.details}>
@@ -113,7 +72,7 @@ export default function ShopCard({ product }) {
           title={product ? product.title : "dummy title"}
         ></CardHeader>
         <CardContent>
-          <Typography>
+          <Typography component={'span'}>
             <EditableArea
               truncate={200}
               size={{ width: "100%", height: "400px" }}
@@ -130,7 +89,7 @@ export default function ShopCard({ product }) {
           <Typography className={classes.pos} color="textSecondary">
             £{product ? product.price : "2.50"}
           </Typography>
-          <Typography>
+          <Typography component={'span'}>
             <MultipleSelect
               value={[]}
               title="Options"

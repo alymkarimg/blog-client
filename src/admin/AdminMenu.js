@@ -51,7 +51,7 @@ const AdminMenu = () => {
     }
 
 
-    const { menuItems, currentTarget, menuTree, dialogOpen, prototype, changes } = values
+    const { menuItems, currentTarget, menuTree, dialogOpen, prototype } = values
 
     useEffect(function () {
         setValues({

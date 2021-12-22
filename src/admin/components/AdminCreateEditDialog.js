@@ -45,10 +45,6 @@ const FullScreenDialog = ({
     setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } });
   };
 
-  const onEditorChange = (editableArea) => {
-    setValues({ ...values, dbItem: { ...dbItem, editableArea } });
-  };
-
   var textfieldsArray = getFieldsFromPrototype(prototype, true);
 
   const createForm = (arr) => {
@@ -151,7 +147,8 @@ const FullScreenDialog = ({
             />
           </div>
         );
-      }
+      }  
+      return null
     });
 
     return (

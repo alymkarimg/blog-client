@@ -83,13 +83,8 @@ export default function BlogCard({ blog }) {
   });
 
   const {
-    title,
-    expanded
+    title
   } = values;
-
-  const handleExpandClick = () => {
-    setValues({ ...values, expanded: !expanded });
-  };
 
   return (
     <Card className={classes.root} raised={true}>
