@@ -76,7 +76,13 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, i) => (
             <SwiperSlide key={`large_elem__${title}${i}`}>
-              <ShopCard product={product} />
+              <ShopCard
+                truncate={100}
+                readMoreButton={true}
+                product={product}
+                title={title}
+                index={i}
+              />
             </SwiperSlide>
           ))}
         </Swiper>
@@ -103,7 +109,13 @@ function ShopSnippet({ title, products = [] }) {
         >
           {products.map((product, index) => (
             <SwiperSlide key={`small_elem_${title}${index}`}>
-              <ShopCard product={product} title={title} index={index} />
+              <ShopCard
+                truncate={100}
+                readMoreButton={true}
+                product={product}
+                title={title}
+                index={index}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

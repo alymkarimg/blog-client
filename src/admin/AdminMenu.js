@@ -57,7 +57,7 @@ const AdminMenu = () => {
         setValues({
             ...values, prototype
         })
-    }, [prototype, values])
+    }, [prototype])
 
     const renderItem = ({ item }) => item.id;
 

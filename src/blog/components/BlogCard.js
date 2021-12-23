@@ -68,8 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-export default function BlogCard({ blog }) {
+export default function BlogCard({ blog, truncate, readMoreButton = true }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     expanded: false,
@@ -82,9 +81,7 @@ export default function BlogCard({ blog }) {
     category: "",
   });
 
-  const {
-    title
-  } = values;
+  const { title } = values;
 
   return (
     <Card className={classes.root} raised={true}>
@@ -124,14 +121,16 @@ export default function BlogCard({ blog }) {
                 <ShareIcon />
               </IconButton>
             </div>
-            <Link
-              to="/auth/password/forgot"
-              style={{ margin: "20px 10px" }}
-              className="btn btn-sm btn-outline-info"
-            >
-              {" "}
-              Read more{" "}
-            </Link>
+            {readMoreButton && (
+              <Link
+                to={`/blog/${blog.slug}`}
+                style={{ margin: "20px 10px" }}
+                className="btn btn-sm btn-outline-info"
+              >
+                {" "}
+                Read more{" "}
+              </Link>
+            )}
           </CardActions>
         </div>
       </div>
