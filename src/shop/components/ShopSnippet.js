@@ -2,11 +2,9 @@
 import React, {
   useState,
   useEffect,
-  useRef,
-  Fragment,
+  useRef
 } from "react";
 import ShopCard from "./ShopCard";
-import { Navigation, Pagination } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react.js";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -23,14 +21,7 @@ function ShopSnippet({ title, products = [] }) {
     screenChanged: false,
   });
 
-  let { largeScreen, screenChanged } = values;
-
-  // const classes = useStyles();
-
-  // const events = {
-  //   onDragged: function (event) { },
-  //   onChanged: function (event) { },
-  // };
+  let { largeScreen } = values;
 
   const handleResize = () => {
     setValues({
@@ -40,23 +31,15 @@ function ShopSnippet({ title, products = [] }) {
   };
 
   useEffect(() => {
-    // Add event listener
-    window.addEventListener("resize", () => {
-      setValues({ ...values, screenChanged: true });
-      handleResize();
-    });
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize)
   }, []);
 
-  useEffect(() => {
-    handleResize();
-  }, [screenChanged]);
-
-  const navigationPrevRef = useRef(null);
-  const navigationNextRef = useRef(null);
+  const swiperRef = useRef()
 
   if (largeScreen) {
     return (
-      <div>
+      <>
         <div
           style={{
             display: "flex",
@@ -64,90 +47,73 @@ function ShopSnippet({ title, products = [] }) {
             width: "100%",
           }}
         >
-          <Tooltip title="Previous" ref={navigationPrevRef}>
-            <span>
-              <IconButton aria-label={`Previous`}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </span>
+          <Tooltip title="Previous">
+            <IconButton
+              aria-label={`Previous`}
+              onClick={() => {
+                swiperRef.current && swiperRef.current.swiper.slidePrev()
+              }}
+            >
+              <ChevronLeftIcon />
+            </IconButton>
           </Tooltip>
-          <Tooltip title="Next" ref={navigationNextRef}>
-            <span>
-              <IconButton aria-label={`Next`}>
-                <ChevronRightIcon />
-              </IconButton>
-            </span>
+          <Tooltip title="Next">
+            <IconButton
+              aria-label={`Next`}
+              onClick={() => {
+                swiperRef.current && swiperRef.current.swiper.slideNext()
+              }}
+            >
+              <ChevronRightIcon />
+            </IconButton>
           </Tooltip>
         </div>
         <Swiper
-          navigation={{
-            // Both prevEl & nextEl are null at render so this does not work
-            prevEl: navigationPrevRef.current,
-            nextEl: navigationNextRef.current,
-          }}
-          onSwiper={(swiper) => {
-            // Delay execution for the refs to be defined
-            setTimeout(() => {
-              // Override prevEl & nextEl now that refs are defined
-              swiper.params.navigation.prevEl = navigationPrevRef.current;
-              swiper.params.navigation.nextEl = navigationNextRef.current;
-
-              // Re-init navigation
-              swiper.navigation.destroy();
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }, 1000);
-          }}
-          modules={[Navigation, Pagination]}
-          pagination={{ clickable: true }}
-          spaceBetween={10}
-          slidesPerView={5}
-          onSlideChange={() => console.log("slide change")}
+          ref={swiperRef}
+          loop
+          spaceBetween={15}
+          slidesPerView={3}
         >
-          {products.map((product, i) => {
-            return (
-              <Fragment key={`elem${i}`}>
-                <SwiperSlide key={`elem_${i}`}>
-                  <ShopCard product={product}></ShopCard>
-                </SwiperSlide>
-              </Fragment>
-            );
-          })}
+          {products.map((product, i) => (
+            <SwiperSlide key={`large_elem__${title}${i}`}>
+              <ShopCard product={product} />
+            </SwiperSlide>
+          ))}
         </Swiper>
-      </div>
+      </>
     );
   } else {
     return (
       <div style={{ display: "flex", flexDirection: "row" }}>
-        <Tooltip title="Previous" ref={navigationPrevRef}>
-          <IconButton aria-label={`Previous`}>
+        <Tooltip title="Previous">
+          <IconButton
+            aria-label={`Previous`}
+            onClick={() => {
+              swiperRef.current && swiperRef.current.swiper.slidePrev()
+            }}
+          >
             <ChevronLeftIcon />
           </IconButton>
         </Tooltip>
         <Swiper
+          ref={swiperRef}
+          loop
           spaceBetween={10}
           slidesPerView={1}
-          onSlideChange={() => console.log("slide change")}
-          onSwiper={(swiper) => console.log(swiper)}
         >
-          {products.map((product, index) => {
-            return (
-              <Fragment key={`product${index}`}>
-                <SwiperSlide>
-                  <ShopCard product={product} title={title} index={index}></ShopCard>
-                </SwiperSlide>
-                {products && (
-                  <>
-                    <div ref={navigationPrevRef}>Prev</div>
-                    <div ref={navigationNextRef}>Next</div>
-                  </>
-                )}
-              </Fragment>
-            );
-          })}
+          {products.map((product, index) => (
+            <SwiperSlide key={`small_elem_${title}${index}`}>
+              <ShopCard product={product} title={title} index={index} />
+            </SwiperSlide>
+          ))}
         </Swiper>
-        <Tooltip title="Next" ref={navigationNextRef}>
-          <IconButton aria-label={`Next`}>
+        <Tooltip title="Next">
+          <IconButton
+            aria-label={`Next`}
+            onClick={() => {
+              swiperRef.current && swiperRef.current.swiper.slideNext()
+            }}
+          >
             <ChevronRightIcon />
           </IconButton>
         </Tooltip>
