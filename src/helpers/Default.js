@@ -217,7 +217,7 @@ export const arrayToObject = (arr) => {
 
 export const trunc = (string, n) => {
   return (
-    string && string.substr(0, n - 1) + (string.length > n ? "&hellip;" : "")
+    string && string.substr(0, n - 1) + (string.length > n && n != 0 ? "&hellip;" : "")
   );
 };
 

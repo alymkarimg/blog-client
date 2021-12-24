@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: "100%",
     maxWidth: "100%",
-    maxHeight: "650px",
     paddingBottom: "15px",
   },
   content: {
@@ -69,7 +68,7 @@ function removeBackground(e) {
 
 export default function ShopCard({
   product,
-  size = { width: "100%", height: "400px" },
+  size = { width: "100%", height: "100%" },
   truncate = false,
   readMoreButton = false,
 }) {
@@ -77,13 +76,14 @@ export default function ShopCard({
   return (
     <Card className={classes.root} raised={true}>
       <div className={classes.details}>
+        <CardHeader
+          subheader={`£${product ? product.price : "2.50"}`}
+          title={product ? product.title : "dummy title"}
+        />
         <Banner
           alwaysOn={false}
           size={{ maxHeight: "300px", height: size.height, width: size.width }}
-          title={`shop ${product && product.title}`}
-        />
-        <CardHeader
-          title={product ? product.title : "dummy title"}
+          title={`shop ${product && product.slug}`}
         />
         <CardContent>
           <Typography component={'span'}>
@@ -96,20 +96,21 @@ export default function ShopCard({
               guid={`shop ${product && product.slug}`}
             />
           </Typography>
-          <Rating
-            value={product ? product.rating : 4.5}
-            text={` ${product ? product.numReviews : 10} reviews`}
-          ></Rating>
-          <Typography className={classes.pos} color="textSecondary">
-            £{product ? product.price : "2.50"}
+          <Typography>
+            <Rating
+              value={product ? product.rating : 4.5}
+              text={` ${product ? product.numReviews : 10} reviews`}
+            ></Rating>
           </Typography>
-          <Typography component={'span'}>
-            <MultipleSelect
-              value={[]}
-              title="Options"
-              menuitems={["With Fries", "With Rice"]}
-            />
-          </Typography>
+          <Typography
+            className={classes.pos}
+            color="textSecondary"
+          ></Typography>
+          <MultipleSelect
+            value={[]}
+            title="Options"
+            menuitems={["With Fries", "With Rice"]}
+          />
         </CardContent>
         <CardContent>
           {readMoreButton && (
@@ -118,7 +119,7 @@ export default function ShopCard({
               style={{
                 display: "flex",
                 justifyContent: "center",
-                margin: "30px 0px",
+                margin: "10px 0px",
               }}
               className="btn btn-sm btn-outline-info"
             >
@@ -126,20 +127,20 @@ export default function ShopCard({
               Read More{" "}
             </Link>
           )}
-        </CardContent>
-      </div>
-      <Link
+          <Link
             to="/auth/password/forgot"
             style={{
               display: "flex",
               justifyContent: "center",
-              margin: "30px 0px",
+              margin: "10px 0px",
             }}
             className="btn btn-sm btn-outline-info"
           >
             {" "}
             Add to Cart{" "}
           </Link>
+        </CardContent>
+      </div>
     </Card>
   );
 }

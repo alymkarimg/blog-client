@@ -153,7 +153,6 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                                 }
                             }}
                             onReady={editor => {
-                                console.log(Array.from(editor.ui.componentFactory.names()));
                                 editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
                                     return new MyUploadAdapter(loader);
                                 };

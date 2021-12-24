@@ -72,12 +72,12 @@ function ShopSnippet({ title, products = [] }) {
           ref={swiperRef}
           loop
           spaceBetween={15}
-          slidesPerView={3}
+          slidesPerView={4}
         >
           {products.map((product, i) => (
             <SwiperSlide key={`large_elem__${title}${i}`}>
               <ShopCard
-                truncate={100}
+                truncate={0}
                 readMoreButton={true}
                 product={product}
                 title={title}
@@ -110,7 +110,7 @@ function ShopSnippet({ title, products = [] }) {
           {products.map((product, index) => (
             <SwiperSlide key={`small_elem_${title}${index}`}>
               <ShopCard
-                truncate={100}
+                truncate={0}
                 readMoreButton={true}
                 product={product}
                 title={title}

@@ -42,6 +42,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
   var width = `${size.width}`
   var height = `${size.height}`
   var maxHeight = `${size.maxHeight}`
+  var minWidth = `${size.maxWidth}`
   var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
   var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
   var bigOrSmall = parseInt(width, 10) > threshold
@@ -185,11 +186,11 @@ const Banner = ({ title, size, alwaysOn = false }) => {
             source = item.newImage ? URL.createObjectURL(item.newImage) : item.image;
           }
           return (
-            <Carousel.Item style={{ height, width, maxHeight }} key={`carouse-item${i}`}>
+            <Carousel.Item style={{ height, width, minWidth, maxHeight }} key={`carouse-item${i}`}>
               {!isVideo && (
                 <img
                   src={source}
-                  style={{ minWidth: "100%", maxHeight: "100%", filter: "contrast(0.5)" }}
+                  style={{ height, width, minWidth, maxHeight, filter: "contrast(0.5)" }}
                   className="image-fluid"
                   alt={`item-${i}`}
                 />
@@ -204,7 +205,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
                 <div className="animated fadeInDown editableAreaContainerBanner">
                   {/* pathname = bannertitle, guid = index of banner item */}
                   {/*  */}
-                  <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height }} pathname={title} guid={`${i}`}></EditableArea>
+                  <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height, maxHeight, minWidth }} pathname={title} guid={`${i}`}></EditableArea>
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -221,7 +222,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         marginBottom: "20px"
       }
       } className={bigOrSmall ? "banner" : "bannerSmall"} >
-        <Carousel keyboard={false} interval={30000} defaultActiveIndex={0} pause="hover" ref={dataSlideTo} indicators={true} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width }} fade>
+        <Carousel keyboard={false} interval={30000} defaultActiveIndex={0} pause="hover" ref={dataSlideTo} indicators={true} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width, maxHeight, minWidth }} fade>
           {
             processAnimatedBannerSlides()
           }

@@ -89,12 +89,15 @@ button, a {
 .fragmentStarText{
   display: flex;
   align-items:flex-start;
-  justify-content: space-evenly;
+  justify-content: flex-start;
   margin-bottom: 8px;
 }
 
 .fragmentStarText span:first-child {    
     height: 29px;
+    padding-right: 30px;
+    position: relative;
+    left: -2px;
 }
 
 .fragmentStarText span:last-child {
