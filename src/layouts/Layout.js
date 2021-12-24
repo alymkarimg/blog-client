@@ -212,7 +212,7 @@ const Layout = function ({ children, match, history }) {
     // };
 
     const printMenuTree = () => {
-      const onClick = () => {};
+      const onClick = () => { };
 
       var menutree =
         menuTree &&
@@ -356,9 +356,8 @@ const Layout = function ({ children, match, history }) {
                   }
                 >
                   <MenuItem className="menuItem">
-                    <Link style={isActive("/profile", match)} to="/profile">{`${
-                      isAuth().firstname
-                    } ${isAuth().surname}`}</Link>
+                    <Link style={isActive("/profile", match)} to="/profile">{`${isAuth().firstname
+                      } ${isAuth().surname}`}</Link>
                   </MenuItem>
                   <MenuItem>
                     <Link
@@ -412,10 +411,10 @@ const Layout = function ({ children, match, history }) {
                     removeQuery("edit");
                   }}
                 >
-                  <PublishIcon></PublishIcon>
+                  <PublishIcon />
                 </button>
               )}
-              {!isEdit() && isAuth() && isAuth().category.title === "admin" && (
+              {!isEdit() && isAuth()?.category?.title === "admin" && (
                 <button
                   className="btn btn-link"
                   style={{ cursor: "pointer", color: "white" }}
@@ -425,7 +424,7 @@ const Layout = function ({ children, match, history }) {
                     });
                   }}
                 >
-                  <EditIcon></EditIcon>
+                  <EditIcon />
                 </button>
               )}
             </Toolbar>

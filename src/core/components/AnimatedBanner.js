@@ -37,7 +37,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
     if (publishAnimatedBanner) {
       updateAnimatedBanners({ title: animatedBanner.title, items: animatedBanner.items })
     }
-  }, [publishAnimatedBanner])
+  }, [])
 
   var width = `${size.width}`
   var height = `${size.height}`
@@ -170,7 +170,9 @@ const Banner = ({ title, size, alwaysOn = false }) => {
   }
 
   useEffect(() => {
+    // TODO: Remove api call to parent (DON'T call single element, call an array of elements and then spread them in code using map)
     loadBanner();
+
   }, [])
 
   const processAnimatedBannerSlides = () => {
@@ -205,7 +207,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
                 <div className="animated fadeInDown editableAreaContainerBanner">
                   {/* pathname = bannertitle, guid = index of banner item */}
                   {/*  */}
-                  <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height, maxHeight, minWidth }} pathname={title} guid={`${i}`}></EditableArea>
+                  <EditableArea alwaysOn={alwaysOn} useloading={true} fade={false} size={{ width, height, maxHeight, minWidth }} pathname={title} guid={`${i}`} />
                 </div>
               </Carousel.Caption>
             </Carousel.Item>
@@ -219,10 +221,23 @@ const Banner = ({ title, size, alwaysOn = false }) => {
       <div style={{
         display: "flex",
         flexDirection: "column",
-        marginBottom: "20px"
-      }
-      } className={bigOrSmall ? "banner" : "bannerSmall"} >
-        <Carousel keyboard={false} interval={30000} defaultActiveIndex={0} pause="hover" ref={dataSlideTo} indicators={true} activeIndex={currentSlide} onSelect={handleSelect} style={{ height, width, maxHeight, minWidth }} fade>
+        marginBottom: "20px",
+        minHeight: "275px"
+      }}
+        className={bigOrSmall ? "banner" : "bannerSmall"}
+      >
+        <Carousel
+          keyboard={false}
+          interval={30000}
+          defaultActiveIndex={0}
+          pause="hover"
+          ref={dataSlideTo}
+          indicators={true}
+          activeIndex={currentSlide}
+          onSelect={handleSelect}
+          style={{ height, width, maxHeight, minWidth }}
+          fade
+        >
           {
             processAnimatedBannerSlides()
           }

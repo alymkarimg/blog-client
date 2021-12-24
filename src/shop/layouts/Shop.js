@@ -59,11 +59,10 @@ const Shop = () => {
 
     return (
         <Layout>
-
             <div style={{ marginBottom: "20px", paddingBottom: "20px" }} className="shopContainer">
                 <div className="row">
                     <div className="col-md-12">
-                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_title"></EditableArea>
+                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_title" />
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
@@ -84,7 +83,7 @@ const Shop = () => {
                         </div>
                     </div>
                     <div className="col-md-12" >
-                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
+                        <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks" />
                         <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
                     </div>
                 </div>

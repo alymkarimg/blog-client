@@ -85,8 +85,8 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
     const { data, loading, pageError } = values
 
     // when the component mounts, set the state
+    // TODO: Remove api call to parent (DON'T call single element, call an array of elements and then spread them in code using map)
     useEffect(() => {
-
         axios({
             method: 'POST',
             url: `${process.env.REACT_APP_API}/editable-area`,
@@ -182,8 +182,8 @@ const EditableArea = ({ isEditablePage, link, onEditorChange, truncate = false, 
                         <div dangerouslySetInnerHTML={{ __html: data }}>
                         </div>
                     </Link>
-                        // <div dangerouslySetInnerHTML={{ __html: data }}>
-                        // </div>
+                    // <div dangerouslySetInnerHTML={{ __html: data }}>
+                    // </div>
                 )
             }
         }

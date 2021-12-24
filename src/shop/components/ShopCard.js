@@ -82,7 +82,7 @@ export default function ShopCard({
         />
         <Banner
           alwaysOn={false}
-          size={{ maxHeight: "300px", height: size.height, width: size.width }}
+          size={{ maxHeight: "275px", height: size.height, width: size.width }}
           title={`shop ${product && product.slug}`}
         />
         <CardContent>
