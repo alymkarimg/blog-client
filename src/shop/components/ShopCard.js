@@ -14,11 +14,17 @@ import MultipleSelect from "../../core/components/MultipleSelect";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
+    margin: "5px",
   },
   details: {
     display: "flex",
     flexDirection: "column",
+    flexShrink: 1,
+    width: "100%",
+    height: "100%",
     maxWidth: "100%",
+    maxHeight: "650px",
+    paddingBottom: "15px",
   },
   content: {
     flex: "1 0 auto",
@@ -68,7 +74,6 @@ export default function ShopCard({
   readMoreButton = false,
 }) {
   const classes = useStyles();
-  
   return (
     <Card className={classes.root} raised={true}>
       <div className={classes.details}>
@@ -76,10 +81,10 @@ export default function ShopCard({
           alwaysOn={false}
           size={{ maxHeight: "300px", height: size.height, width: size.width }}
           title={`shop ${product && product.title}`}
-        ></Banner>
+        />
         <CardHeader
           title={product ? product.title : "dummy title"}
-        ></CardHeader>
+        />
         <CardContent>
           <Typography component={'span'}>
             <EditableArea
@@ -93,7 +98,7 @@ export default function ShopCard({
           </Typography>
           <Rating
             value={product ? product.rating : 4.5}
-            text={`${product ? product.numReviews : 10} reviews`}
+            text={` ${product ? product.numReviews : 10} reviews`}
           ></Rating>
           <Typography className={classes.pos} color="textSecondary">
             £{product ? product.price : "2.50"}

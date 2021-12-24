@@ -74,7 +74,6 @@ const Shop = () => {
                     </div>
 
                     <div className="col-md-12" >
-                        {/* products.filter(q => q.category === "food") */}
                         <ShopSnippet products={products} title={"food"}></ShopSnippet>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
@@ -85,7 +84,6 @@ const Shop = () => {
                         </div>
                     </div>
                     <div className="col-md-12" >
-                        {/* products.filter(q => q.category === "drink") */}
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
                         <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
                     </div>
