@@ -74,7 +74,7 @@ export default function ShopCard({
       <div className={classes.details}>
         <Banner
           alwaysOn={false}
-          size={{ height: size.height, width: size.width }}
+          size={{ maxHeight: "300px", height: size.height, width: size.width }}
           title={`shop ${product && product.title}`}
         ></Banner>
         <CardHeader
@@ -121,7 +121,9 @@ export default function ShopCard({
               Read More{" "}
             </Link>
           )}
-          <Link
+        </CardContent>
+      </div>
+      <Link
             to="/auth/password/forgot"
             style={{
               display: "flex",
@@ -133,8 +135,6 @@ export default function ShopCard({
             {" "}
             Add to Cart{" "}
           </Link>
-        </CardContent>
-      </div>
     </Card>
   );
 }

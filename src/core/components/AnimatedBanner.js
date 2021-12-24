@@ -41,6 +41,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
 
   var width = `${size.width}`
   var height = `${size.height}`
+  var maxHeight = `${size.maxHeight}`
   var isPercent = width.charAt(width.length - 1) === "%" ? true : false //   is it a percent
   var threshold = isPercent ? 50 : 500 // the value that it must be > to be classed as "big"
   var bigOrSmall = parseInt(width, 10) > threshold
@@ -184,7 +185,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
             source = item.newImage ? URL.createObjectURL(item.newImage) : item.image;
           }
           return (
-            <Carousel.Item style={{ height, width }} key={`carouse-item${i}`}>
+            <Carousel.Item style={{ height, width, maxHeight }} key={`carouse-item${i}`}>
               {!isVideo && (
                 <img
                   src={source}
