@@ -10,9 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogActions from "@material-ui/core/DialogActions";
 import "../../assets/css/Style.css";
 import CurrencyTextField from "@unicef/material-ui-currency-textfield";
-import {
-  getFieldsFromPrototype
-} from "../../helpers/Default";
+import { getFieldsFromPrototype } from "../../helpers/Default";
 import SimpleSelect from "../../core/components/Select";
 
 const FullScreenDialog = ({
@@ -25,24 +23,26 @@ const FullScreenDialog = ({
   handleEditRow,
   row,
 }) => {
-
   const [values, setValues] = useState({
     prototype,
     open,
     dbItem: {
       ...row,
-      categories: row === undefined ? [] : row.categories,
+      categories: row && row.categories ? row.categories : [],
+      type: row && row.type ? row.type : [],
     },
   });
 
-  useEffect(() => {
-    row && setValues({ ...values, dbItem: {} });
-  }, [row, values]);
-
   var { dbItem } = values;
 
-  const handleChange = (name, event) => (event) => {
-    setValues({ ...values, dbItem: { ...dbItem, [name]: event.target.value } });
+  const handleChange = (name) => (event) => {
+    setValues({
+      ...values,
+      dbItem: {
+        ...dbItem,
+        [name]: event && event.target ? event.target.value : event,
+      },
+    });
   };
 
   var textfieldsArray = getFieldsFromPrototype(prototype, true);
@@ -92,7 +92,23 @@ const FullScreenDialog = ({
               value={values.dbItem[value]}
               onChange={handleChange(value)}
               title="Categories"
-              menuitems={["Vegetarian", "Recipes", "Articles"]}
+              // blogs/products/users
+              loadMenuItems={"blog"}
+            />
+          </div>
+        );
+      }
+      if (value === "type") {
+        form.push(
+          <div
+            className="col-md-12"
+            style={{ marginLeft: "-10px", marginBottom: "10px" }}
+          >
+            <SimpleSelect
+              sort={values.dbItem[value]}
+              onChange={handleChange(value)}
+              title="Type"
+              menuitems={["blog", "product", "users", "menu"]}
             />
           </div>
         );
@@ -147,14 +163,15 @@ const FullScreenDialog = ({
             />
           </div>
         );
-      }  
-      return null
+      }
+      return null;
     });
 
     return (
       <div
-        className={`row ${values.image === undefined ? "col-md-8" : "col-md-12"
-          }`}
+        className={`row ${
+          values.image === undefined ? "col-md-8" : "col-md-12"
+        }`}
       >
         {" "}
         {form}{" "}

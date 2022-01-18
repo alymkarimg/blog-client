@@ -42,15 +42,17 @@ button, a {
     background-color: transparent;
     box-sizing: border-box;
     margin: 0em;
-    padding: 1px 6px;
     border-width: 0;
     border-style: none;
     border-color: transparent;
     border-image: none;
-    margin: 5px 10px;
     outline: none !important;
 }
 
+.MuiAppBar a > * {
+    padding: 1px;
+    margin: 5px;
+}
 .rc-menu-button {
     position: relative;
     top: 2px;
@@ -108,6 +110,12 @@ button, a {
 
 .ck.ck-balloon-panel.ck-balloon-panel_visible {
     z-index: 1400;
+}
+
+.ck.ck-editor__editable_inline {
+    overflow: auto;
+    padding: 0 !important;
+    border: 1px solid transparent;
 }
 
 .create_blog_container_wrapper p {
@@ -172,8 +180,12 @@ img {
 
 .overlay_above_nav .container {
     margin-top: 0px !important;
-    box-shadow: 1px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
-    background-color: white;
+    /* box-shadow: 1px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+    background-color: white; */
+}
+
+figure {
+    margin: 0 0 0rem; 
 }
 
 /* .cke_focus {

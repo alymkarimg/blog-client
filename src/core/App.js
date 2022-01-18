@@ -4,7 +4,9 @@ import React from "react";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import "../assets/css/Style.css";
+import DashboardCard from "./components/DashboardCard";
 import { makeStyles } from "@material-ui/core/styles";
+import Banner from './components/AnimatedBanner'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -55,6 +57,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const size = { width: "400px", height: "345px" };
+const fade = true;
+
 const App = () => {
   const classes = useStyles();
   return (
@@ -68,21 +73,52 @@ const App = () => {
         ></EditableArea>
       </div>
       <div>
-        <Card className={classes.root} raised={true}>
-          <div className={classes.details}>
-            <CardContent className={classes.blogCard}>
-              <EditableArea
-                truncate={400}
-                size={{ width: "100%", height: "100%" }}
-                useloading={true}
-                fade={false}
-                pathname={`/`}
-                guid={`Special Offers`}
-              />
-            </CardContent>
+        <div
+          className="adminHome row"
+          style={{ display: "flex", marginBottom: "20px" }}
+        >
+          <div
+            className="col-md-4 p-3"
+            style={{ marginTop: "20px", marginBottom: "20px" }}
+          >
+            <DashboardCard
+              size={size}
+              fade={fade}
+              link={true}
+              pathname="/"
+              guid="Box1"
+            ></DashboardCard>
           </div>
-        </Card>
+          <div
+            className="col-md-4 p-3"
+            style={{ marginTop: "20px", marginBottom: "20px" }}
+          >
+            <DashboardCard
+              size={size}
+              fade={fade}
+              link={true}
+              pathname="/"
+              guid="Box2"
+            ></DashboardCard>
+          </div>
+          <div
+            className="col-md-4 p-3"
+            style={{ marginTop: "20px", marginBottom: "20px" }}
+          >
+            <DashboardCard
+              size={size}
+              fade={fade}
+              link={true}
+              pathname="/"
+              guid="Box3"
+            ></DashboardCard>
+          </div>
+        </div>
       </div>
+      <Banner
+        size={{ width: "100%", height: "400px" }}
+        title="mainBanner2"
+      ></Banner>
     </Layout>
   );
 };

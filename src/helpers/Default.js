@@ -32,8 +32,23 @@ export const getCookie = (key) => {
 
 // save in localstorage
 export const setLocalStorage = (key, value) => {
-  if (window !== "undefined") {
-    localStorage.setItem(key, JSON.stringify(value));
+  try {
+    if (window !== "undefined") {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+  } catch (e) {}
+};
+
+// get from localstorage
+export const getLocalStorage = (key, initialValue) => {
+  try {
+    if (window !== "undefined") {
+      const value = window.localStorage.getItem(key);
+      return value ? JSON.parse(value) : initialValue;
+    }
+  } catch (e) {
+    // if error, return initial value
+    return initialValue;
   }
 };
 
@@ -165,8 +180,6 @@ export const getFieldsFromPrototype = (
   return prototype.filter((property) => {
     // delete any fields starting with M
     // delete slug, _id, v, editable area
-    console.log(property);
-
     if (
       property === "_id" ||
       property === "__v" ||
@@ -217,11 +230,19 @@ export const arrayToObject = (arr) => {
 
 export const trunc = (string, n) => {
   return (
-    string && string.substr(0, n - 1) + (string.length > n && n != 0 ? "&hellip;" : "")
+    string &&
+    string.substr(0, n - 1) + (string.length > n && n != 0 ? "&hellip;" : "")
   );
 };
 
 export const hasExtension = (imgExtension, fileName) => {
   const pattern = "(" + imgExtension.join("|").replace(/\./g, "\\.") + ")$";
   return new RegExp(pattern, "i").test(fileName);
+};
+
+export const formatNumber = (number) => {
+  return new Intl.NumberFormat("en-UK", {
+    style: "currency",
+    currency: "GBP",
+  }).format(number);
 };

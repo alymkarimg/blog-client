@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
+import { CartContext } from "../../contexts/CartContext";
 import { Link } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -72,9 +73,23 @@ export default function ShopCard({
   truncate = false,
   readMoreButton = false,
 }) {
+
+  const { cartItems } = useContext(CartContext).cart;
+  const { addProduct, increase } = useContext(CartContext);
+
+  const isInCart  = () => {
+    const temp = cartItems.find(item => item._id === product._id && product.size == item.size);
+    console.log(temp)
+    return temp
+  }
+
+  useEffect(() => {
+
+  }, [cartItems])
+
   const classes = useStyles();
   return (
-    <Card className={classes.root} raised={true}>
+    <Card className={classes.root, "fade-in"} raised={true}>
       <div className={classes.details}>
         <CardHeader
           subheader={`£${product ? product.price : "2.50"}`}
@@ -109,6 +124,7 @@ export default function ShopCard({
           <MultipleSelect
             value={[]}
             title="Options"
+            // build an epos
             menuitems={["With Fries", "With Rice"]}
           />
         </CardContent>
@@ -127,18 +143,32 @@ export default function ShopCard({
               Read More{" "}
             </Link>
           )}
-          <Link
-            to="/auth/password/forgot"
+          {
+            isInCart(product) &&
+            <button
             style={{
               display: "flex",
               justifyContent: "center",
               margin: "10px 0px",
             }}
-            className="btn btn-sm btn-outline-info"
-          >
-            {" "}
-            Add to Cart{" "}
-          </Link>
+                id={product._id}
+                onClick={() =>
+                    increase(product)}
+                className="btn btn-outline-primary btn-sm">Add more</button>
+          }
+
+          {
+            !isInCart(product) &&
+            <button
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              margin: "10px 0px",
+            }}
+                id={product._id}
+                onClick={() => addProduct(product)}
+                className="btn btn-primary btn-sm">Add to cart</button>
+          }
         </CardContent>
       </div>
     </Card>

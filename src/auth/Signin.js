@@ -124,7 +124,7 @@ const Signin = ({ history }) => {
                     <Link to='/auth/password/forgot' className="btn btn-sm btn-outline-danger"> Forgot Password </Link>
                 </div>
                 <div className="d-none d-lg-block col-md-9" style={{ paddingRight: "0px", paddingLeft: "0px" }}>
-                    <EditableArea guid="EA_signin" pathname="/signin/"></EditableArea>
+                    <EditableArea size={{ height: "100%" }} guid="EA_signin" pathname="/signin"></EditableArea>
                 </div >
             </div>
 

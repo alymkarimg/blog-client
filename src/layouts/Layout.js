@@ -146,6 +146,16 @@ const Layout = function ({ children, match, history }) {
         },
       },
     },
+    footer: {
+      position: "relative",
+      bottom: "0px",
+      textAlign: "center",
+      width: "100%",
+      padding: "10px",
+      backgroundColor: "black",
+      color: "white"
+
+    },
   }));
   const classes = useStyles();
 
@@ -225,7 +235,12 @@ const Layout = function ({ children, match, history }) {
                     <Link
                       key={`item${i}`}
                       to={`/${item.url}`}
-                      style={isActive(item.url, match)}
+                      style={{
+                        ...isActive(`/${item.url}`, match),
+                        position: "relative",
+                        top: "7px",
+                        padding: "0px 20px",
+                      }}
                       className="menuItem"
                     >
                       <SubMenu className="menu" label={item.title}>
@@ -238,7 +253,15 @@ const Layout = function ({ children, match, history }) {
             }
             return (
               <MenuItem className="menuItem" key={`menu-item${index}`}>
-                <Link to={`/${item.url}`} style={isActive(item.url, match)}>
+                <Link
+                  to={`/${item.url}`}
+                  style={{
+                    ...isActive(`${item.url}`, match),
+                    position: "relative",
+                    top: "7px",
+                    padding: "0px 20px",
+                  }}
+                >
                   {item.title}
                 </Link>
               </MenuItem>
@@ -261,7 +284,14 @@ const Layout = function ({ children, match, history }) {
           } else {
             return (
               <MenuItem className="menuItem" key={`menu-el${index}`}>
-                <Link to={`/${menuItem.url}`} style={isActive(menuItem.url, match)}>
+                <Link
+                  to={`/${menuItem.url}`}
+                  style={{
+                    ...isActive(`/${menuItem.url}`, match),
+                    position: "relative",
+                    padding: "0px 20px",
+                  }}
+                >
                   {menuItem.title}
                 </Link>
               </MenuItem>
@@ -296,6 +326,7 @@ const Layout = function ({ children, match, history }) {
                     ...isActive("/blogs", match),
                     position: "relative",
                     top: "7px",
+                    padding: "0px 20px",
                   }}
                 >{`Blog`}</Link>
                 <Link
@@ -304,6 +335,7 @@ const Layout = function ({ children, match, history }) {
                     ...isActive("/shop", match),
                     position: "relative",
                     top: "7px",
+                    padding: "0px 20px",
                   }}
                 >{`Shop`}</Link>
                 {menuTree && printMenuTree()}
@@ -397,7 +429,6 @@ const Layout = function ({ children, match, history }) {
                   className="nav-link"
                   style={isActive("/cart", match)}
                 >
-                  {" "}
                   <ShoppingCartIcon></ShoppingCartIcon>
                 </Link>
               }
@@ -435,11 +466,19 @@ const Layout = function ({ children, match, history }) {
     );
   };
 
+  const footer = () => {
+    return (
+      <footer className={`${classes.footer}`}>
+        2022 &copy; AA Cafe
+      </footer>
+    );
+  };
+
   const messengerVar = isMessengerActive(match) ? "messenger p-0" : "";
   const hamburgerMessage = sidebarIsOpen ? "Close" : "";
 
   return (
-    <div className="wrapper">
+    <div className="wrapper" style={{ minHeight: "100vh" }}>
       {menuTree && (
         <Drawer
           style={{ width: "220px" }}
@@ -478,7 +517,7 @@ const Layout = function ({ children, match, history }) {
             {!isFullscreen(match) && (
               <div
                 style={{ marginTop: "20px", marginBottom: "20px" }}
-                className={`container`}
+                className={`container min-vh-100`}
               >
                 {children}
               </div>
@@ -496,17 +535,15 @@ const Layout = function ({ children, match, history }) {
                 {children}
               </div>
             )}
+            {footer()}
           </div>
         )}
         {!isHomepageActive(match) && (
           <div>
-            {/* {isHomepageActive(match) && (
-                            <Banner size={{ width: "unset", height: "400px" }} title="mainBanner" ></Banner>
-                        )} */}
             {!isFullscreen(match) && (
               <div
                 style={{ marginTop: "20px", marginBottom: "20px" }}
-                className={`container ${messengerVar}`}
+                className={`container min-vh-100 ${messengerVar}`}
               >
                 {children}
               </div>
@@ -519,11 +556,12 @@ const Layout = function ({ children, match, history }) {
                   marginTop: "0px",
                   marginBottom: "0px",
                 }}
-                className={messengerVar}
+                className={`min-vh-100  ${messengerVar}`}
               >
                 {children}
               </div>
             )}
+            {footer()}
           </div>
         )}
       </div>

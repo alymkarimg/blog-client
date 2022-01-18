@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import PropTypes from 'prop-types';
 import EditableArea from '../../core/components/EditableArea'
-import React, { useState, useEffect, useRef, useContext } from 'react'
+import React, { useState, useEffect, useRef, useContext, useLayoutEffect } from 'react'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import { isAdmin, isEdit, isAdminArea, hasExtension } from '../../helpers/Default'
@@ -20,8 +20,9 @@ import { AnimatedBannerContext } from '../../contexts/AnimatedBannerContext';
 
 const Banner = ({ title, size, alwaysOn = false }) => {
 
-  const { animatedBannerValues, updateAnimatedBanners } = useContext(AnimatedBannerContext);
-  const { publishAnimatedBanner } = animatedBannerValues;
+  const { animatedBannerValues, updateAnimatedBanners, animatedBannerModelsValues } = useContext(AnimatedBannerContext);
+  const { publishAnimatedBanner, animatedBanners } = animatedBannerValues;
+  const { animatedBannerModels} = animatedBannerModelsValues
 
   const [values, setValues] = useState({
     title,
@@ -38,6 +39,10 @@ const Banner = ({ title, size, alwaysOn = false }) => {
       updateAnimatedBanners({ title: animatedBanner.title, items: animatedBanner.items })
     }
   }, [publishAnimatedBanner])
+
+  useLayoutEffect(() => {
+    updateAnimatedBanners({ title })
+  }, [])
 
   var width = `${size.width}`
   var height = `${size.height}`
@@ -98,38 +103,24 @@ const Banner = ({ title, size, alwaysOn = false }) => {
         Authorization: `Bearer ${getCookie('token')}`
       }
     }).then((response) => {
-      loadBanner();
-      handleSelect((animatedBanner.items.length - 1), undefined)
-      reloadEditableArea()
+      setValues({...values, animatedBanner: response.data.animatedBanner})
       toast.success(response.data.message)
-
     }).catch(error => {
       error.response.data.errors.forEach((error) => {
         toast.error(error.message)
       })
     })
   }
+
+  useEffect(() => {
+    animatedBanner && handleSelect(animatedBanner.items.length - 1)
+  }, [animatedBanner])
 
   const loadBanner = () => {
-    axios({
-      method: 'POST',
-      url: `${getURL}/${title}`,
-      headers: {
-        Authorization: `Bearer ${getCookie('token')}`
-      }
-    }).then(response => {
-      var animatedBanner = response.data
-      setValues({ ...values, animatedBanner, loading: false });
-
-    }).catch(error => {
-      error.response.data.errors.forEach((error) => {
-        toast.error(error.message)
-      })
-    })
+    setValues({...values, animatedBanner: animatedBannerModels.find(q => q.title == title)})
   }
 
-  const handleSelect = (currentSlide, e) => {
-    reloadEditableArea()
+  const handleSelect = (currentSlide) => {
     setValues({ ...values, currentSlide });
   };
 
@@ -138,7 +129,7 @@ const Banner = ({ title, size, alwaysOn = false }) => {
 
     // use active class to find the current ckeditor instance
     var content
-    if (animatedBanner.items[currentSlide].EditableArea) {
+    if (animatedBanner.items[currentSlide].EditableArea !== undefined) {
       content = animatedBanner.items[currentSlide].EditableArea.content
       for (var i = 0; i < areaContainer.length - 1; i++) {
 
@@ -165,13 +156,14 @@ const Banner = ({ title, size, alwaysOn = false }) => {
       animatedBanner.items[currentSlide].newImage = media[0]
       // get current slide
       setValues({ ...values, animatedBanner })
-      updateAnimatedBanners(animatedBanner)
     }
   }
 
   useEffect(() => {
-    loadBanner();
-  }, [])
+    if(animatedBannerModels){
+      loadBanner();
+    }
+  }, [animatedBannerModels])
 
   const processAnimatedBannerSlides = () => {
 

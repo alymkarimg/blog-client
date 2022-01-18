@@ -32,7 +32,7 @@ function Sidebar({ items, depthStep, depth, toggleDrawer, sidebarIsOpen }) {
   return (
     <React.Fragment>
       <div className="sidebar">
-        <EditableArea size={{ width: "400px", height: "345px" }} pathname="/" guid="ed_menu"></EditableArea>
+        <EditableArea size={{ width: "400px", height: "345px" }} pathname="/" guid="ea_sidemenu"></EditableArea>
         <List disablePadding dense>
           {items.map((sidebarItem, index) => (
             <SidebarItem

@@ -1,43 +1,91 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, useEffect, useState } from 'react';
-import { isAuth } from '../helpers/Default'
-import { ToastContainer, toast } from 'react-toastify';
+import React, { createContext, useEffect, useState } from "react";
+import { isAuth, getLocalStorage, setLocalStorage } from "../helpers/Default";
+import { ToastContainer, toast } from "react-toastify";
+import axios from "axios";
+import { getCookie } from "../helpers/Default";
 
 export const GlobalContext = createContext(null);
 
-const GlobalContextProvider = (props) => {
-    const [globalValues, setValues] = useState({
-        theme: false,
-        loggedIn: false
-    })
+const GlobalContextProvider = ({ children }) => {
+  const [globalValues, setValues] = useState({
+    theme: false,
+    loggedIn: false,
+  });
 
-    const { theme, loggedIn } = globalValues
+  const [categories, setCategories] = useState(() => getLocalStorage("categories", []));
+  const [loading,setLoading]=useState(false);
 
-    // add a value to the editable area state
-    const updateLoggedIn = () => {
-        setValues({ ...globalValues, loggedIn: !loggedIn })
+  const { theme, loggedIn } = globalValues;
+
+  const pageLoad = true;
+
+  // add a value to the editable area state
+  const updateLoggedIn = () => {
+    setValues({ ...globalValues, loggedIn: !loggedIn });
+  };
+
+  // for a button in the navigation to update publish editable area state
+  const updateTheme = () => {
+    setValues({ ...globalValues, theme: !theme });
+  };
+
+  useEffect(() => {
+    if (loggedIn) {
+      toast.success(
+        `Hey ${isAuth().firstname} ${isAuth().surname}, Welecome back!`
+      );
+      updateLoggedIn();
     }
+  }, [loggedIn]);
 
-    // for a button in the navigation to update publish editable area state
-    const updateTheme = () => {
-        setValues({ ...globalValues, theme: !theme })
+  useEffect(() => {
+    setLocalStorage("categories", categories);
+  }, [categories]);
+
+  const getAllCategories = async () => {
+    const getURL = `${process.env.REACT_APP_API}/category`;
+
+    try {
+      return axios({
+        method: "GET",
+        url: `${getURL}`,
+        headers: {
+          Authorization: `Bearer ${getCookie("token")}`,
+        },
+      })
+        .then((response) => {
+          if (response.data.categorys) {
+            setLoading(true)
+            // save to local storgage
+            setCategories(response.data.categorys);
+            setLoading(false)
+          }
+        })
+        .catch((error) => {
+          error.response.data.errors.forEach((error) => {
+            toast.error(error.message);
+          });
+        });
+    } catch (e) {
+      console.log(e);
     }
+  };
 
-    useEffect(() => {
-        if (loggedIn) {
-            toast.success(`Hey ${isAuth().firstname} ${isAuth().surname}, Welecome back!`);
-            updateLoggedIn();
-        }
+  useEffect(async () => {
+    const fetchData = async () => {
+      await getAllCategories();
+    };
+    await fetchData();
+  }, []);
 
-    }, [loggedIn])
-
-    return (
-        <GlobalContext.Provider value={{ globalValues, updateLoggedIn, updateTheme }}>
-            <ToastContainer />
-            {props.children}
-        </GlobalContext.Provider>
-    )
-
-}
+  return (
+    <GlobalContext.Provider
+      value={{ globalValues, updateLoggedIn, updateTheme, loading, categories  }}
+    >
+      {children}
+    </GlobalContext.Provider>
+  );
+};
 
 export default GlobalContextProvider;
