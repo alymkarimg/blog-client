@@ -57,33 +57,37 @@ const Shop = () => {
         })
     }, [])
 
+    const modifyMenuItems = (array) => {
+        array.filter()
+    }
+
     return (
         <Layout>
 
             <div style={{ marginBottom: "20px", paddingBottom: "20px" }} className="shopContainer">
-                <div className="row">
+                <div className="row fade-in">
                     <div className="col-md-12">
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_title"></EditableArea>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
                             <div className="filter" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
-                                <MultipleSelect value={[]} title="Filter food" menuitems={["Pizzas", "Kebabs", "Garlic Bread", "Chicken Strips", "Hot Wings", "Side Orders", ""]} />
+                                <MultipleSelect value={[]} title="Filter food" loadMenuItems={"product"} />
                             </div>
                         </div>
                     </div>
 
-                    <div className="col-md-12" >
+                    <div className="col-md-12 fade-in" >
                         <ShopSnippet products={products} title={"food"}></ShopSnippet>
                     </div>
                     <div className="col-md-12" style={{ display: "flex", flexDirection: "row", }} >
                         <div>
                             <div className="filter" style={{ display: "flex", flexDirection: "row", padding: "0px 0px 20px 0px" }}>
-                                <MultipleSelect value={[]} title="Filter drinks" menuitems={["Pizzas", "Kebabs", "Garlic Bread", "Chicken Strips", "Hot Wings", "Side Orders", ""]} />
+                                <MultipleSelect modifyMenuItems={modifyMenuItems} value={[]} title="Filter drinks" menuitems={["Pizzas", "Kebabs", "Garlic Bread", "Chicken Strips", "Hot Wings", "Side Orders", ""]} />
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-12" >
+                    <div className="col-md-12 fade-in" >
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
                         <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
                     </div>
