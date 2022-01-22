@@ -23,15 +23,16 @@ const AnimatedBannerContextProvider = (props) => {
   const updateAnimatedBanners = (animatedBanner) => {
     if (!animatedBanners.find((q) => q.title === animatedBanner.title)) {
       animatedBanners.push(animatedBanner);
-    } else {
-      var bannerToEdit = animatedBanners.find(
-        (q) => q.title === animatedBanner.title
-      );
-      if (bannerToEdit) {
-        bannerToEdit.title = animatedBanner.title;
-        bannerToEdit.items = animatedBanner.items;
-      }
     }
+    // else {
+    //   var bannerToEdit = animatedBanners.find(
+    //     (q) => q.title === animatedBanner.title
+    //   );
+    //   if (bannerToEdit) {
+    //     bannerToEdit.title = animatedBanner.title;
+    //     bannerToEdit.items = animatedBanner.items;
+    //   }
+    // }
     setValues({
       ...animatedBannerValues,
       animatedBanners: [...animatedBanners],
@@ -88,16 +89,24 @@ const AnimatedBannerContextProvider = (props) => {
                   item.guid === fileProps[1]
                 ) {
                   item.image = urlObject.url;
+                  item.newImage = undefined;
                 }
               });
             }
           });
-          removeQuery("edit");
           setValues({
             ...animatedBannerValues,
             publishAnimatedBanners: false,
           });
-          toast.success(response.data.message);
+
+          if (urlsObjects.length > 0) {
+            setanimatedBannerModelsValues({
+              ...animatedBannerModelsValues,
+              animatedBannerModels: [...animatedBannerModels],
+            });
+          }
+
+          toast.success("animated banners saved");
         })
         .catch((error) => {
           console.log("Error saving to the database", error.response.data);
@@ -139,7 +148,11 @@ const AnimatedBannerContextProvider = (props) => {
 
   // for a button in the navigation to update publish editable area state
   const updatePublishAnimatedBanners = () => {
-    setValues({ ...animatedBannerValues, publishAnimatedBanners: true });
+    setValues({
+      ...animatedBannerValues,
+      publishAnimatedBanners: true,
+      animatedBanners: [],
+    });
   };
 
   return (

@@ -188,6 +188,11 @@ figure {
     margin: 0 0 0rem; 
 }
 
+a {
+    color: white;
+}
+
+
 /* .cke_focus {
     outline: none !important;
     border-width: 3px !important;
@@ -214,7 +219,6 @@ figure {
 }
 .editableAreaContainer p {
     text-overflow: ellipsis;  
-    white-space: nowrap;
     overflow: hidden;
 }
 

@@ -64,21 +64,19 @@ const App = () => {
   const classes = useStyles();
   return (
     <Layout>
-      <div id="intro">
         <EditableArea
           fade={true}
           className="p-5 text-center"
           path="/"
           guid="ea_profile_intro"
         ></EditableArea>
-      </div>
       <div>
         <div
           className="adminHome row"
           style={{ display: "flex", marginBottom: "20px" }}
         >
           <div
-            className="col-md-4 p-3"
+            className="col-md-3 p-3"
             style={{ marginTop: "20px", marginBottom: "20px" }}
           >
             <DashboardCard
@@ -90,7 +88,7 @@ const App = () => {
             ></DashboardCard>
           </div>
           <div
-            className="col-md-4 p-3"
+            className="col-md-3 p-3"
             style={{ marginTop: "20px", marginBottom: "20px" }}
           >
             <DashboardCard
@@ -102,7 +100,7 @@ const App = () => {
             ></DashboardCard>
           </div>
           <div
-            className="col-md-4 p-3"
+            className="col-md-3 p-3"
             style={{ marginTop: "20px", marginBottom: "20px" }}
           >
             <DashboardCard
@@ -113,10 +111,22 @@ const App = () => {
               guid="Box3"
             ></DashboardCard>
           </div>
+          <div
+            className="col-md-3 p-3"
+            style={{ marginTop: "20px", marginBottom: "20px" }}
+          >
+            <DashboardCard
+              size={size}
+              fade={fade}
+              link={true}
+              pathname="/"
+              guid="Box4"
+            ></DashboardCard>
+          </div>
         </div>
       </div>
       <Banner
-        size={{ width: "100%", height: "400px" }}
+        size={{}}
         title="mainBanner2"
       ></Banner>
     </Layout>

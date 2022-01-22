@@ -11,6 +11,7 @@ import Rating from "./Rating";
 import Banner from "../../core/components/AnimatedBanner";
 import EditableArea from "../../core/components/EditableArea";
 import MultipleSelect from "../../core/components/MultipleSelect";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -73,23 +74,22 @@ export default function ShopCard({
   truncate = false,
   readMoreButton = false,
 }) {
-
   const { cartItems } = useContext(CartContext).cart;
   const { addProduct, increase } = useContext(CartContext);
 
-  const isInCart  = () => {
-    const temp = cartItems.find(item => item._id === product._id && product.size == item.size);
-    console.log(temp)
-    return temp
-  }
+  const isInCart = () => {
+    const temp = cartItems.find(
+      (item) => item._id === product._id && product.size == item.size
+    );
+    console.log(temp);
+    return temp;
+  };
 
-  useEffect(() => {
-
-  }, [cartItems])
+  useEffect(() => {}, [cartItems]);
 
   const classes = useStyles();
   return (
-    <Card className={classes.root, "fade-in"} raised={true}>
+    <Card className={(classes.root, "fade-in")} raised={true}>
       <div className={classes.details}>
         <CardHeader
           subheader={`£${product ? product.price : "2.50"}`}
@@ -97,18 +97,18 @@ export default function ShopCard({
         />
         <Banner
           alwaysOn={false}
-          size={{ maxHeight: "275px", height: size.height, width: size.width }}
+          size={{ maxHeight: "400px", height: size.height, width: size.width }}
           title={`shop ${product && product.slug}`}
         />
         <CardContent>
-          <Typography component={'span'}>
+          <Typography component={"span"}>
             <EditableArea
               truncate={truncate}
               size={{ height: size.height, width: size.width }}
               useloading={true}
               fade={false}
               pathname={`shop editableArea`}
-              guid={`shop ${product && product.slug}`}
+              guid={`shop ${product && product.slug} description`}
             />
           </Typography>
           <Typography>
@@ -143,32 +143,41 @@ export default function ShopCard({
               Read More{" "}
             </Link>
           )}
-          {
-            isInCart(product) &&
+          {isInCart(product) && (
             <button
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "10px 0px",
-            }}
-                id={product._id}
-                onClick={() =>
-                    increase(product)}
-                className="btn btn-outline-primary btn-sm">Add more</button>
-          }
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "10px 0px",
+              }}
+              id={product._id}
+              onClick={() => {
+                toast.success("Product added to cart");
+                increase(product);
+              }}
+              className="btn btn-outline-primary btn-sm"
+            >
+              Add more
+            </button>
+          )}
 
-          {
-            !isInCart(product) &&
+          {!isInCart(product) && (
             <button
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              margin: "10px 0px",
-            }}
-                id={product._id}
-                onClick={() => addProduct(product)}
-                className="btn btn-primary btn-sm">Add to cart</button>
-          }
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                margin: "10px 0px",
+              }}
+              id={product._id}
+              onClick={() => {
+                toast.success("Product added to cart");
+                addProduct(product);
+              }}
+              className="btn btn-primary btn-sm"
+            >
+              Add to cart
+            </button>
+          )}
         </CardContent>
       </div>
     </Card>

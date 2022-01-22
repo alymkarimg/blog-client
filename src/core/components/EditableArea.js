@@ -129,7 +129,6 @@ var editorConfig = {
 
 const EditableArea = ({
   EditablePage = false,
-  link,
   onEditorChange,
   truncate = false,
   pathname,
@@ -155,9 +154,10 @@ const EditableArea = ({
     fade,
     pageError: false,
     isEditablePage: EditablePage === "/:page" ? true : false,
+    link: "",
     url: location.pathname,
   });
-  const { data, loading, pageError, isEditablePage } = values;
+  const { data, loading, pageError, isEditablePage, link } = values;
 
   // when the component mounts, set the state
   useEffect(() => {
@@ -175,6 +175,7 @@ const EditableArea = ({
             ...values,
             loading: false,
             data: editableArea.content,
+            link: editableArea.link
           });
         }
       }
@@ -238,7 +239,6 @@ const EditableArea = ({
               onChange={(evt, editor) => {
                 if ((isAdminArea() && alwaysOn) || !alwaysOn) {
                   setValues({ ...values, data: editor.getData() });
-                  console.log(editor.getData());
                 }
               }}
               onReady={(editor) => {

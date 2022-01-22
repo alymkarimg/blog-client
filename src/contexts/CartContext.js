@@ -8,11 +8,23 @@ import { PlaylistAddOutlined } from "@material-ui/icons";
 
 export const CartContext = createContext(null);
 
+const sumItems = (cartItems) => {
+  let itemCount = cartItems.reduce(
+    (total, product) => total + product.quantity,
+    0
+  );
+  let total = cartItems
+    .reduce((total, product) => total + product.price * product.quantity, 0)
+    .toFixed(2);
+  return { itemCount, total };
+};
+
+
 const CartContextProvider = (props) => {
   const [cart, setCart] = useState(() =>
     getLocalStorage("cart", {
       cartItems: [],
-      storage: null,
+      storage: sumItems([]),
       checkout: false,
     })
   );
@@ -22,17 +34,6 @@ const CartContextProvider = (props) => {
   useEffect(() => {
     setLocalStorage("cart", cart);
   }, [cart]);
-
-  const sumItems = (cartItems) => {
-    let itemCount = cartItems.reduce(
-      (total, product) => total + product.quantity,
-      0
-    );
-    let total = cartItems
-      .reduce((total, product) => total + product.price * product.quantity, 0)
-      .toFixed(2);
-    return { itemCount, total };
-  };
 
   const increase = (product) => {
     if (

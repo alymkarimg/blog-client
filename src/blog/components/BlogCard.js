@@ -103,8 +103,8 @@ export default function BlogCard({ blog, truncate, readMoreButton = true }) {
         />
         <CardContent className={classes.blogCard}>
           <EditableArea
-            truncate={400}
-            size={{ width: "100%", height: "100%" }}
+            truncate={150}
+            size={{ width: "250px" }}
             useloading={true}
             fade={false}
             pathname={`blog editableArea`}
@@ -136,7 +136,7 @@ export default function BlogCard({ blog, truncate, readMoreButton = true }) {
       </div>
       <Banner
         alwaysOn={false}
-        size={{ width: "100%", height: "400px" }}
+        size={{ width: "100%", height: "100%", maxWidth: "400px", maxHeight: "400px" }}
         title={`blog ${blog && blog.slug}`}
       ></Banner>
     </Card>

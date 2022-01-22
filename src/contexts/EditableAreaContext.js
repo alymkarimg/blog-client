@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 import { getCookie } from "../helpers/Default";
 import { toast } from "react-toastify";
@@ -34,23 +34,25 @@ const EditableAreaContextProvider = (props) => {
       )
     ) {
       editableAreas.push(editableArea);
-    } else {
-      var areaToEdit = editableAreas.find(
-        (q) =>
-          q.guid === editableArea.guid && q.pathname == editableArea.pathname
-      );
-      if (areaToEdit) {
-        areaToEdit.guid = editableArea.guid;
-        areaToEdit.pathname = editableArea.pathname;
-        areaToEdit.data = editableArea.data;
-        areaToEdit.loading = editableArea.loading;
-        areaToEdit.size = editableArea.size;
-        areaToEdit.fade = editableArea.fade;
-        areaToEdit.pageError = editableArea.pageError;
-        areaToEdit.isEditablePage = editableArea.isEditablePage;
-        areaToEdit.url = editableArea.url;
-      }
-    }
+    } 
+    // else {
+    //   var areaToEdit = editableAreas.find(
+    //     (q) =>
+    //       q.guid === editableArea.guid && q.pathname == editableArea.pathname
+    //   );
+    //   if (areaToEdit && editableArea.data != undefined) {
+    //     areaToEdit.guid = editableArea.guid;
+    //     areaToEdit.pathname = editableArea.pathname;
+    //     areaToEdit.data = editableArea.data;
+    //     areaToEdit.loading = editableArea.loading;
+    //     areaToEdit.size = editableArea.size;
+    //     areaToEdit.fade = editableArea.fade;
+    //     areaToEdit.pageError = editableArea.pageError;
+    //     areaToEdit.isEditablePage = editableArea.isEditablePage;
+    //     areaToEdit.url = editableArea.url;
+    //     areaToEdit.link = editableArea.link
+    //   }
+    // }
     setValues({
       ...editableAreavalues,
       editableAreas: [...editableAreas],
@@ -75,13 +77,15 @@ const EditableAreaContextProvider = (props) => {
       if (areaToEdit) {
         areaToEdit.guid = editableArea.guid;
         areaToEdit.pathname = editableArea.pathname;
-        areaToEdit.content = editableArea.content;
+        // areaToEdit.content = editableArea.content;
+        areaToEdit.data = editableArea.data
         areaToEdit.loading = editableArea.loading;
         areaToEdit.size = editableArea.size;
         areaToEdit.fade = editableArea.fade;
         areaToEdit.pageError = editableArea.pageError;
         areaToEdit.isEditablePage = editableArea.isEditablePage;
         areaToEdit.url = editableArea.url;
+        areaToEdit.link = editableArea.link
       }
     }
     setEditableAreaModelsValues({
@@ -130,14 +134,15 @@ const EditableAreaContextProvider = (props) => {
 
   // for a button in the navigation to update publish editable area state
   const updatePublishEditableAreas = () => {
-    setValues({ ...editableAreavalues, publishEditableAreas: true });
+    setValues({ ...editableAreavalues, publishEditableAreas: true, editableAreas: [] });
   };
 
   // when pubisheditableareas changes, update db if there are editable areas to update
   useEffect(() => {
     if (
       publishEditableAreas &&
-      editableAreaModels.length > 0
+      editableAreaModels.length > 0 &&
+      editableAreas.length > 0 
     ) {
       axios({
         method: "POST",
@@ -151,7 +156,6 @@ const EditableAreaContextProvider = (props) => {
           removeQuery("edit");
           setValues({
             ...editableAreavalues,
-            editableAreas: [],
             publishEditableAreas: false,
           });
           toast.success("Editable areas saved");

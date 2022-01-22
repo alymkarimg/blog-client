@@ -88,7 +88,7 @@ const Shop = () => {
                     </div>
                     <div className="col-md-12 fade-in" >
                         <EditableArea fade={true} pathname="/shop" guid="EA_shop_drinks"></EditableArea>
-                        <ShopSnippet title={"drink"} products={products} ></ShopSnippet>
+{/* <ShopSnippet title={"drink"} products={products} ></ShopSnippet> */}
                     </div>
                 </div>
             </div>

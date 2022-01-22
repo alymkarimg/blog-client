@@ -97,7 +97,7 @@ const Routes = () => {
                     component={ShopSingleItem}
                   />
                   <Route path="/blog/:slug" exact component={BlogCardItem} />
-                  <Route path="/:page" exact component={EditablePage} />
+                  <Route path="/*" exact component={EditablePage} />
                 </Switch>
               </CartContextProvider>
             </AnimatedBannerContextProvider>

@@ -7,7 +7,7 @@ import axios from "axios";
 import EditableArea from "../core/components/EditableArea";
 import SimpleSelect from "../core/components/Select";
 import MultipleSelect from "../core/components/MultipleSelect";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import Avatar from "@material-ui/core/Avatar";
 import { makeStyles } from "@material-ui/core/styles";
@@ -51,13 +51,21 @@ const Blogs = () => {
     sortBy,
   } = values;
 
-  let { categories, loading } = useContext(GlobalContext);
+  let { categories } = useContext(GlobalContext);
+  // useEffect(() => {
+  //   if (categories && categories.length > 0) {
+  //     fetchData();
+  //     function fetchData() {}
+  //   }
+  // }, [loading]);
+
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (categories && categories.length > 0) {
-      fetchData();
-      function fetchData() {}
+    if(blogs && blogs.length > 0){
+      setLoading(false);
     }
-  }, [loading]);
+  }, [blogs]);
 
   useEffect(() => {
     axios({
@@ -70,9 +78,8 @@ const Blogs = () => {
           blogs: response.data.blogs,
           allBlogs: response.data.blogs,
           sortBy: "Newest listed",
-          timeToFilter: "All time"
+          timeToFilter: "All time",
         });
-
       })
       .catch((error) => {
         console.log(error);
@@ -241,6 +248,7 @@ const Blogs = () => {
 
   return (
     <Layout>
+      <ToastContainer />
       <div className="row">
         <div className="col-md-12">
           <EditableArea
@@ -350,7 +358,8 @@ const Blogs = () => {
         </div>
         <div className="row col-md-12">
           <div className="col-md-9">
-            {blogs.map((blog, i) => {
+            {loading == true && (<></>)}
+            {blogs.length > 0 && loading == false && blogs.map((blog, i) => {
               return (
                 <Fragment key={`blog${blog.slug}`}>
                   <div
@@ -362,6 +371,16 @@ const Blogs = () => {
                 </Fragment>
               );
             })}
+            {blogs.length == 0 && loading == false && (
+              <Fragment>
+                <div
+                  className=""
+                  style={{ marginBottom: "20px" }}
+                >
+                  <h1>No blogs to display</h1>
+                </div>
+              </Fragment>
+            )}
           </div>
           <div
             className="col-md-3 fade-in ml-auto"
