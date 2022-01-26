@@ -77,6 +77,8 @@ export default function ShopCard({
   const { cartItems } = useContext(CartContext).cart;
   const { addProduct, increase } = useContext(CartContext);
 
+  const { categories }
+
   const isInCart = () => {
     const temp = cartItems.find(
       (item) => item._id === product._id && product.size == item.size
@@ -129,55 +131,57 @@ export default function ShopCard({
           />
         </CardContent>
         <CardContent>
-          {readMoreButton && (
-            <Link
-              to={`/product/${product.slug}`}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "10px 0px",
-              }}
-              className="btn btn-sm btn-outline-info"
-            >
-              {" "}
-              Read More{" "}
-            </Link>
-          )}
-          {isInCart(product) && (
-            <button
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "10px 0px",
-              }}
-              id={product._id}
-              onClick={() => {
-                toast.success("Product added to cart");
-                increase(product);
-              }}
-              className="btn btn-outline-primary btn-sm"
-            >
-              Add more
-            </button>
-          )}
+          <div style={{ display: "flex" }}>
+            {readMoreButton && (
+              <Link
+                to={`/product/${product.slug}`}
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px 0px",
+                }}
+                className="btn btn-sm btn-outline-info"
+              >
+                {" "}
+                Read More{" "}
+              </Link>
+            )}
+            {isInCart(product) && (
+              <button
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px 0px",
+                }}
+                id={product._id}
+                onClick={() => {
+                  toast.success("Product added to cart");
+                  increase(product);
+                }}
+                className="btn btn-outline-primary btn-sm"
+              >
+                Add more
+              </button>
+            )}
 
-          {!isInCart(product) && (
-            <button
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                margin: "10px 0px",
-              }}
-              id={product._id}
-              onClick={() => {
-                toast.success("Product added to cart");
-                addProduct(product);
-              }}
-              className="btn btn-primary btn-sm"
-            >
-              Add to cart
-            </button>
-          )}
+            {!isInCart(product) && (
+              <button
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  margin: "10px 0px",
+                }}
+                id={product._id}
+                onClick={() => {
+                  toast.success("Product added to cart");
+                  addProduct(product);
+                }}
+                className="btn btn-primary btn-sm"
+              >
+                Add to cart
+              </button>
+            )}
+          </div>
         </CardContent>
       </div>
     </Card>
