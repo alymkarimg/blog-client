@@ -77,8 +77,6 @@ export default function ShopCard({
   const { cartItems } = useContext(CartContext).cart;
   const { addProduct, increase } = useContext(CartContext);
 
-  const { categories }
-
   const isInCart = () => {
     const temp = cartItems.find(
       (item) => item._id === product._id && product.size == item.size
