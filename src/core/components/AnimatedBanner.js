@@ -178,11 +178,11 @@ const Banner = ({ title, size, alwaysOn = false }) => {
             source = item.newImage ? URL.createObjectURL(item.newImage) : item.image;
           }
           return (
-            <Carousel.Item style={{ height, width, maxWidth, maxHeight }} key={`carouse-item${i}`}>
+            <Carousel.Item key={`carouse-item${i}`}>
               {!isVideo && (
                 <img
                   src={source}
-                  style={{ height, width, maxWidth, maxHeight, filter: "contrast(0.5)" }}
+                  style={{ height, width, maxWidth, maxHeight, filter: "contrast(0.5)", float: "right" }}
                   className="image-fluid"
                   alt={`item-${i}`}
                 />
@@ -210,7 +210,6 @@ const Banner = ({ title, size, alwaysOn = false }) => {
       <div style={{
         display: "flex",
         flexDirection: "column",
-        // marginBottom: "20px",
       }}
         className={bigOrSmall ? "banner" : "bannerSmall"}
       >
@@ -269,7 +268,9 @@ const Banner = ({ title, size, alwaysOn = false }) => {
     )
   } else {
     return (
-      <p>Loading...</p>
+      <div style={{backgroundColor: "white", height: size.height, width: size.width, maxHeight: size.maxHeight, maxWidth: size.maxWidth}}>
+
+      </div>
     )
   }
 

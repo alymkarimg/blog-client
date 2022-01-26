@@ -4,9 +4,10 @@ import FormCardDetails from "./FormCardDetails";
 import FormShippingDetails from "./FormShippingDetails";
 import Confirm from "./Confirm";
 import Success from "./Success";
-import { getLocalStorage } from "../../helpers/Default";
+import { getLocalStorage, getCookie } from "../../helpers/Default";
 import { withRouter } from "react-router-dom";
-import { CartContext }  from '../../contexts/CartContext'
+import { CartContext } from "../../contexts/CartContext";
+import axios from 'axios'
 
 export class UserForm extends Component {
   state = {
@@ -20,9 +21,12 @@ export class UserForm extends Component {
     postcode: "",
     country: "",
     open: this.props.open,
+    payment_intent: null,
+    payment_intent_client_secret: null,
+    redirect_status: null,
   };
 
-  static contextType = CartContext
+  static contextType = CartContext;
 
   componentDidUpdate(prevProps) {
     const params = decodeURI(this.props.location.search)
@@ -40,25 +44,54 @@ export class UserForm extends Component {
     if (this.props.open && !this.state.open) {
       this.setState({ ...this.state, open: this.props.open });
     }
-    
+
     if (
       params.payment_intent &&
       params.payment_intent_client_secret &&
       params.redirect_status == "succeeded"
     ) {
-      this.setState({
-        step: 5,
-        open: true
-      }, () => {
-        this.props.history.replace({ 
-          search: undefined, 
+      this.setState(
+        {
+          step: 5,
+          open: true,
+          payment_intent: params.payment_intent,
+          payment_intent_client_secret: params.payment_intent_client_secret,
+          redirect_status: params.redirect_status,
+        },
+        () => {
+          this.props.history.replace({
+            search: undefined,
+          });
+        }
+      );
+
+      axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_API}/order/edit`,
+        data: {
+          payment_intent: params.payment_intent,
+          payment_intent_client_secret: params.payment_intent_client_secret,
+          redirect_status: params.redirect_status,
+        },
+        headers: {
+          Authorization: `Bearer ${getCookie("token")}`,
+          ContentType: "multipart/form-data",
+        },
+      })
+        .then((response) => {
+          console.log("Article Successfully edited", response);
         })
-      });
+        .catch((error) => {
+          console.log("Error saving article", error);
+          // error.response.data.err.forEach((error) => {
+          //   toast.error(error)
+          // })
+        });
     }
   }
 
   componentDidMount() {
-    let user = getLocalStorage("user");
+    let user = getLocalStorage("user") ? getLocalStorage("user") : {};
     this.setState({
       ...this.state,
       firstName: user.firstname,
@@ -95,8 +128,14 @@ export class UserForm extends Component {
   };
 
   handleSubmit = () => {
-    console.log(this.state, this.context.cart)
-  }
+    console.log(
+      this.state,
+      this.context.cart,
+      this.state.payment_intent,
+      this.state.payment_intent_client_secret,
+      this.state.redirect_status
+    );
+  };
 
   render() {
     const { handleCheckout } = this.context;
@@ -111,7 +150,7 @@ export class UserForm extends Component {
       postcode,
       country,
     } = this.state;
-    
+
     const values = {
       firstName,
       lastName,
@@ -171,6 +210,7 @@ export class UserForm extends Component {
             open={this.state.open}
             nextStep={this.nextStep}
             prevStep={this.prevStep}
+            values={values}
             handleChange={this.handleChange}
             handleSubmit={this.handleSubmit}
             closeModal={() => {
@@ -188,7 +228,7 @@ export class UserForm extends Component {
             closeModal={() => {
               this.setState({ ...this.state, open: !this.state.open, step: 1 });
               this.props.closeModal();
-              handleCheckout()
+              handleCheckout();
             }}
             values={values}
           />

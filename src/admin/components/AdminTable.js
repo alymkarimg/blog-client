@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { getCookie } from "../../helpers/Default";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -20,6 +20,8 @@ import FullScreenDialog from "./AdminCreateEditDialog";
 import EnhancedTableToolbar from "./AdminTableToolbar";
 import EnhancedTableHead from "./AdminTableHead";
 import { getFieldsFromPrototype, toHumanString } from "../../helpers/Default";
+import ShopSnippet from "../../shop/components/ShopSnippet";
+import { Dialog } from "@material-ui/core";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,6 +89,10 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
     setOpen(false);
   };
 
+  const [cartDialog, setCartDialog] = useState({
+    open: false,
+    product: null,
+  });
   const [open, setOpen] = useState(false);
   const [order, setOrder] = useState("asc");
   const [orderBy, setOrderBy] = useState("publishedDate");
@@ -97,9 +103,10 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
     prototype: null,
     rows: [],
     row: null,
+    model: null,
   });
 
-  const { prototype, rows, row } = values;
+  const { prototype, rows, row, model } = values;
 
   useEffect(
     function () {
@@ -111,11 +118,12 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
         },
       })
         .then((response) => {
-          console.log(response)
+          console.log(response);
           setValues({
             ...values,
             prototype: response.data.prototype,
             rows: response.data[`${name.toLowerCase()}s`],
+            model: response.data.model ? response.data.model : null,
           });
         })
         .catch((error) => {
@@ -177,7 +185,6 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
 
   const handleCreateRow = (dbItem) => {
     dbItem.categories = dbItem.categories.map((q) => q.toLowerCase());
@@ -285,6 +292,23 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
   if (prototype != null) {
     return (
       <div className={classes.root}>
+        <Dialog
+          fullWidth
+          maxWidth="sm"
+          onBackdropClick={() => {
+            setCartDialog({ ...cartDialog, open: false });
+          }}
+          open={cartDialog.open}
+        >
+          <div style={{ padding: "20px" }}>
+            <h2>Items in cart</h2>
+            <ShopSnippet
+              title={"View Cart"}
+              products={cartDialog.products}
+            ></ShopSnippet>
+          </div>
+        </Dialog>
+
         {open && (
           <FullScreenDialog
             name={name}
@@ -300,6 +324,9 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
         )}
         <Paper className={classes.paper}>
           <EnhancedTableToolbar
+            addButton={model != "orders"}
+            editButton={model != "orders"}
+            deleteButton={model != "orders"}
             setRow={setRow}
             setOpen={setOpen}
             open={open}
@@ -349,7 +376,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
                               inputProps={{ "aria-labelledby": labelId }}
                             />
                           </TableCell>
-                          {createRow(row, prototype)}
+                          {createRow(row, prototype, setCartDialog)}
                         </TableRow>
                       );
                     })}
@@ -360,16 +387,18 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
                           colSpan={6}
                         >
                           <h1> No {name}s to display, please create one</h1>
-                          <Button
-                            onClick={() => {
-                              handleOpen();
-                              setValues({ ...values, open: true });
-                            }}
-                            className="btn btn-primary"
-                          >
-                            {" "}
-                            Create {name.toLowerCase()}
-                          </Button>
+                          {model != "orders" && (
+                            <Button
+                              onClick={() => {
+                                handleOpen();
+                                setValues({ ...values, open: true });
+                              }}
+                              className="btn btn-primary"
+                            >
+                              {" "}
+                              Create {name.toLowerCase()}
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     )}
@@ -405,7 +434,7 @@ export default function EnhancedTable({ name, routePrefix, getURL }) {
   }
 }
 
-const createRow = (row, prototype) => {
+const createRow = (row, prototype, setCartDialog) => {
   const form = [];
   getFieldsFromPrototype(prototype).map((q) => {
     if (q === "categories") {
@@ -416,9 +445,7 @@ const createRow = (row, prototype) => {
           {toHumanString(categories)}
         </TableCell>
       );
-    }
-
-    if (q === "publishedDate" && q) {
+    } else if (q === "publishedDate" && q) {
       if (q !== undefined) {
         var testDate = row[q].slice(0, 10);
       }
@@ -428,14 +455,62 @@ const createRow = (row, prototype) => {
           {testDate}
         </TableCell>
       );
+    } else if (q === "cart") {
+      return form.push(
+        <Fragment>
+          <Button
+            onClick={(ev) => {
+              ev.preventDefault();
+              ev.stopPropagation();
+              setCartDialog({
+                open: true,
+                products: [...row[q][0].cartItems],
+              });
+            }}
+          >
+            View Cart
+          </Button>
+        </Fragment>
+      );
+    } else if (q === "shippingAddress") {
+      form.push(
+        <TableCell
+          component="td"
+          id={row.id}
+          scope="row"
+          padding="none"
+        ></TableCell>
+      );
+    } else if (q === "user") {
+      form.push(
+        <TableCell component="td" id={row.id} scope="row" padding="none">
+          <div>
+            <p>
+              {row[q].firstName} {row[q].lastName}
+            </p>
+          </div>
+        </TableCell>
+      );
+    } else if (q === "username") {
+      form.push(
+        <TableCell component="td" id={row.id} scope="row" padding="none">
+          <div>{row[q] && <p>{row[q]}</p>}</div>
+        </TableCell>
+      );
+    } else if (q === "status") {
+      form.push(
+        <TableCell component="td" id={row.id} scope="row" padding="none">
+          <div>{row[q] && row[q]}</div>
+        </TableCell>
+      );
+    } else {
+      form.push(
+        <TableCell component="td" id={row.id} scope="row" padding="none">
+          {row[q]}
+        </TableCell>
+      );
     }
-
-    form.push(
-      <TableCell component="td" id={row.id} scope="row" padding="none">
-        {row[q]}
-      </TableCell>
-    );
-    return true
+    return true;
   });
 
   return form;

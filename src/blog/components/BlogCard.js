@@ -68,7 +68,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BlogCard({ blog, truncate, readMoreButton = true }) {
+export default function BlogCard({ blog, truncate = 150, readMoreButton = true }) {
   const classes = useStyles();
   const [values, setValues] = useState({
     expanded: false,
@@ -103,7 +103,7 @@ export default function BlogCard({ blog, truncate, readMoreButton = true }) {
         />
         <CardContent className={classes.blogCard}>
           <EditableArea
-            truncate={150}
+            truncate={truncate}
             size={{ width: "250px" }}
             useloading={true}
             fade={false}

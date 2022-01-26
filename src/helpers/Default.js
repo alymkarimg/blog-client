@@ -175,7 +175,8 @@ export const isActive = (path, match) => {
 
 export const getFieldsFromPrototype = (
   prototype,
-  includeEditableArea = false
+  includeEditableArea = false,
+  includeCreatedAt = false
 ) => {
   return prototype.filter((property) => {
     // delete any fields starting with M

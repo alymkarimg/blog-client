@@ -299,7 +299,9 @@ a {
 }
 
 .loader {
-    width: 60px;
+    width: "100%";
+    background-color: transparent;
+    background-image: none;
 }
 
 .loader-wheel {

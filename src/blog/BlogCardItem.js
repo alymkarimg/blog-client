@@ -47,7 +47,7 @@ const BlogCardItem = (props) => {
     return (
       <Layout>
         {blog && (
-          <div className="col-md-10 offset-md-1">
+          <div className="blogCardItem col-md-10 offset-md-1">
             <BlogCard
               blog={blog}
               size={{ height: "auto", width: "100%" }}

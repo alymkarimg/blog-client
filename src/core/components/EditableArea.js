@@ -203,7 +203,7 @@ const EditableArea = ({
       // if the area is loading and is  in view mode
       if (loading && useloading) {
         return (
-          <div style={size} className={`editableAreaContainer loading loader`}>
+          <div style={size} className={`editableAreaContainer ${guid} loading loader`}>
             <div className="loader-wheel"></div>
             <div className="loader-text"></div>
           </div>
@@ -232,7 +232,7 @@ const EditableArea = ({
             <CKEditor
               data-pathname={pathname}
               id={guid}
-              className={`editableAreaContainer ${fadeVar}`}
+              className={`editableAreaContainer ${guid} ${fadeVar}`}
               editor={InlineEditor}
               config={editorConfig}
               data={data}
@@ -260,7 +260,7 @@ const EditableArea = ({
           <Link
             to={link || "/"}
             ref={myRef}
-            className={`editableAreaContainer ${fadeVar}`}
+            className={`editableAreaContainer ${guid} ${fadeVar}`}
           >
             <div
               dangerouslySetInnerHTML={{ __html: trunc(data, truncate) }}
@@ -272,7 +272,7 @@ const EditableArea = ({
           <Link
             to={link}
             ref={myRef}
-            className={`editableAreaContainer ${fadeVar}`}
+            className={`editableAreaContainer ${guid} ${fadeVar}`}
           >
             <div dangerouslySetInnerHTML={{ __html: data }}></div>
           </Link>

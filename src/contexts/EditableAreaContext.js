@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, useEffect, useState } from "react";
 import ReactDOM from "react-dom";
+import { getLocalStorage, setLocalStorage } from "../helpers/Default";
 import { getCookie } from "../helpers/Default";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -10,20 +11,33 @@ import { useLocation } from "react-router";
 export const EditableAreaContext = createContext(null);
 
 const EditableAreaContextProvider = (props) => {
-  const [editableAreavalues, setValues] = useState({
-    publishEditableAreas: false,
-    editableAreas: [],
-  });
-
   const location = useLocation();
+
+  const [editableAreavalues, setValues] = useState(() =>
+    getLocalStorage("editableAreavalues", {
+      publishEditableAreas: false,
+      editableAreas: [],
+    })
+  );
+
+  const [editableAreaModelsValues, setEditableAreaModelsValues] = useState(() =>
+    getLocalStorage("editableAreaModelsValues", {
+      editableAreaModels: [],
+    })
+  );
 
   var { publishEditableAreas, editableAreas } = editableAreavalues;
 
-  const [editableAreaModelsValues, setEditableAreaModelsValues] = useState({
-    editableAreaModels: [],
-  });
-
   let { editableAreaModels } = editableAreaModelsValues;
+
+  useEffect(() => {
+    setLocalStorage("editableAreaModelsValues", editableAreaModelsValues);
+  }, [editableAreaModelsValues]);
+
+
+  useEffect(() => {
+    setLocalStorage("editableAreaValues", editableAreavalues);
+  }, [editableAreavalues]);
 
   // add a value to the editable area state
   const updateEditableAreas = (editableArea) => {
@@ -34,7 +48,7 @@ const EditableAreaContextProvider = (props) => {
       )
     ) {
       editableAreas.push(editableArea);
-    } 
+    }
     // else {
     //   var areaToEdit = editableAreas.find(
     //     (q) =>
@@ -78,14 +92,14 @@ const EditableAreaContextProvider = (props) => {
         areaToEdit.guid = editableArea.guid;
         areaToEdit.pathname = editableArea.pathname;
         // areaToEdit.content = editableArea.content;
-        areaToEdit.data = editableArea.data
+        areaToEdit.data = editableArea.data;
         areaToEdit.loading = editableArea.loading;
         areaToEdit.size = editableArea.size;
         areaToEdit.fade = editableArea.fade;
         areaToEdit.pageError = editableArea.pageError;
         areaToEdit.isEditablePage = editableArea.isEditablePage;
         areaToEdit.url = editableArea.url;
-        areaToEdit.link = editableArea.link
+        areaToEdit.link = editableArea.link;
       }
     }
     setEditableAreaModelsValues({
@@ -120,6 +134,7 @@ const EditableAreaContextProvider = (props) => {
       })
         .then((response) => {
           response.data.map((q) => updateEditableAreaModels(q));
+          setValues({ ...editableAreavalues });
         })
         .catch((error) => {
           if (axios.isCancel(error)) return;
@@ -134,7 +149,11 @@ const EditableAreaContextProvider = (props) => {
 
   // for a button in the navigation to update publish editable area state
   const updatePublishEditableAreas = () => {
-    setValues({ ...editableAreavalues, publishEditableAreas: true, editableAreas: [] });
+    setValues({
+      ...editableAreavalues,
+      publishEditableAreas: true,
+      editableAreas: [],
+    });
   };
 
   // when pubisheditableareas changes, update db if there are editable areas to update
@@ -142,7 +161,7 @@ const EditableAreaContextProvider = (props) => {
     if (
       publishEditableAreas &&
       editableAreaModels.length > 0 &&
-      editableAreas.length > 0 
+      editableAreas.length > 0
     ) {
       axios({
         method: "POST",

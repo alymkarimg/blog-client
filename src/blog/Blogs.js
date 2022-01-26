@@ -366,7 +366,7 @@ const Blogs = () => {
                     className="fade-in blogCard"
                     style={{ marginBottom: "20px" }}
                   >
-                    <BlogCard readMoreButton={true} blog={blog} />
+                    <BlogCard truncate={150} readMoreButton={true} blog={blog} />
                   </div>
                 </Fragment>
               );

@@ -31,6 +31,10 @@ const EnhancedTableHead = ({ prototype, classes, onSelectAllClick, order, orderB
             column.label = ''
         }
 
+        if (property.startsWith("ShippingAddress")){
+            column.label = property.substring(16)
+        }
+
         return column;
     })
 

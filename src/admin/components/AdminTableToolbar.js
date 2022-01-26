@@ -16,6 +16,9 @@ import axios from "axios";
 import "../../assets/css/Style.css";
 
 const EnhancedTableToolbar = ({
+  addButton = true,
+  editButton = true,
+  deleteButton = true,
   setOpen,
   setRow,
   numSelected,
@@ -109,7 +112,7 @@ const EnhancedTableToolbar = ({
           {`${name}`}
         </Typography>
       )}
-      {numSelected === 0 && (
+      {numSelected === 0 && addButton && (
         <Tooltip title="Add">
           <IconButton
             onClick={(e) => {
@@ -123,7 +126,7 @@ const EnhancedTableToolbar = ({
         </Tooltip>
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && deleteButton? (
         <React.Fragment>
           <Tooltip title="Delete">
             <IconButton
@@ -135,7 +138,7 @@ const EnhancedTableToolbar = ({
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-          {numSelected < 2 && (
+          {numSelected < 2 && editButton && (
             <Tooltip title="Edit">
               <IconButton
                 onClick={(e) => {

@@ -70,7 +70,6 @@ function ShopSnippet({ title, products = [] }) {
         </div>
         <Swiper
           ref={swiperRef}
-          loop
           spaceBetween={15}
           slidesPerView={4}
         >
@@ -103,7 +102,6 @@ function ShopSnippet({ title, products = [] }) {
         </Tooltip>
         <Swiper
           ref={swiperRef}
-          loop
           spaceBetween={10}
           slidesPerView={1}
         >
