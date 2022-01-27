@@ -172,7 +172,6 @@ export class UserForm extends Component {
             closeModal={() => {
               this.setState({ ...this.state, open: !this.state.open });
               this.props.closeModal();
-              handleCheckout();
             }}
             values={values}
           />
