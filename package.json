@@ -5,7 +5,7 @@
     "dependencies": {
         "@babel/plugin-transform-react-jsx": "^7.9.4",
         "@babel/plugin-transform-react-jsx-self": "^7.9.0",
-        "@ckeditor/ckeditor5-build-inline": "github:alymkarimg/Inline-Editor#alym-inline",
+        "@ckeditor/ckeditor5-build-inline": "github:alymkarimg/Inline-Editor#master",
         "@ckeditor/ckeditor5-react": "^3.0.1",
         "@fortawesome/fontawesome-svg-core": "^1.2.35",
         "@fortawesome/free-solid-svg-icons": "^5.15.3",
