@@ -13,31 +13,26 @@ export const EditableAreaContext = createContext(null);
 const EditableAreaContextProvider = (props) => {
   const location = useLocation();
 
-  const [editableAreavalues, setValues] = useState(() =>
-    getLocalStorage("editableAreavalues", {
-      publishEditableAreas: false,
-      editableAreas: [],
-    })
-  );
+  const [editableAreavalues, setValues] = useState({
+    publishEditableAreas: false,
+    editableAreas: [],
+  });
 
-  const [editableAreaModelsValues, setEditableAreaModelsValues] = useState(() =>
-    getLocalStorage("editableAreaModelsValues", {
-      editableAreaModels: [],
-    })
-  );
+  const [editableAreaModelsValues, setEditableAreaModelsValues] = useState({
+    editableAreaModels: [],
+  });
 
   var { publishEditableAreas, editableAreas } = editableAreavalues;
 
   let { editableAreaModels } = editableAreaModelsValues;
 
-  useEffect(() => {
-    setLocalStorage("editableAreaModelsValues", editableAreaModelsValues);
-  }, [editableAreaModelsValues]);
+  // useEffect(() => {
+  //   setLocalStorage("editableAreaModelsValues", editableAreaModelsValues);
+  // }, [editableAreaModelsValues]);
 
-
-  useEffect(() => {
-    setLocalStorage("editableAreaValues", editableAreavalues);
-  }, [editableAreavalues]);
+  // useEffect(() => {
+  //   setLocalStorage("editableAreaValues", editableAreavalues);
+  // }, [editableAreavalues]);
 
   // add a value to the editable area state
   const updateEditableAreas = (editableArea) => {

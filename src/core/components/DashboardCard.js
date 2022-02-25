@@ -23,19 +23,15 @@ export default function DashboardCard({ link, pathname, guid, size, fade }) {
 
     if (isEdit()) {
         return (
-            <Fragment>
                 <Card raised={true} className={classes.roots}>
                     <EditableArea useloading={true} fade={fade} size={size} pathname={pathname} guid={`${guid}_image`}></EditableArea>
                 </Card>
-            </Fragment>
         );
     } else {
         return (
-            <Link to={link} style={{ textDecoration: 'none' }}>
                 <Card raised={true} className={classes.root}>
                     <EditableArea useloading={true} fade={fade} size={size} pathname={pathname} guid={`${guid}_image`}></EditableArea>
                 </Card>
-            </Link>
         );
     }
 }

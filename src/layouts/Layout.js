@@ -337,7 +337,7 @@ const Layout = function ({ children, match, history }) {
                     top: "7px",
                     padding: "0px 20px",
                   }}
-                >{`Shop`}</Link>
+                >{`Menu`}</Link>
                 {menuTree && printMenuTree()}
               </div>
 

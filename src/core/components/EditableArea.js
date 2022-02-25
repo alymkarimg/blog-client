@@ -18,7 +18,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import InlineEditor from "@ckeditor/ckeditor5-build-inline/build/ckeditor.js";
 import { useRef } from "react";
 import { TextField } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 // DOMPurify.setConfig({ ADD_ATTR: ['target'] });
 
@@ -59,6 +59,8 @@ var editorConfig = {
     "insertTable",
     "todoList",
     "underline",
+    "htmlEmbed",
+    "simpleBox",
   ],
   image: {
     toolbar: [
@@ -125,6 +127,9 @@ var editorConfig = {
     ],
   },
   removePlugins: ["Title"],
+  mediaEmbed: {
+    previewsInData: true,
+  },
 };
 
 const EditableArea = ({
@@ -138,8 +143,12 @@ const EditableArea = ({
   useloading = false,
   alwaysOn = false,
 }) => {
-  const { editableAreavalues, updateEditableAreas, editableAreaModelsValues, handleLoad } =
-    useContext(EditableAreaContext);
+  const {
+    editableAreavalues,
+    updateEditableAreas,
+    editableAreaModelsValues,
+    handleLoad,
+  } = useContext(EditableAreaContext);
   const { publishEditableAreas } = editableAreavalues;
   const { editableAreaModels } = editableAreaModelsValues;
   const myRef = useRef();
@@ -175,7 +184,7 @@ const EditableArea = ({
             ...values,
             loading: false,
             data: editableArea.content,
-            link: editableArea.link
+            link: editableArea.link,
           });
         }
       }
@@ -203,7 +212,10 @@ const EditableArea = ({
       // if the area is loading and is  in view mode
       if (loading && useloading) {
         return (
-          <div style={size} className={`editableAreaContainer ${guid} loading loader`}>
+          <div
+            style={size}
+            className={`editableAreaContainer ${guid} loading loader`}
+          >
             <div className="loader-wheel"></div>
             <div className="loader-text"></div>
           </div>
@@ -258,7 +270,8 @@ const EditableArea = ({
       else if (truncate !== false) {
         return (
           <Link
-            to={link || "/"}
+            style={{ minWidth: "100%" }}
+            to={link || "#"}
             ref={myRef}
             className={`editableAreaContainer ${guid} ${fadeVar}`}
           >
@@ -270,7 +283,8 @@ const EditableArea = ({
       } else {
         return (
           <Link
-            to={link}
+            style={{ minWidth: "100%" }}
+            to={link || "#"}
             ref={myRef}
             className={`editableAreaContainer ${guid} ${fadeVar}`}
           >

@@ -6,7 +6,10 @@ import CardContent from "@material-ui/core/CardContent";
 import "../assets/css/Style.css";
 import DashboardCard from "./components/DashboardCard";
 import { makeStyles } from "@material-ui/core/styles";
-import Banner from './components/AnimatedBanner'
+import Banner from "./components/AnimatedBanner";
+import YouTubeSubscribe from './components/YoutubeSubscribe'
+import FacebookLike from './components/FacebookLike'
+import TwitterFollow from './components/TwitterFollow'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -64,12 +67,29 @@ const App = () => {
   const classes = useStyles();
   return (
     <Layout>
-        <EditableArea
-          fade={true}
-          className="p-5 text-center"
-          path="/"
-          guid="ea_profile_intro"
-        ></EditableArea>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          paddingTop: "20px",
+        }}
+      >
+        <TwitterFollow showCount={false} />
+        <YouTubeSubscribe
+          channelid={"UChBEbMKI1eCcejTtmI32UEw"}
+          theme={"default"}
+          layout={"default"}
+          count={"default"}
+        />
+        <FacebookLike/>
+      </div>
+
+      <EditableArea
+        fade={true}
+        className="p-5 text-center"
+        path="/"
+        guid="ea_profile_intro"
+      ></EditableArea>
       <div>
         <div
           className="adminHome row"
@@ -115,20 +135,17 @@ const App = () => {
             className="col-md-3 p-3"
             style={{ marginTop: "20px", marginBottom: "20px" }}
           >
-            <DashboardCard
-              size={size}
-              fade={fade}
-              link={true}
-              pathname="/"
-              guid="Box4"
-            ></DashboardCard>
+            <a
+              class="twitter-timeline"
+              data-height="300"
+              href="https://twitter.com/Twitter?ref_src=twsrc%5Etfw"
+            >
+              Tweets by Twitter
+            </a>{" "}
           </div>
         </div>
       </div>
-      <Banner
-        size={{}}
-        title="mainBanner2"
-      ></Banner>
+      <Banner size={{}} title="mainBanner2"></Banner>
     </Layout>
   );
 };
