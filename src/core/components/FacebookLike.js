@@ -8,7 +8,7 @@ export default class FacebookLike extends Component {
     layout: "button",
     action: "like",
     size: "small",
-    share: "true"
+    share: "true",
   };
 
   /**
@@ -19,6 +19,16 @@ export default class FacebookLike extends Component {
   constructor(props) {
     super(props);
     this.facebookLikeNode = React.createRef();
+
+    this.state = {
+      initialized: false,
+    };
+  }
+
+  initialized() {
+    this.setState({
+      initialized: true,
+    });
   }
 
   /**
@@ -32,15 +42,23 @@ export default class FacebookLike extends Component {
    */
 
   componentDidMount() {
+    if (this.state.initialized) {
+      return;
+    }
 
     // Make <script src="https://apis.google.com/js/platform.js" ></script>
     const facebookscript = document.createElement("script");
-    facebookscript.src = "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v13.0";
+    facebookscript.src =
+      "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v13.0";
     facebookscript.crossOrigin = "anonymous";
     facebookscript.async = true;
     facebookscript.defer = true;
-    facebookscript.nonce = "dw4RgAND"
+    facebookscript.nonce = "dw4RgAND";
     this.facebookLikeNode.current.parentNode.appendChild(facebookscript);
+    if (window.FB) {
+      window.FB.XFBML.parse();
+    }
+    this.initialized();
   }
 
   render() {
@@ -49,7 +67,7 @@ export default class FacebookLike extends Component {
     return (
       <section className="facebookLike">
         <div
-        ref={this.facebookLikeNode}
+          ref={this.facebookLikeNode}
           className="fb-like"
           data-href={href}
           data-width={width}

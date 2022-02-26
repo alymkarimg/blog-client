@@ -136,7 +136,7 @@ const App = () => {
             style={{ marginTop: "20px", marginBottom: "20px" }}
           >
             <a
-              class="twitter-timeline"
+              className="twitter-timeline"
               data-height="300"
               href="https://twitter.com/Twitter?ref_src=twsrc%5Etfw"
             >
